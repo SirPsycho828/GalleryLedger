@@ -17,17 +17,11 @@
       ]
     },
     {
-      "collectionGroup": "events",
+      "collectionGroup": "works",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "createdAt", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "photos",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "sortOrder", "order": "ASCENDING" }
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     }
   ],
