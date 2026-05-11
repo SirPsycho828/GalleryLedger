@@ -7,67 +7,75 @@ import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { Work, WorkStatus } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS } from '@/types'
 import { cn } from '@/lib/utils'
 
-const STATUS_COLORS: Record<WorkStatus, { bg: string; text: string }> = {
-  intake: { bg: 'bg-blue-50', text: 'text-blue-700' },
-  in_storage: { bg: 'bg-gray-100', text: 'text-gray-700' },
-  on_display: { bg: 'bg-emerald-50', text: 'text-emerald-700' },
-  on_loan: { bg: 'bg-amber-50', text: 'text-amber-700' },
-  shipped: { bg: 'bg-purple-50', text: 'text-purple-700' },
-  sold: { bg: 'bg-emerald-50', text: 'text-emerald-700' },
-  returned: { bg: 'bg-gray-100', text: 'text-gray-600' },
+const STATUS_COLORS: Record<WorkStatus, { bg: string; text: string; dot: string }> = {
+  intake: { bg: 'bg-blue-500/10', text: 'text-blue-400', dot: 'bg-blue-400' },
+  in_storage: { bg: 'bg-zinc-500/10', text: 'text-zinc-400', dot: 'bg-zinc-400' },
+  on_display: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', dot: 'bg-emerald-400' },
+  on_loan: { bg: 'bg-amber-500/10', text: 'text-amber-400', dot: 'bg-amber-400' },
+  shipped: { bg: 'bg-purple-500/10', text: 'text-purple-400', dot: 'bg-purple-400' },
+  sold: { bg: 'bg-gold/10', text: 'text-gold', dot: 'bg-gold' },
+  returned: { bg: 'bg-zinc-500/10', text: 'text-zinc-500', dot: 'bg-zinc-500' },
 }
 
 export function StatusBadge({ status }: { status: WorkStatus }) {
   const colors = STATUS_COLORS[status]
   return (
-    <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium uppercase', colors.bg, colors.text)}>
+    <span className={cn(
+      'inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider',
+      colors.bg, colors.text
+    )}>
+      <span className={cn('h-1 w-1 rounded-full', colors.dot)} />
       {STATUS_LABELS[status]}
     </span>
   )
 }
 
-function WorkCard({ work, onClick }: { work: Work; onClick: () => void }) {
+function WorkCard({ work, onClick, index }: { work: Work; onClick: () => void; index: number }) {
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
       onClick={onClick}
-      className="flex w-full items-start gap-3 rounded-lg border border-border bg-card p-3 text-left shadow-sm hover:bg-muted/50 transition-colors min-h-[72px]"
+      className="group flex w-full items-start gap-4 border-b border-border/50 bg-transparent p-4 text-left transition-colors hover:bg-card"
     >
       {work.coverPhotoUrl ? (
         <img
           src={work.coverPhotoUrl}
           alt=""
-          className="h-[72px] w-[72px] flex-shrink-0 rounded-md object-cover"
+          className="h-[80px] w-[80px] flex-shrink-0 object-cover transition-transform group-hover:scale-[1.02]"
         />
       ) : (
-        <div className="flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center rounded-md bg-muted">
-          <ImagePlus className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
+        <div className="flex h-[80px] w-[80px] flex-shrink-0 items-center justify-center bg-secondary">
+          <ImagePlus className="h-5 w-5 text-muted-foreground" strokeWidth={1} />
         </div>
       )}
-      <div className="flex-1 min-w-0 space-y-0.5">
-        <p className="truncate text-sm font-semibold">{work.artist}</p>
-        <p className="truncate text-sm">{work.title}</p>
+      <div className="flex-1 min-w-0 space-y-1 py-0.5">
+        <p className="truncate text-sm font-medium text-foreground">{work.artist}</p>
+        <p className="truncate text-sm italic text-muted-foreground">{work.title}</p>
         {(work.medium || work.dimensions) && (
-          <p className="truncate text-xs text-muted-foreground">
+          <p className="truncate text-xs text-muted-foreground/70">
             {[work.medium, work.dimensions].filter(Boolean).join(' \u2014 ')}
           </p>
         )}
         <StatusBadge status={work.status} />
       </div>
-    </button>
+    </motion.button>
   )
 }
 
 function WorkListSkeleton() {
   return (
-    <div className="space-y-3">
+    <div className="divide-y divide-border/50">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="flex items-start gap-3 rounded-lg border border-border p-3">
-          <Skeleton className="h-[72px] w-[72px] rounded-md" />
-          <div className="flex-1 space-y-2">
+        <div key={i} className="flex items-start gap-4 p-4">
+          <Skeleton className="h-[80px] w-[80px]" />
+          <div className="flex-1 space-y-2 py-1">
             <Skeleton className="h-4 w-2/3" />
             <Skeleton className="h-4 w-1/2" />
             <Skeleton className="h-3 w-1/3" />
@@ -96,7 +104,6 @@ export default function WorkList() {
     return unsub
   }, [gallery])
 
-  // Status counts
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: works.length }
     for (const s of WORK_STATUSES) counts[s] = 0
@@ -104,7 +111,6 @@ export default function WorkList() {
     return counts
   }, [works])
 
-  // Filtered works
   const filteredWorks = useMemo(() => {
     let result = works
     if (statusFilter !== 'all') {
@@ -136,11 +142,11 @@ export default function WorkList() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by artist, title, or medium"
                 autoFocus
-                className="h-9"
+                className="h-9 border-border/60 bg-card"
               />
               <button
                 onClick={() => { setSearchOpen(false); setSearchQuery('') }}
-                className="flex h-11 w-11 items-center justify-center"
+                className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-foreground"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
               </button>
@@ -148,11 +154,17 @@ export default function WorkList() {
           ) : (
             <>
               {hasWorks && (
-                <button onClick={() => setSearchOpen(true)} className="flex h-11 w-11 items-center justify-center">
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors"
+                >
                   <Search className="h-5 w-5" strokeWidth={1.5} />
                 </button>
               )}
-              <button onClick={() => navigate('/works/new')} className="flex h-11 w-11 items-center justify-center">
+              <button
+                onClick={() => navigate('/works/new')}
+                className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors"
+              >
                 <Plus className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </>
@@ -160,32 +172,40 @@ export default function WorkList() {
         }
       />
 
-      <div className="mx-auto max-w-[640px] px-4 pt-4">
+      <div className="mx-auto max-w-[640px]">
         {loading ? (
           <WorkListSkeleton />
         ) : !hasWorks ? (
-          /* Empty state */
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <ImagePlus className="h-12 w-12 text-muted-foreground mb-4" strokeWidth={1.5} />
-            <h2 className="text-lg font-semibold">No works yet</h2>
-            <p className="mt-1 text-sm text-muted-foreground max-w-xs">
-              Add your first work to start building your gallery's records
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center py-24 text-center px-4"
+          >
+            <div className="mb-6 flex h-20 w-20 items-center justify-center border border-border/50 bg-secondary">
+              <ImagePlus className="h-8 w-8 text-muted-foreground" strokeWidth={1} />
+            </div>
+            <h2 className="font-heading text-xl font-medium">Your Collection Awaits</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-[280px]">
+              Begin documenting your gallery's works with full provenance tracking
             </p>
-            <Button className="mt-6" onClick={() => navigate('/works/new')}>
-              Add a work
+            <Button
+              className="mt-8 h-11 bg-gold px-8 text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90"
+              onClick={() => navigate('/works/new')}
+            >
+              Add First Work
             </Button>
-          </div>
+          </motion.div>
         ) : (
           <>
             {/* Status filter chips */}
-            <div className="flex gap-2 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide">
+            <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide">
               <button
                 onClick={() => setStatusFilter('all')}
                 className={cn(
-                  'flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium border transition-colors',
+                  'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
                   statusFilter === 'all'
-                    ? 'bg-accent text-accent-foreground border-primary/20'
-                    : 'bg-muted text-muted-foreground border-border'
+                    ? 'border-gold/30 bg-gold/10 text-gold'
+                    : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
                 )}
               >
                 All ({statusCounts.all})
@@ -196,10 +216,10 @@ export default function WorkList() {
                     key={s}
                     onClick={() => setStatusFilter(s)}
                     className={cn(
-                      'flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium border transition-colors',
+                      'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
                       statusFilter === s
-                        ? 'bg-accent text-accent-foreground border-primary/20'
-                        : 'bg-muted text-muted-foreground border-border'
+                        ? 'border-gold/30 bg-gold/10 text-gold'
+                        : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
                     )}
                   >
                     {STATUS_LABELS[s]} ({statusCounts[s]})
@@ -218,12 +238,13 @@ export default function WorkList() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {filteredWorks.map((work) => (
+              <div className="divide-y divide-border/30">
+                {filteredWorks.map((work, i) => (
                   <WorkCard
                     key={work.id}
                     work={work}
                     onClick={() => navigate(`/works/${work.id}`)}
+                    index={i}
                   />
                 ))}
               </div>

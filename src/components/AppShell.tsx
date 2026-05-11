@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router'
 import { Image, Users, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { OfflineBanner } from '@/components/OfflineBanner'
+import { motion } from 'framer-motion'
 
 const tabs = [
   { path: '/', icon: Image, label: 'Works' },
@@ -25,8 +26,8 @@ export function AppShell() {
         <Outlet />
       </main>
 
-      {/* Bottom tabs */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background pb-[env(safe-area-inset-bottom)]">
+      {/* Bottom navigation — dark glass with gold accents */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
         <div className="mx-auto flex h-16 max-w-[640px] items-center justify-around">
           {tabs.map((tab) => {
             const active = isActive(tab.path)
@@ -35,12 +36,19 @@ export function AppShell() {
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-1 py-2 px-4 min-w-[64px]',
-                  active ? 'text-primary' : 'text-muted-foreground'
+                  'relative flex flex-col items-center justify-center gap-1 py-2 px-5 min-w-[72px] transition-colors',
+                  active ? 'text-gold' : 'text-muted-foreground hover:text-foreground/70'
                 )}
               >
-                <tab.icon className="h-6 w-6" strokeWidth={1.5} />
-                <span className="text-xs font-medium">{tab.label}</span>
+                {active && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    className="absolute -top-px left-3 right-3 h-px bg-gold"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <tab.icon className="h-5 w-5" strokeWidth={1.5} />
+                <span className="text-[10px] font-medium uppercase tracking-wider">{tab.label}</span>
               </button>
             )
           })}

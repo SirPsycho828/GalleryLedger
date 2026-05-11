@@ -23,43 +23,44 @@ export default function SettingsPage() {
   return (
     <div>
       <TopBar title="Settings" />
-      <div className="mx-auto max-w-[640px] p-4 space-y-1">
+      <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-1">
         {/* Gallery Name */}
         <button
           onClick={() => { setNewName(gallery?.name ?? ''); setEditingName(true) }}
-          className="flex w-full items-center justify-between rounded-lg p-3 text-left hover:bg-muted"
+          className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
         >
           <div>
             <p className="text-sm font-medium">Gallery Name</p>
             <p className="text-sm text-muted-foreground">{gallery?.name || 'Not set'}</p>
           </div>
+          <span className="text-xs text-gold/70">Edit</span>
         </button>
 
-        <Separator />
+        <Separator className="opacity-50" />
 
         {/* Email */}
-        <div className="flex w-full items-center justify-between rounded-lg p-3">
+        <div className="flex w-full items-center justify-between p-3">
           <div>
             <p className="text-sm font-medium">Email</p>
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="opacity-50" />
 
         {/* Sign Out */}
         <button
           onClick={() => setShowSignOutDialog(true)}
-          className="flex w-full items-center rounded-lg p-3 text-left text-destructive hover:bg-muted"
+          className="flex w-full items-center p-3 text-left text-destructive hover:bg-secondary transition-colors"
         >
           <p className="text-sm font-medium">Sign Out</p>
         </button>
 
-        <Separator />
+        <Separator className="opacity-50" />
 
         {/* App Version */}
         <div className="p-3 pt-6 text-center">
-          <p className="text-xs text-muted-foreground">GalleryLedger v0.1.0</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">GalleryLedger v0.1.0</p>
         </div>
       </div>
 
@@ -76,12 +77,12 @@ export default function SettingsPage() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               maxLength={100}
-              className="h-11"
+              className="h-11 bg-card border-border/60"
             />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingName(false)}>Cancel</Button>
-            <Button onClick={handleSaveName} disabled={!newName.trim()}>Save</Button>
+            <Button onClick={handleSaveName} disabled={!newName.trim()} className="bg-gold text-gold-foreground hover:bg-gold/90">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

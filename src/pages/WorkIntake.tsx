@@ -247,15 +247,15 @@ export default function WorkIntake() {
       <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 pb-24 space-y-6">
         {/* Section 1: Photos */}
         <div>
-          <h2 className="text-base font-semibold mb-3">Photos</h2>
+          <h2 className="font-heading text-base font-medium mb-3">Photos</h2>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {photos.map((photo, i) => (
               <div key={i} className="relative flex-shrink-0">
-                <img src={photo.preview} alt="" className="h-20 w-20 rounded-md object-cover" />
+                <img src={photo.preview} alt="" className="h-20 w-20 object-cover" />
                 <button
                   type="button"
                   onClick={() => removePhoto(i)}
-                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-background text-xs"
+                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-background text-foreground text-xs border border-border"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -265,7 +265,7 @@ export default function WorkIntake() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-md border-2 border-dashed border-border hover:border-primary transition-colors"
+                className="flex h-20 w-20 flex-shrink-0 items-center justify-center border-2 border-dashed border-border/50 hover:border-gold/50 transition-colors"
               >
                 <Camera className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
               </button>
@@ -284,7 +284,7 @@ export default function WorkIntake() {
 
         {/* Section 2: Work Details */}
         <div className="space-y-4">
-          <h2 className="text-base font-semibold">Work Details</h2>
+          <h2 className="font-heading text-base font-medium">Work Details</h2>
 
           <div className="space-y-2" data-error={errors.artist ? '' : undefined}>
             <Label htmlFor="artist">Artist *</Label>
@@ -356,7 +356,7 @@ export default function WorkIntake() {
 
         {/* Section 3: Condition Assessment */}
         <div className="space-y-4">
-          <h2 className="text-base font-semibold">Condition Assessment</h2>
+          <h2 className="font-heading text-base font-medium">Condition Assessment</h2>
 
           <div data-error={errors.condition ? '' : undefined}>
             <Label className="mb-2 block">Overall Condition *</Label>
@@ -367,10 +367,10 @@ export default function WorkIntake() {
                   type="button"
                   onClick={() => { setCondition(rating); setErrors((prev) => ({ ...prev, condition: '' })) }}
                   className={cn(
-                    'rounded-full px-4 py-2 text-sm font-medium border transition-colors',
+                    'px-4 py-2 text-sm font-medium border transition-colors',
                     condition === rating
-                      ? 'bg-primary text-primary-foreground border-primary'
-                      : 'bg-muted text-foreground border-border hover:border-primary/50'
+                      ? 'bg-gold/10 text-gold border-gold/30'
+                      : 'bg-secondary text-foreground border-border/50 hover:border-border'
                   )}
                 >
                   {CONDITION_LABELS[rating]}
@@ -422,7 +422,7 @@ export default function WorkIntake() {
 
         {/* Section 4: Signature */}
         <div>
-          <h2 className="text-base font-semibold mb-2">Signature</h2>
+          <h2 className="font-heading text-base font-medium mb-2">Signature</h2>
           <p className="text-xs text-muted-foreground mb-2">Optional — confirms consignor acknowledgment of condition at intake</p>
           {signaturePreview ? (
             <div className="flex items-start gap-3">
@@ -469,9 +469,9 @@ export default function WorkIntake() {
         )}
 
         {/* Save button */}
-        <div className="fixed bottom-16 left-0 right-0 z-30 border-t border-border bg-background px-4 py-3">
+        <div className="fixed bottom-16 left-0 right-0 z-30 border-t border-border/50 bg-background/95 backdrop-blur-xl px-4 py-3">
           <div className="mx-auto max-w-[640px]">
-            <Button type="submit" className="w-full h-11" disabled={saving}>
+            <Button type="submit" className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" disabled={saving}>
               {saving ? 'Saving...' : 'Save Work'}
             </Button>
           </div>

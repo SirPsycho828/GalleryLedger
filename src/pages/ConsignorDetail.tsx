@@ -151,7 +151,7 @@ export default function ConsignorDetail() {
         actions={
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex h-11 w-11 items-center justify-center">
+              <button className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors">
                 <MoreVertical className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </DropdownMenuTrigger>
@@ -168,38 +168,38 @@ export default function ConsignorDetail() {
         <div className="space-y-2">
           {consignor.email && (
             <a href={`mailto:${consignor.email}`} className="flex items-center gap-2 text-sm">
-              <Mail className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+              <Mail className="h-4 w-4 text-gold/70" strokeWidth={1.5} />
               {consignor.email}
             </a>
           )}
           {consignor.phone && (
             <a href={`tel:${consignor.phone}`} className="flex items-center gap-2 text-sm">
-              <Phone className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+              <Phone className="h-4 w-4 text-gold/70" strokeWidth={1.5} />
               {consignor.phone}
             </a>
           )}
           {consignor.address && (
             <div className="flex items-start gap-2 text-sm">
-              <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground" strokeWidth={1.5} />
+              <MapPin className="h-4 w-4 mt-0.5 text-gold/70" strokeWidth={1.5} />
               <span className="whitespace-pre-line">{consignor.address}</span>
             </div>
           )}
           {!consignor.email && !consignor.phone && !consignor.address && (
-            <p className="text-sm text-muted-foreground">No contact info. <button onClick={openEdit} className="text-primary underline">Edit</button></p>
+            <p className="text-sm text-muted-foreground">No contact info. <button onClick={openEdit} className="text-gold underline">Edit</button></p>
           )}
         </div>
 
         {/* Notes */}
         {consignor.notes && (
-          <div className="rounded-lg border border-border bg-muted/50 p-3">
+          <div className="border border-border/50 bg-card p-3">
             <p className="text-sm text-muted-foreground whitespace-pre-line">{consignor.notes}</p>
           </div>
         )}
 
         {/* Financial summary */}
         {linkedWorks.length > 0 && (
-          <div className="rounded-lg border border-border bg-muted/50 p-4 space-y-2">
-            <h3 className="text-sm font-semibold">Financial Summary</h3>
+          <div className="border border-border/50 bg-card p-4 space-y-2">
+            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Financial Summary</h3>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">Works sold</span><span>{soldWorks.length} of {linkedWorks.length}</span></div>
               {soldWorks.length > 0 && (
@@ -207,9 +207,9 @@ export default function ConsignorDetail() {
                   <div className="flex justify-between"><span className="text-muted-foreground">Total sales</span><span>{formatCurrency(totalSales, 'USD')}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Consignor share</span><span>{formatCurrency(Math.round(totalConsignorShare), 'USD')}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Paid out</span><span>{formatCurrency(totalPaidOut, 'USD')}</span></div>
-                  <div className="flex justify-between font-medium border-t border-border pt-1 mt-1">
+                  <div className="flex justify-between font-medium border-t border-border/50 pt-1 mt-1">
                     <span>Outstanding</span>
-                    <span className={outstanding < 0 ? 'text-destructive' : outstanding === 0 ? 'text-emerald-600' : ''}>
+                    <span className={outstanding < 0 ? 'text-destructive' : outstanding === 0 ? 'text-success' : ''}>
                       {formatCurrency(Math.round(outstanding), 'USD')}
                     </span>
                   </div>
@@ -221,7 +221,7 @@ export default function ConsignorDetail() {
 
         {/* Linked works */}
         <div>
-          <h3 className="text-sm font-semibold mb-3">Works ({linkedWorks.length})</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Works ({linkedWorks.length})</h3>
           {linkedWorks.length === 0 ? (
             <p className="text-sm text-muted-foreground">No works from this consignor</p>
           ) : (
@@ -230,12 +230,12 @@ export default function ConsignorDetail() {
                 <button
                   key={work.id}
                   onClick={() => navigate(`/works/${work.id}`)}
-                  className="flex w-full items-start gap-3 rounded-lg border border-border bg-card p-3 text-left shadow-sm hover:bg-muted/50 transition-colors"
+                  className="flex w-full items-start gap-3 border border-border/50 bg-card p-3 text-left hover:bg-secondary transition-colors"
                 >
                   {work.coverPhotoUrl ? (
-                    <img src={work.coverPhotoUrl} alt="" className="h-[56px] w-[56px] rounded-md object-cover" />
+                    <img src={work.coverPhotoUrl} alt="" className="h-[56px] w-[56px] object-cover" />
                   ) : (
-                    <div className="flex h-[56px] w-[56px] items-center justify-center rounded-md bg-muted">
+                    <div className="flex h-[56px] w-[56px] items-center justify-center bg-secondary">
                       <ImagePlus className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
                     </div>
                   )}
@@ -258,25 +258,25 @@ export default function ConsignorDetail() {
           <div className="space-y-4 pt-4">
             <div className="space-y-2">
               <Label>Name *</Label>
-              <Input value={editName} onChange={(e) => setEditName(e.target.value)} maxLength={200} className="h-11" />
+              <Input value={editName} onChange={(e) => setEditName(e.target.value)} maxLength={200} className="h-11 bg-card border-border/60" />
             </div>
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="h-11" />
+              <Input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="h-11 bg-card border-border/60" />
             </div>
             <div className="space-y-2">
               <Label>Phone</Label>
-              <Input type="tel" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} className="h-11" />
+              <Input type="tel" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} className="h-11 bg-card border-border/60" />
             </div>
             <div className="space-y-2">
               <Label>Address</Label>
-              <Textarea value={editAddress} onChange={(e) => setEditAddress(e.target.value)} maxLength={500} rows={3} />
+              <Textarea value={editAddress} onChange={(e) => setEditAddress(e.target.value)} maxLength={500} rows={3} className="bg-card border-border/60" />
             </div>
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea value={editNotes} onChange={(e) => setEditNotes(e.target.value)} maxLength={2000} rows={3} />
+              <Textarea value={editNotes} onChange={(e) => setEditNotes(e.target.value)} maxLength={2000} rows={3} className="bg-card border-border/60" />
             </div>
-            <Button onClick={handleSaveEdit} className="w-full h-11" disabled={!editName.trim()}>Save</Button>
+            <Button onClick={handleSaveEdit} className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90" disabled={!editName.trim()}>Save</Button>
           </div>
         </SheetContent>
       </Sheet>

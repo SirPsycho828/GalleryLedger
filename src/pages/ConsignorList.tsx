@@ -98,14 +98,16 @@ export default function ConsignorList() {
             ))}
           </div>
         ) : consignors.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Users className="h-12 w-12 text-muted-foreground mb-4" strokeWidth={1.5} />
-            <h2 className="text-lg font-semibold">No consignors yet</h2>
-            <p className="mt-1 text-sm text-muted-foreground max-w-xs">
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="mb-6 flex h-20 w-20 items-center justify-center border border-border/50 bg-secondary">
+              <Users className="h-8 w-8 text-muted-foreground" strokeWidth={1} />
+            </div>
+            <h2 className="font-heading text-xl font-medium">No Consignors Yet</h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-[280px]">
               Consignors will appear here when you add them
             </p>
-            <Button className="mt-6" onClick={() => navigate('/consignors/new')}>
-              Add a consignor
+            <Button className="mt-8 h-11 bg-gold px-8 text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" onClick={() => navigate('/consignors/new')}>
+              Add a Consignor
             </Button>
           </div>
         ) : (

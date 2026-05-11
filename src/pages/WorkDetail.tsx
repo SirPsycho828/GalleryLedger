@@ -25,11 +25,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 import { StatusBadge } from '@/pages/WorkList'
 import type { Work, TimelineEvent, Photo, Consignor, EventType, WorkStatus, ConditionRating } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS, CONDITION_RATINGS, EVENT_TYPE_LABELS, CURRENCIES } from '@/types'
 
-// Event type icons
 const EVENT_ICONS: Record<EventType, typeof Plus> = {
   intake: ImagePlus,
   condition_update: RefreshCw,
@@ -41,7 +41,6 @@ const EVENT_ICONS: Record<EventType, typeof Plus> = {
   document_attach: Paperclip,
 }
 
-// FAB menu items (intake excluded - never created manually)
 const FAB_MENU: { type: EventType; label: string; icon: typeof Plus }[] = [
   { type: 'condition_update', label: 'Condition Update', icon: RefreshCw },
   { type: 'location_change', label: 'Location Change', icon: MapPin },
@@ -67,7 +66,6 @@ export default function WorkDetail() {
   const [consignorName, setConsignorName] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // UI state
   const [fabOpen, setFabOpen] = useState(false)
   const [eventFormType, setEventFormType] = useState<EventType | null>(null)
   const [editOpen, setEditOpen] = useState(false)
@@ -75,13 +73,11 @@ export default function WorkDetail() {
   const [carouselIndex, setCarouselIndex] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
 
-  // Export state
   const [exportOpen, setExportOpen] = useState(false)
   const [exportMode, setExportMode] = useState<'full' | 'selective' | null>(null)
   const [selectedEventIds, setSelectedEventIds] = useState<Set<string>>(new Set())
   const [exportProgress, setExportProgress] = useState<string | null>(null)
 
-  // Subscribe to work, events, photos
   useEffect(() => {
     if (!gallery || !workId) return
     const unsub1 = subscribeToWork(gallery.id, workId, (w) => { setWork(w); setLoading(false) })
@@ -90,13 +86,11 @@ export default function WorkDetail() {
     return () => { unsub1(); unsub2(); unsub3() }
   }, [gallery, workId])
 
-  // Load consignor name
   useEffect(() => {
     if (!gallery || !work?.consignorId) { setConsignorName(null); return }
     getConsignor(gallery.id, work.consignorId).then((c) => setConsignorName(c?.name ?? 'Unknown'))
   }, [gallery, work?.consignorId])
 
-  // Derived state from events
   const currentLocation = useMemo(() => {
     const locationEvents = events.filter((e) => e.type === 'location_change')
     if (locationEvents.length === 0) return null
@@ -110,7 +104,6 @@ export default function WorkDetail() {
     return (latest.details as any)?.conditionSummary ?? null
   }, [events])
 
-  // Financial derived state
   const totalPayouts = useMemo(() => {
     return events
       .filter((e) => e.type === 'payout')
@@ -122,7 +115,6 @@ export default function WorkDetail() {
     : 0
   const remainingBalance = consignorShare - totalPayouts
 
-  // Handle carousel scroll
   function handleCarouselScroll() {
     if (!carouselRef.current) return
     const el = carouselRef.current
@@ -130,7 +122,6 @@ export default function WorkDetail() {
     setCarouselIndex(index)
   }
 
-  // Delete work
   async function handleDelete() {
     if (!gallery || !workId || !work) return
     try {
@@ -161,7 +152,6 @@ export default function WorkDetail() {
       )
       const filename = `${work.artist}_${work.title}_provenance.pdf`.replace(/[^a-zA-Z0-9_.-]/g, '_')
 
-      // Try native share first (mobile), fallback to download
       const shared = await sharePdf(blob, filename)
       if (!shared) downloadBlob(blob, filename)
 
@@ -179,11 +169,11 @@ export default function WorkDetail() {
   if (loading) {
     return (
       <div>
-        <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border bg-background px-4">
+        <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border/50 bg-background/95 backdrop-blur-xl px-4">
           <Skeleton className="h-5 w-32" />
         </div>
         <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-4">
-          <Skeleton className="w-full aspect-[4/3] rounded-lg" />
+          <Skeleton className="w-full aspect-[4/3]" />
           <Skeleton className="h-6 w-2/3" />
           <Skeleton className="h-4 w-1/2" />
           <Skeleton className="h-32 w-full" />
@@ -195,11 +185,11 @@ export default function WorkDetail() {
   if (!work) {
     return (
       <div>
-        <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border bg-background px-4">
-          <button onClick={() => navigate(-1)} className="mr-2 flex h-11 w-11 items-center justify-center">
+        <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border/50 bg-background/95 backdrop-blur-xl px-4">
+          <button onClick={() => navigate(-1)} className="mr-2 flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold">
             <ArrowLeft className="h-5 w-5" strokeWidth={1.5} />
           </button>
-          <span className="text-xl font-bold">Not Found</span>
+          <span className="font-heading text-lg font-medium">Not Found</span>
         </div>
         <div className="mx-auto max-w-[640px] px-4 pt-8 text-center">
           <p className="text-muted-foreground">This work doesn't exist or was deleted.</p>
@@ -211,17 +201,17 @@ export default function WorkDetail() {
   return (
     <div>
       {/* Sticky top bar */}
-      <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border bg-background px-4">
-        <button onClick={() => navigate(-1)} className="mr-2 flex h-11 w-11 items-center justify-center">
+      <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border/50 bg-background/95 backdrop-blur-xl px-4">
+        <button onClick={() => navigate(-1)} className="mr-2 flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors">
           <ArrowLeft className="h-5 w-5" strokeWidth={1.5} />
         </button>
-        <h1 className="flex-1 truncate text-xl font-bold">{work.title}</h1>
-        <button onClick={() => setExportOpen(true)} className="flex h-11 w-11 items-center justify-center">
+        <h1 className="flex-1 truncate font-heading text-lg font-medium">{work.title}</h1>
+        <button onClick={() => setExportOpen(true)} className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors">
           <Share className="h-5 w-5" strokeWidth={1.5} />
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex h-11 w-11 items-center justify-center">
+            <button className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors">
               <MoreVertical className="h-5 w-5" strokeWidth={1.5} />
             </button>
           </DropdownMenuTrigger>
@@ -233,7 +223,7 @@ export default function WorkDetail() {
       </div>
 
       <div className="mx-auto max-w-[640px] pb-24">
-        {/* Photo carousel */}
+        {/* Photo carousel — edge-to-edge, no rounding, gallery-style */}
         <div className="relative">
           {photos.length > 0 ? (
             <>
@@ -244,11 +234,11 @@ export default function WorkDetail() {
               >
                 {photos.map((photo) => (
                   <div key={photo.id} className="w-full flex-shrink-0 snap-center">
-                    <div className="aspect-[4/3]">
+                    <div className="aspect-[4/3] bg-black">
                       <img
                         src={photo.storageUrl}
                         alt=""
-                        className="h-full w-full object-contain bg-muted"
+                        className="h-full w-full object-contain"
                         onClick={() => window.open(photo.storageUrl, '_blank')}
                       />
                     </div>
@@ -256,63 +246,69 @@ export default function WorkDetail() {
                 ))}
               </div>
               {photos.length > 1 && (
-                <div className="flex justify-center gap-1.5 py-2">
+                <div className="flex justify-center gap-1.5 py-3">
                   {photos.map((_, i) => (
-                    <div key={i} className={cn('h-1.5 w-1.5 rounded-full', i === carouselIndex ? 'bg-primary' : 'bg-border')} />
+                    <div key={i} className={cn('h-1 w-1 rounded-full transition-colors', i === carouselIndex ? 'bg-gold' : 'bg-border')} />
                   ))}
                 </div>
               )}
             </>
           ) : (
-            <div className="flex aspect-[4/3] items-center justify-center bg-muted">
-              <ImagePlus className="h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
+            <div className="flex aspect-[4/3] items-center justify-center bg-secondary">
+              <ImagePlus className="h-12 w-12 text-muted-foreground/50" strokeWidth={1} />
             </div>
           )}
         </div>
 
         {/* Work details */}
-        <div className="px-4 pt-4 space-y-1">
-          <h2 className="text-xl font-bold">{work.artist}</h2>
-          <p className="italic">{work.title}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="px-4 pt-5 space-y-1"
+        >
+          <h2 className="font-heading text-2xl font-medium">{work.artist}</h2>
+          <p className="text-base italic text-muted-foreground">{work.title}</p>
           {(work.medium || work.dimensions || work.year) && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground/70">
               {[work.medium, work.dimensions, work.year].filter(Boolean).join(' \u2014 ')}
             </p>
           )}
           {consignorName && (
             <button
               onClick={() => navigate(`/consignors/${work.consignorId}`)}
-              className="text-sm text-muted-foreground hover:text-primary"
+              className="text-sm text-gold/80 transition-colors hover:text-gold"
             >
               Consignor: {consignorName}
             </button>
           )}
-          <div className="pt-1">
+          <div className="pt-2">
             <StatusBadge status={work.status} />
           </div>
-        </div>
+        </motion.div>
 
         {/* Derived state */}
-        <div className="px-4 pt-4">
-          <Separator className="mb-3" />
-          <div className="space-y-1 text-sm">
-            <div className="flex gap-2">
-              <span className="text-muted-foreground">Location:</span>
-              <span>{currentLocation || 'Not recorded'}</span>
+        <div className="px-4 pt-5">
+          <div className="h-px bg-border/50 mb-4" />
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Location</span>
+              <p className="mt-0.5 text-foreground">{currentLocation || 'Not recorded'}</p>
             </div>
-            <div className="flex gap-2">
-              <span className="text-muted-foreground">Condition:</span>
-              <span>{currentCondition ? CONDITION_LABELS[currentCondition as ConditionRating] || currentCondition : 'Not recorded'}</span>
+            <div>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Condition</span>
+              <p className="mt-0.5 text-foreground">{currentCondition ? CONDITION_LABELS[currentCondition as ConditionRating] || currentCondition : 'Not recorded'}</p>
             </div>
           </div>
           {work.notes && (
-            <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{work.notes}</p>
+            <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{work.notes}</p>
           )}
         </div>
 
         {/* Financial summary */}
         {work.salePrice != null && (
-          <div className="mx-4 mt-4 rounded-lg border border-border bg-muted/50 p-4 space-y-1.5 text-sm">
+          <div className="mx-4 mt-5 border border-border/50 bg-card p-4 space-y-2 text-sm">
+            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Financial Summary</h3>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Sale</span>
               <span>{formatCurrency(work.salePrice, work.currency)}</span>
@@ -333,12 +329,12 @@ export default function WorkDetail() {
                 <span>{formatCurrency(totalPayouts, work.currency)}</span>
               </div>
             )}
-            <Separator />
+            <div className="h-px bg-border/50 my-1" />
             <div className="flex justify-between font-medium">
               <span>Remaining</span>
               <span className={cn(
                 remainingBalance < 0 && 'text-destructive',
-                remainingBalance === 0 && 'text-emerald-600'
+                remainingBalance === 0 && 'text-success'
               )}>
                 {remainingBalance === 0 ? (
                   <span className="flex items-center gap-1">
@@ -352,16 +348,17 @@ export default function WorkDetail() {
 
         {/* Timeline */}
         <div className="px-4 pt-6">
-          <h3 className="text-base font-semibold mb-4">Timeline ({events.length} event{events.length !== 1 ? 's' : ''})</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">
+            Timeline ({events.length} event{events.length !== 1 ? 's' : ''})
+          </h3>
 
           {events.length === 0 ? (
             <p className="text-sm text-muted-foreground">No events yet</p>
           ) : (
             <div className="relative">
-              {/* Connecting line */}
-              <div className="absolute left-[5px] top-2 bottom-2 w-0.5 bg-border" />
+              <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border/50" />
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {events.map((event, idx) => {
                   const Icon = EVENT_ICONS[event.type] || MessageSquare
                   const isLast = idx === events.length - 1
@@ -369,23 +366,21 @@ export default function WorkDetail() {
                   const details = event.details as any
 
                   return (
-                    <div key={event.id} className="relative pl-6">
-                      {/* Timeline dot */}
+                    <div key={event.id} className="relative pl-7">
                       <div className={cn(
-                        'absolute left-0 top-1 h-3 w-3 rounded-full border-2',
-                        isLast ? 'border-primary bg-primary' : 'border-gray-300 bg-white'
+                        'absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border-2',
+                        isLast ? 'border-gold bg-gold' : 'border-border bg-background'
                       )} />
 
-                      {/* Event content */}
                       <div className="space-y-1">
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-muted-foreground">
-                            {formatDate(event.createdAt)} <span className="text-primary">{EVENT_TYPE_LABELS[event.type]}</span>
+                            {formatDate(event.createdAt)} <span className="text-gold/80">{EVENT_TYPE_LABELS[event.type]}</span>
                           </span>
                           {editable && (
                             <button
                               onClick={() => toast.info('Event editing coming soon')}
-                              className="text-xs text-primary hover:underline"
+                              className="text-xs text-gold/60 hover:text-gold transition-colors"
                             >
                               Edit
                             </button>
@@ -393,7 +388,6 @@ export default function WorkDetail() {
                         </div>
                         <p className="text-sm">{event.description}</p>
 
-                        {/* Type-specific details */}
                         {event.type === 'condition_update' && details?.conditionNotes && (
                           <p className="text-xs text-muted-foreground">{details.conditionNotes}</p>
                         )}
@@ -414,12 +408,11 @@ export default function WorkDetail() {
                           </p>
                         )}
                         {event.type === 'document_attach' && details?.fileName && (
-                          <a href={details.fileUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">
+                          <a href={details.fileUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-gold hover:text-gold/80">
                             {details.fileName}
                           </a>
                         )}
 
-                        {/* Event photos */}
                         {event.photoUrls.length > 0 && (
                           <div className="flex gap-1.5 pt-1 overflow-x-auto">
                             {event.photoUrls.map((url, i) => (
@@ -427,14 +420,13 @@ export default function WorkDetail() {
                                 key={i}
                                 src={url}
                                 alt=""
-                                className="h-14 w-14 flex-shrink-0 rounded object-cover cursor-pointer"
+                                className="h-14 w-14 flex-shrink-0 object-cover cursor-pointer hover:opacity-80 transition-opacity"
                                 onClick={() => window.open(url, '_blank')}
                               />
                             ))}
                           </div>
                         )}
 
-                        {/* Signature indicator */}
                         {event.type === 'intake' && details?.signatureUrl && (
                           <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
                             <PenTool className="h-3 w-3" />
@@ -452,14 +444,16 @@ export default function WorkDetail() {
       </div>
 
       {/* FAB */}
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setFabOpen(true)}
-        className="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors"
+        className="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_24px_rgba(201,169,110,0.2)] transition-colors hover:bg-gold/90"
       >
         <Plus className="h-6 w-6" />
-      </button>
+      </motion.button>
 
-      {/* FAB menu bottom sheet */}
+      {/* FAB menu */}
       <Sheet open={fabOpen} onOpenChange={setFabOpen}>
         <SheetContent side="bottom" className="max-h-[85vh]">
           <SheetHeader><SheetTitle>Add Event</SheetTitle></SheetHeader>
@@ -468,9 +462,9 @@ export default function WorkDetail() {
               <button
                 key={item.type}
                 onClick={() => { setFabOpen(false); setEventFormType(item.type) }}
-                className="flex w-full items-center gap-3 rounded-lg p-3 text-left hover:bg-muted transition-colors"
+                className="flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-secondary"
               >
-                <item.icon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
+                <item.icon className="h-5 w-5 text-gold/70" strokeWidth={1.5} />
                 <span className="text-sm font-medium">{item.label}</span>
               </button>
             ))}
@@ -478,7 +472,7 @@ export default function WorkDetail() {
         </SheetContent>
       </Sheet>
 
-      {/* Event creation form sheet */}
+      {/* Event form */}
       <EventFormSheet
         type={eventFormType}
         work={work}
@@ -487,7 +481,7 @@ export default function WorkDetail() {
         onClose={() => setEventFormType(null)}
       />
 
-      {/* Edit work sheet */}
+      {/* Edit work */}
       <EditWorkSheet
         work={work}
         galleryId={gallery!.id}
@@ -519,7 +513,7 @@ export default function WorkDetail() {
             <div className="space-y-2 pt-4">
               <button
                 onClick={() => handleExport('full')}
-                className="flex w-full flex-col rounded-lg border border-border p-4 text-left hover:bg-muted transition-colors"
+                className="flex w-full flex-col border border-border/50 bg-card p-4 text-left transition-colors hover:bg-secondary"
               >
                 <span className="text-sm font-medium">Full Timeline Export</span>
                 <span className="text-xs text-muted-foreground mt-1">All events, photos, condition history, and financials</span>
@@ -529,7 +523,7 @@ export default function WorkDetail() {
                   setExportMode('selective')
                   setSelectedEventIds(new Set(events.map((e) => e.id)))
                 }}
-                className="flex w-full flex-col rounded-lg border border-border p-4 text-left hover:bg-muted transition-colors"
+                className="flex w-full flex-col border border-border/50 bg-card p-4 text-left transition-colors hover:bg-secondary"
               >
                 <span className="text-sm font-medium">Selective Export</span>
                 <span className="text-xs text-muted-foreground mt-1">Choose which events to include</span>
@@ -546,7 +540,7 @@ export default function WorkDetail() {
                       setSelectedEventIds(new Set(events.map((e) => e.id)))
                     }
                   }}
-                  className="text-xs font-medium text-primary"
+                  className="text-xs font-medium text-gold"
                 >
                   {selectedEventIds.size === events.length ? 'Deselect all' : 'Select all'}
                 </button>
@@ -554,7 +548,7 @@ export default function WorkDetail() {
               </div>
               <div className="space-y-1 max-h-[50vh] overflow-y-auto">
                 {events.map((ev) => (
-                  <label key={ev.id} className="flex items-center gap-3 rounded-lg p-2 hover:bg-muted transition-colors cursor-pointer">
+                  <label key={ev.id} className="flex items-center gap-3 p-2 transition-colors hover:bg-secondary cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedEventIds.has(ev.id)}
@@ -564,7 +558,7 @@ export default function WorkDetail() {
                         else next.delete(ev.id)
                         setSelectedEventIds(next)
                       }}
-                      className="h-4 w-4 rounded border-border"
+                      className="h-4 w-4 rounded border-border accent-gold"
                     />
                     <div className="flex-1 min-w-0">
                       <span className="text-xs text-muted-foreground">{formatDate(ev.createdAt)}</span>
@@ -577,7 +571,7 @@ export default function WorkDetail() {
               </div>
               <Button
                 onClick={() => handleExport('selective')}
-                className="w-full h-11"
+                className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90"
                 disabled={selectedEventIds.size === 0}
               >
                 Generate PDF
@@ -589,9 +583,9 @@ export default function WorkDetail() {
 
       {/* Export progress overlay */}
       {exportProgress && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-background/90 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gold border-t-transparent" />
             <p className="text-sm text-muted-foreground">{exportProgress}</p>
           </div>
         </div>
@@ -610,44 +604,29 @@ function EventFormSheet({ type, work, events, galleryId, onClose }: {
   onClose: () => void
 }) {
   const [saving, setSaving] = useState(false)
-
-  // Condition update state
   const [condRating, setCondRating] = useState<ConditionRating | null>(null)
   const [condNotes, setCondNotes] = useState('')
-
-  // Location change state
   const currentLoc = useMemo(() => {
     const locs = events.filter((e) => e.type === 'location_change')
     return locs.length > 0 ? (locs[locs.length - 1].details as any)?.to ?? '' : ''
   }, [events])
   const [locFrom, setLocFrom] = useState(currentLoc)
   const [locTo, setLocTo] = useState('')
-
-  // Status change state
   const [newStatus, setNewStatus] = useState<WorkStatus | ''>('')
   const [statusNote, setStatusNote] = useState('')
-
-  // Note state
   const [noteText, setNoteText] = useState('')
-
-  // Sale state
   const [salePriceStr, setSalePriceStr] = useState('')
   const [saleCurrency, setSaleCurrency] = useState('USD')
   const [commissionStr, setCommissionStr] = useState('')
   const [buyerName, setBuyerName] = useState('')
   const [saleNote, setSaleNote] = useState('')
-
-  // Payout state
   const [payoutAmtStr, setPayoutAmtStr] = useState('')
   const [payoutMethod, setPayoutMethod] = useState('')
   const [payoutRef, setPayoutRef] = useState('')
   const [payoutNote, setPayoutNote] = useState('')
-
-  // Document state
   const [docFile, setDocFile] = useState<File | null>(null)
   const [docNote, setDocNote] = useState('')
 
-  // Reset form when type changes
   useEffect(() => {
     setCondRating(null); setCondNotes('')
     setLocFrom(currentLoc); setLocTo('')
@@ -659,7 +638,6 @@ function EventFormSheet({ type, work, events, galleryId, onClose }: {
     setSaving(false)
   }, [type, currentLoc])
 
-  // Financial context for payouts
   const payoutTotal = events.filter((e) => e.type === 'payout').reduce((s, e) => s + ((e.details as any)?.amount ?? 0), 0)
   const consShare = work.salePrice != null && work.commissionRate != null
     ? Math.round(work.salePrice * (1 - work.commissionRate)) : 0
@@ -754,86 +732,81 @@ function EventFormSheet({ type, work, events, galleryId, onClose }: {
         </SheetHeader>
 
         <div className="space-y-4 pt-4">
-          {/* Condition Update form */}
           {type === 'condition_update' && (
             <>
               <div>
-                <Label className="mb-2 block">Overall Condition *</Label>
+                <Label className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground">Overall Condition *</Label>
                 <div className="flex gap-2 flex-wrap">
                   {CONDITION_RATINGS.map((r) => (
                     <button key={r} type="button" onClick={() => setCondRating(r)}
-                      className={cn('rounded-full px-4 py-2 text-sm font-medium border transition-colors',
-                        condRating === r ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted text-foreground border-border'
+                      className={cn('px-4 py-2 text-sm font-medium border transition-colors',
+                        condRating === r ? 'bg-gold/10 text-gold border-gold/30' : 'bg-secondary text-foreground border-border/50 hover:border-border'
                       )}
                     >{CONDITION_LABELS[r]}</button>
                   ))}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Condition Notes *</Label>
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Condition Notes *</Label>
                 <Textarea value={condNotes} onChange={(e) => setCondNotes(e.target.value)} maxLength={2000} rows={3} placeholder="Describe what changed" />
               </div>
             </>
           )}
 
-          {/* Location Change form */}
           {type === 'location_change' && (
             <>
               <div className="space-y-2">
-                <Label>From</Label>
-                <Input value={locFrom} onChange={(e) => setLocFrom(e.target.value)} className="h-11" placeholder="Previous location" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">From</Label>
+                <Input value={locFrom} onChange={(e) => setLocFrom(e.target.value)} className="h-11 bg-card border-border/60" placeholder="Previous location" />
               </div>
               <div className="space-y-2">
-                <Label>To *</Label>
-                <Input value={locTo} onChange={(e) => setLocTo(e.target.value)} className="h-11" placeholder="New location" autoFocus />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">To *</Label>
+                <Input value={locTo} onChange={(e) => setLocTo(e.target.value)} className="h-11 bg-card border-border/60" placeholder="New location" autoFocus />
               </div>
             </>
           )}
 
-          {/* Status Change form */}
           {type === 'status_change' && (
             <>
               <div>
-                <Label className="mb-2 block">New Status *</Label>
+                <Label className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground">New Status *</Label>
                 <div className="flex gap-2 flex-wrap">
                   {WORK_STATUSES.filter((s) => s !== work.status).map((s) => (
                     <button key={s} type="button" onClick={() => setNewStatus(s)}
-                      className={cn('rounded-full px-3 py-1.5 text-sm font-medium border transition-colors',
-                        newStatus === s ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted text-foreground border-border'
+                      className={cn('px-3 py-1.5 text-sm font-medium border transition-colors',
+                        newStatus === s ? 'bg-gold/10 text-gold border-gold/30' : 'bg-secondary text-foreground border-border/50 hover:border-border'
                       )}
                     >{STATUS_LABELS[s]}</button>
                   ))}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Note</Label>
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Note</Label>
                 <Textarea value={statusNote} onChange={(e) => setStatusNote(e.target.value)} maxLength={500} rows={2} />
               </div>
             </>
           )}
 
-          {/* Note form */}
           {type === 'note' && (
             <div className="space-y-2">
-              <Label>Note *</Label>
+              <Label className="text-xs uppercase tracking-widest text-muted-foreground">Note *</Label>
               <Textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} maxLength={2000} rows={4} autoFocus />
             </div>
           )}
 
-          {/* Sale form */}
           {type === 'sale' && (
             <>
               {events.some((e) => e.type === 'sale') && (
-                <div className="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+                <div className="border border-warning/20 bg-warning/5 p-3 text-sm text-warning">
                   This work already has a sale recorded. A new sale will update the financial details.
                 </div>
               )}
               <div className="space-y-2">
-                <Label>Sale Price *</Label>
-                <Input type="number" step="0.01" min="0.01" value={salePriceStr} onChange={(e) => setSalePriceStr(e.target.value)} className="h-11" placeholder="0.00" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Sale Price *</Label>
+                <Input type="number" step="0.01" min="0.01" value={salePriceStr} onChange={(e) => setSalePriceStr(e.target.value)} className="h-11 bg-card border-border/60" placeholder="0.00" />
               </div>
               <div className="space-y-2">
-                <Label>Currency</Label>
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Currency</Label>
                 <Select value={saleCurrency} onValueChange={setSaleCurrency}>
                   <SelectTrigger className="h-11"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -842,64 +815,62 @@ function EventFormSheet({ type, work, events, galleryId, onClose }: {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Gallery Commission (%) *</Label>
-                <Input type="number" min="0" max="100" value={commissionStr} onChange={(e) => setCommissionStr(e.target.value)} className="h-11" placeholder="50" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Gallery Commission (%) *</Label>
+                <Input type="number" min="0" max="100" value={commissionStr} onChange={(e) => setCommissionStr(e.target.value)} className="h-11 bg-card border-border/60" placeholder="50" />
               </div>
               <div className="space-y-2">
-                <Label>Buyer Name</Label>
-                <Input value={buyerName} onChange={(e) => setBuyerName(e.target.value)} className="h-11" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Buyer Name</Label>
+                <Input value={buyerName} onChange={(e) => setBuyerName(e.target.value)} className="h-11 bg-card border-border/60" />
               </div>
             </>
           )}
 
-          {/* Payout form */}
           {type === 'payout' && (
             <>
               {work.salePrice != null ? (
-                <div className="rounded-lg border border-border bg-muted/50 p-3 space-y-1 text-sm">
+                <div className="border border-border/50 bg-card p-3 space-y-1 text-sm">
                   <div className="flex justify-between"><span className="text-muted-foreground">Sale price</span><span>{formatCurrency(work.salePrice, work.currency)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Commission ({work.commissionRate != null ? Math.round(work.commissionRate * 100) : 0}%)</span><span>-{formatCurrency(Math.round((work.salePrice) * (work.commissionRate ?? 0)), work.currency)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Consignor share</span><span>{formatCurrency(consShare, work.currency)}</span></div>
                   {payoutTotal > 0 && <div className="flex justify-between"><span className="text-muted-foreground">Previously paid</span><span>-{formatCurrency(payoutTotal, work.currency)}</span></div>}
-                  <Separator />
+                  <div className="h-px bg-border/50 my-1" />
                   <div className="flex justify-between font-medium"><span>Remaining</span><span>{formatCurrency(Math.round(remaining), work.currency)}</span></div>
                 </div>
               ) : (
-                <div className="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+                <div className="border border-warning/20 bg-warning/5 p-3 text-sm text-warning">
                   No sale has been recorded for this work.
                 </div>
               )}
               <div className="space-y-2">
-                <Label>Amount *</Label>
-                <Input type="number" step="0.01" min="0.01" value={payoutAmtStr} onChange={(e) => setPayoutAmtStr(e.target.value)} className="h-11" placeholder="0.00" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Amount *</Label>
+                <Input type="number" step="0.01" min="0.01" value={payoutAmtStr} onChange={(e) => setPayoutAmtStr(e.target.value)} className="h-11 bg-card border-border/60" placeholder="0.00" />
               </div>
               <div className="space-y-2">
-                <Label>Payment Method *</Label>
-                <Input value={payoutMethod} onChange={(e) => setPayoutMethod(e.target.value)} className="h-11" placeholder='Check, wire, cash, etc.' />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Payment Method *</Label>
+                <Input value={payoutMethod} onChange={(e) => setPayoutMethod(e.target.value)} className="h-11 bg-card border-border/60" placeholder='Check, wire, cash, etc.' />
               </div>
               <div className="space-y-2">
-                <Label>Reference</Label>
-                <Input value={payoutRef} onChange={(e) => setPayoutRef(e.target.value)} className="h-11" placeholder="Check #, transaction ID" />
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Reference</Label>
+                <Input value={payoutRef} onChange={(e) => setPayoutRef(e.target.value)} className="h-11 bg-card border-border/60" placeholder="Check #, transaction ID" />
               </div>
             </>
           )}
 
-          {/* Document Attach form */}
           {type === 'document_attach' && (
             <>
               <div className="space-y-2">
-                <Label>File *</Label>
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">File *</Label>
                 <Input type="file" accept=".pdf,image/jpeg,image/png" onChange={(e) => setDocFile(e.target.files?.[0] ?? null)} className="h-11" />
                 {docFile && <p className="text-xs text-muted-foreground">{docFile.name} ({(docFile.size / 1024 / 1024).toFixed(1)} MB)</p>}
               </div>
               <div className="space-y-2">
-                <Label>Note</Label>
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Note</Label>
                 <Textarea value={docNote} onChange={(e) => setDocNote(e.target.value)} maxLength={500} rows={2} placeholder="Describe this document" />
               </div>
             </>
           )}
 
-          <Button onClick={handleSave} className="w-full h-11" disabled={saving}>
+          <Button onClick={handleSave} className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90" disabled={saving}>
             {saving ? 'Saving...' : 'Save'}
           </Button>
         </div>
@@ -943,7 +914,6 @@ function EditWorkSheet({ work, galleryId, open, onClose }: {
         dimensions: dimensions.trim(), year: year.trim(), notes: notes.trim(),
         consignorId: newConsignorId,
       })
-      // Update consignor work counts if changed
       if (oldConsignorId !== newConsignorId) {
         if (oldConsignorId) await incrementConsignorWorkCount(galleryId, oldConsignorId, -1)
         if (newConsignorId) await incrementConsignorWorkCount(galleryId, newConsignorId, 1)
@@ -963,27 +933,27 @@ function EditWorkSheet({ work, galleryId, open, onClose }: {
         <SheetHeader><SheetTitle>Edit Work Details</SheetTitle></SheetHeader>
         <div className="space-y-4 pt-4">
           <div className="space-y-2">
-            <Label>Artist *</Label>
-            <Input value={artist} onChange={(e) => setArtist(e.target.value)} maxLength={200} className="h-11" />
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Artist *</Label>
+            <Input value={artist} onChange={(e) => setArtist(e.target.value)} maxLength={200} className="h-11 bg-card border-border/60" />
           </div>
           <div className="space-y-2">
-            <Label>Title *</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} className="h-11" />
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Title *</Label>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} className="h-11 bg-card border-border/60" />
           </div>
           <div className="space-y-2">
-            <Label>Medium</Label>
-            <Input value={medium} onChange={(e) => setMedium(e.target.value)} maxLength={200} className="h-11" />
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Medium</Label>
+            <Input value={medium} onChange={(e) => setMedium(e.target.value)} maxLength={200} className="h-11 bg-card border-border/60" />
           </div>
           <div className="space-y-2">
-            <Label>Dimensions</Label>
-            <Input value={dimensions} onChange={(e) => setDimensions(e.target.value)} maxLength={100} className="h-11" />
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Dimensions</Label>
+            <Input value={dimensions} onChange={(e) => setDimensions(e.target.value)} maxLength={100} className="h-11 bg-card border-border/60" />
           </div>
           <div className="space-y-2">
-            <Label>Year</Label>
-            <Input value={year} onChange={(e) => setYear(e.target.value)} maxLength={20} className="h-11" />
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Year</Label>
+            <Input value={year} onChange={(e) => setYear(e.target.value)} maxLength={20} className="h-11 bg-card border-border/60" />
           </div>
           <div className="space-y-2">
-            <Label>Consignor</Label>
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Consignor</Label>
             <Select value={consignorId} onValueChange={setConsignorId}>
               <SelectTrigger className="h-11"><SelectValue placeholder="None" /></SelectTrigger>
               <SelectContent>
@@ -993,10 +963,10 @@ function EditWorkSheet({ work, galleryId, open, onClose }: {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Notes</Label>
+            <Label className="text-xs uppercase tracking-widest text-muted-foreground">Notes</Label>
             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={2000} rows={3} />
           </div>
-          <Button onClick={handleSave} className="w-full h-11" disabled={!artist.trim() || !title.trim() || saving}>
+          <Button onClick={handleSave} className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90" disabled={!artist.trim() || !title.trim() || saving}>
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>

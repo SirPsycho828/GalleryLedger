@@ -2,12 +2,13 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/playfair-display";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: 'DM Sans Variable', sans-serif;
-    --font-sans: 'DM Sans Variable', sans-serif;
+    --font-heading: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
+    --font-sans: 'DM Sans Variable', system-ui, sans-serif;
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -28,6 +29,8 @@
     --color-background: var(--background);
     --color-success: var(--success);
     --color-warning: var(--warning);
+    --color-gold: var(--gold);
+    --color-gold-foreground: var(--gold-foreground);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -37,43 +40,57 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* GalleryLedger Design System - Light mode only */
+/* GalleryLedger Design System — "The Gallery" */
 :root {
-    /* PRD: background #FFFFFF */
-    --background: #FFFFFF;
-    /* PRD: text-primary #111827 (gray-900) */
-    --foreground: #111827;
-    /* PRD: surface-raised #FFFFFF */
-    --card: #FFFFFF;
-    --card-foreground: #111827;
-    --popover: #FFFFFF;
-    --popover-foreground: #111827;
-    /* PRD: accent #1D4ED8 (blue-700) for primary buttons/links */
-    --primary: #1D4ED8;
-    --primary-foreground: #FFFFFF;
-    /* PRD: surface #F9FAFB (gray-50) */
-    --secondary: #F9FAFB;
-    --secondary-foreground: #111827;
-    /* PRD: surface #F9FAFB */
-    --muted: #F9FAFB;
-    /* PRD: text-secondary #6B7280 (gray-500) */
-    --muted-foreground: #6B7280;
-    /* PRD: accent-subtle #EFF6FF (blue-50) */
-    --accent: #EFF6FF;
-    --accent-foreground: #1D4ED8;
-    /* PRD: destructive #DC2626 (red-600) */
-    --destructive: #DC2626;
-    /* PRD: border #E5E7EB (gray-200) */
-    --border: #E5E7EB;
-    --input: #E5E7EB;
-    /* PRD: accent #1D4ED8 for focus ring */
-    --ring: #1D4ED8;
-    /* PRD: 6px border radius */
-    --radius: 0.375rem;
-    /* PRD: success #059669 (emerald-600) */
-    --success: #059669;
-    /* PRD: warning #D97706 (amber-600) */
-    --warning: #D97706;
+    /* Deep charcoal background — like gallery walls at night */
+    --background: #0A0A0B;
+    /* Warm ivory text */
+    --foreground: #F5F0EB;
+
+    /* Card surfaces — slightly lighter charcoal */
+    --card: #141416;
+    --card-foreground: #F5F0EB;
+
+    /* Popovers/dialogs */
+    --popover: #1A1A1D;
+    --popover-foreground: #F5F0EB;
+
+    /* Primary: warm champagne gold */
+    --primary: #C9A96E;
+    --primary-foreground: #0A0A0B;
+
+    /* Secondary: muted dark surface */
+    --secondary: #1E1E22;
+    --secondary-foreground: #E0D9D0;
+
+    /* Muted elements */
+    --muted: #1E1E22;
+    --muted-foreground: #8A8480;
+
+    /* Accent: subtle warm highlight */
+    --accent: #1E1A14;
+    --accent-foreground: #C9A96E;
+
+    /* Destructive */
+    --destructive: #E54D4D;
+
+    /* Borders — very subtle, warm-tinted */
+    --border: #2A2A2E;
+    --input: #2A2A2E;
+
+    /* Focus ring — gold */
+    --ring: #C9A96E;
+
+    /* Radius — sharper for gallery aesthetic */
+    --radius: 0.25rem;
+
+    /* Status colors */
+    --success: #4ADE80;
+    --warning: #FBBF24;
+
+    /* Gold accent system */
+    --gold: #C9A96E;
+    --gold-foreground: #0A0A0B;
 }
 
 @layer base {
@@ -88,5 +105,26 @@
         @apply font-sans;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Selection color — gold tint */
+    ::selection {
+        background: rgba(201, 169, 110, 0.25);
+        color: #F5F0EB;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #2A2A2E;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3A3A3E;
     }
 }
