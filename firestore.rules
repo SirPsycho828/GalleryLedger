@@ -1,0 +1,120 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isGalleryOwner(galleryId) {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/galleries/$(galleryId)).data.ownerId == request.auth.uid;
+    }
+
+    function isValidTimestamp(field) {
+      return request.resource.data[field] == request.time;
+    }
+
+    // Valid work statuses
+    function isValidStatus(status) {
+      return status in ['intake', 'in_storage', 'on_display', 'on_loan', 'shipped', 'sold', 'returned'];
+    }
+
+    // Valid event types
+    function isValidEventType(type) {
+      return type in ['intake', 'condition_update', 'location_change', 'status_change', 'sale', 'payout', 'note', 'document_attach'];
+    }
+
+    // Galleries
+    match /galleries/{galleryId} {
+      allow create: if isSignedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.keys().hasAll(['ownerId', 'name', 'createdAt']);
+
+      allow read: if isSignedIn()
+        && resource.data.ownerId == request.auth.uid;
+
+      allow update: if isSignedIn()
+        && resource.data.ownerId == request.auth.uid
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if false;
+
+      allow list: if isSignedIn()
+        && request.auth.uid == resource.data.ownerId;
+
+      // Works subcollection
+      match /works/{workId} {
+        allow create: if isGalleryOwner(galleryId)
+          && request.resource.data.keys().hasAll(['artist', 'title', 'status', 'createdAt', 'updatedAt'])
+          && request.resource.data.artist is string
+          && request.resource.data.title is string
+          && isValidStatus(request.resource.data.status);
+
+        allow read: if isGalleryOwner(galleryId);
+
+        allow update: if isGalleryOwner(galleryId)
+          && request.resource.data.createdAt == resource.data.createdAt
+          && (!request.resource.data.keys().hasAny(['status']) || isValidStatus(request.resource.data.status));
+
+        allow delete: if isGalleryOwner(galleryId);
+
+        allow list: if isGalleryOwner(galleryId);
+
+        // Events subcollection (append-only with 15-min edit grace)
+        match /events/{eventId} {
+          allow create: if isGalleryOwner(galleryId)
+            && request.resource.data.keys().hasAll(['type', 'description', 'createdAt', 'editableUntil'])
+            && isValidEventType(request.resource.data.type);
+
+          allow read: if isGalleryOwner(galleryId);
+
+          allow update: if isGalleryOwner(galleryId)
+            && request.time <= resource.data.editableUntil
+            && request.resource.data.type == resource.data.type
+            && request.resource.data.createdAt == resource.data.createdAt
+            && request.resource.data.editableUntil == resource.data.editableUntil;
+
+          allow delete: if false;
+
+          allow list: if isGalleryOwner(galleryId);
+        }
+
+        // Photos subcollection
+        match /photos/{photoId} {
+          allow create: if isGalleryOwner(galleryId)
+            && request.resource.data.keys().hasAll(['storageUrl', 'storagePath', 'fileName', 'sortOrder', 'createdAt']);
+
+          allow read: if isGalleryOwner(galleryId);
+
+          allow update: if isGalleryOwner(galleryId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sortOrder', 'eventId', 'storageUrl']);
+
+          allow delete: if isGalleryOwner(galleryId);
+
+          allow list: if isGalleryOwner(galleryId);
+        }
+      }
+
+      // Consignors subcollection
+      match /consignors/{consignorId} {
+        allow create: if isGalleryOwner(galleryId)
+          && request.resource.data.keys().hasAll(['name', 'createdAt', 'updatedAt'])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0;
+
+        allow read: if isGalleryOwner(galleryId);
+
+        allow update: if isGalleryOwner(galleryId)
+          && request.resource.data.createdAt == resource.data.createdAt;
+
+        allow delete: if isGalleryOwner(galleryId);
+
+        allow list: if isGalleryOwner(galleryId);
+      }
+    }
+  }
+}

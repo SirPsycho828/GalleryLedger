@@ -1,0 +1,35 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "works",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "works",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "consignorId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "photos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sortOrder", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
