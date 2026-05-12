@@ -172,11 +172,14 @@ export default function WorkDetail() {
         <div className="sticky top-0 z-40 flex h-14 items-center border-b border-border/50 bg-background/95 backdrop-blur-xl px-4">
           <Skeleton className="h-5 w-32" />
         </div>
-        <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-4">
-          <Skeleton className="w-full aspect-[4/3]" />
-          <Skeleton className="h-6 w-2/3" />
-          <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-32 w-full" />
+        <div className="lg:flex">
+          <div className="h-[50vh] bg-black lg:w-1/2 lg:h-screen" />
+          <div className="px-4 pt-6 space-y-4 lg:w-1/2 lg:px-8">
+            <Skeleton className="h-8 w-2/3" />
+            <Skeleton className="h-5 w-1/2" />
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-32 w-full" />
+          </div>
         </div>
       </div>
     )
@@ -222,143 +225,140 @@ export default function WorkDetail() {
         </DropdownMenu>
       </div>
 
-      <div className="mx-auto max-w-[640px] pb-24">
-        {/* Photo carousel — edge-to-edge, no rounding, gallery-style */}
-        <div className="relative">
+      <div className="lg:flex">
+        {/* Hero section — left on desktop, full-width on mobile */}
+        <div className="relative bg-black lg:sticky lg:top-0 lg:h-screen lg:w-1/2">
           {photos.length > 0 ? (
-            <>
-              <div
-                ref={carouselRef}
-                onScroll={handleCarouselScroll}
-                className="flex snap-x snap-mandatory overflow-x-auto scrollbar-hide"
-              >
-                {photos.map((photo) => (
-                  <div key={photo.id} className="w-full flex-shrink-0 snap-center">
-                    <div className="aspect-[4/3] bg-black">
-                      <img
-                        src={photo.storageUrl}
-                        alt=""
-                        className="h-full w-full object-contain"
-                        onClick={() => window.open(photo.storageUrl, '_blank')}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="relative h-[50vh] lg:h-full">
+              <motion.img
+                layoutId={`work-image-${workId}`}
+                src={photos[carouselIndex]?.storageUrl ?? work.coverPhotoUrl}
+                alt=""
+                className="h-full w-full object-contain"
+              />
               {photos.length > 1 && (
-                <div className="flex justify-center gap-1.5 py-3">
-                  {photos.map((_, i) => (
-                    <div key={i} className={cn('h-1 w-1 rounded-full transition-colors', i === carouselIndex ? 'bg-gold' : 'bg-border')} />
+                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
+                  {photos.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCarouselIndex(idx)}
+                      className={cn(
+                        'h-1.5 w-1.5 rounded-full transition-colors',
+                        idx === carouselIndex ? 'bg-gold' : 'bg-white/40'
+                      )}
+                    />
                   ))}
                 </div>
               )}
-            </>
+            </div>
           ) : (
-            <div className="flex aspect-[4/3] items-center justify-center bg-secondary">
-              <ImagePlus className="h-12 w-12 text-muted-foreground/50" strokeWidth={1} />
+            <div className="flex h-[50vh] items-center justify-center lg:h-full">
+              <ImagePlus className="h-12 w-12 text-muted-foreground/20" strokeWidth={1} />
             </div>
           )}
         </div>
 
-        {/* Work details */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="px-4 pt-5 space-y-1"
-        >
-          <h2 className="font-heading text-2xl font-medium">{work.artist}</h2>
-          <p className="text-base italic text-muted-foreground">{work.title}</p>
-          {(work.medium || work.dimensions || work.year) && (
-            <p className="text-sm text-muted-foreground/70">
-              {[work.medium, work.dimensions, work.year].filter(Boolean).join(' \u2014 ')}
-            </p>
-          )}
-          {consignorName && (
-            <button
-              onClick={() => navigate(`/consignors/${work.consignorId}`)}
-              className="text-sm text-gold/80 transition-colors hover:text-gold"
-            >
-              Consignor: {consignorName}
-            </button>
-          )}
-          <div className="pt-2">
-            <StatusBadge status={work.status} />
-          </div>
-        </motion.div>
-
-        {/* Derived state */}
-        <div className="px-4 pt-5">
-          <div className="h-px bg-border/50 mb-4" />
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Location</span>
-              <p className="mt-0.5 text-foreground">{currentLocation || 'Not recorded'}</p>
-            </div>
-            <div>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Condition</span>
-              <p className="mt-0.5 text-foreground">{currentCondition ? CONDITION_LABELS[currentCondition as ConditionRating] || currentCondition : 'Not recorded'}</p>
-            </div>
-          </div>
-          {work.notes && (
-            <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{work.notes}</p>
-          )}
-        </div>
-
-        {/* Financial summary */}
-        {work.salePrice != null && (
-          <div className="mx-4 mt-5 border border-border/50 bg-card p-4 space-y-2 text-sm">
-            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Financial Summary</h3>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Sale</span>
-              <span>{formatCurrency(work.salePrice, work.currency)}</span>
-            </div>
-            {work.commissionRate != null && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Gallery commission ({Math.round(work.commissionRate * 100)}%)</span>
-                <span>{formatCurrency(Math.round(work.salePrice * work.commissionRate), work.currency)}</span>
-              </div>
+        {/* Content section — right on desktop, below hero on mobile */}
+        <div className="lg:w-1/2 lg:min-h-screen lg:overflow-y-auto pb-24">
+          {/* Artist info */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="px-4 py-6 lg:px-8"
+          >
+            <h1 className="font-heading text-2xl font-medium">{work.artist}</h1>
+            <p className="mt-1 text-base italic text-muted-foreground">{work.title}</p>
+            {(work.medium || work.dimensions || work.year) && (
+              <p className="mt-2 text-sm text-muted-foreground/70">
+                {[work.medium, work.dimensions, work.year].filter(Boolean).join(' — ')}
+              </p>
             )}
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Consignor share</span>
-              <span>{formatCurrency(consignorShare, work.currency)}</span>
-            </div>
-            {totalPayouts > 0 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Paid out</span>
-                <span>{formatCurrency(totalPayouts, work.currency)}</span>
-              </div>
+            {consignorName && (
+              <button
+                onClick={() => navigate(`/consignors/${work.consignorId}`)}
+                className="mt-2 block text-sm text-gold/80 transition-colors hover:text-gold"
+              >
+                Consignor: {consignorName}
+              </button>
             )}
-            <div className="h-px bg-border/50 my-1" />
-            <div className="flex justify-between font-medium">
-              <span>Remaining</span>
-              <span className={cn(
-                remainingBalance < 0 && 'text-destructive',
-                remainingBalance === 0 && 'text-success'
-              )}>
-                {remainingBalance === 0 ? (
-                  <span className="flex items-center gap-1">
-                    <CheckCircle className="h-3.5 w-3.5" /> Fully paid
+            <div className="mt-3"><StatusBadge status={work.status} /></div>
+          </motion.div>
+
+          {/* Details section */}
+          <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">Details</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Location</span>
+                <p className="mt-0.5 text-foreground">{currentLocation || 'Not recorded'}</p>
+              </div>
+              <div>
+                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Condition</span>
+                <p className="mt-0.5 text-foreground">{currentCondition ? CONDITION_LABELS[currentCondition as ConditionRating] || currentCondition : 'Not recorded'}</p>
+              </div>
+            </div>
+            {work.notes && (
+              <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{work.notes}</p>
+            )}
+          </div>
+
+          {/* Financial summary */}
+          {work.salePrice != null && (
+            <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+              <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">Financial Summary</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Sale</span>
+                  <span>{formatCurrency(work.salePrice, work.currency)}</span>
+                </div>
+                {work.commissionRate != null && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Gallery commission ({Math.round(work.commissionRate * 100)}%)</span>
+                    <span>{formatCurrency(Math.round(work.salePrice * work.commissionRate), work.currency)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Consignor share</span>
+                  <span>{formatCurrency(consignorShare, work.currency)}</span>
+                </div>
+                {totalPayouts > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Paid out</span>
+                    <span>{formatCurrency(totalPayouts, work.currency)}</span>
+                  </div>
+                )}
+                <div className="h-px bg-border/50 my-1" />
+                <div className="flex justify-between font-medium">
+                  <span>Remaining</span>
+                  <span className={cn(
+                    remainingBalance < 0 && 'text-destructive',
+                    remainingBalance === 0 && 'text-success'
+                  )}>
+                    {remainingBalance === 0 ? (
+                      <span className="flex items-center gap-1">
+                        <CheckCircle className="h-3.5 w-3.5" /> Fully paid
+                      </span>
+                    ) : formatCurrency(Math.round(remainingBalance), work.currency)}
                   </span>
-                ) : formatCurrency(Math.round(remainingBalance), work.currency)}
-              </span>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Timeline */}
-        <div className="px-4 pt-6">
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">
-            Timeline ({events.length} event{events.length !== 1 ? 's' : ''})
-          </h3>
+          {/* Timeline */}
+          <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-6">
+              Timeline ({events.length} event{events.length !== 1 ? 's' : ''})
+            </h3>
 
-          {events.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No events yet</p>
-          ) : (
-            <div className="relative">
-              <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border/50" />
+            {events.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No events yet</p>
+            ) : (
+              <div className="relative pl-6">
+                {/* Vertical gold line */}
+                <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gold/30" />
 
-              <div className="space-y-5">
                 {events.map((event, idx) => {
                   const Icon = EVENT_ICONS[event.type] || MessageSquare
                   const isLast = idx === events.length - 1
@@ -366,10 +366,17 @@ export default function WorkDetail() {
                   const details = event.details as any
 
                   return (
-                    <div key={event.id} className="relative pl-7">
+                    <motion.div
+                      key={event.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      className="relative mb-6 last:mb-0"
+                    >
+                      {/* Gold dot */}
                       <div className={cn(
-                        'absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border-2',
-                        isLast ? 'border-gold bg-gold' : 'border-border bg-background'
+                        'absolute -left-6 top-1 h-3.5 w-3.5 rounded-full border-2 border-gold',
+                        isLast ? 'bg-gold' : 'bg-background'
                       )} />
 
                       <div className="space-y-1">
@@ -398,7 +405,7 @@ export default function WorkDetail() {
                           <p className="text-xs text-muted-foreground">
                             {formatCurrency(details.salePrice, details.currency || 'USD')}
                             {details.commissionRate != null && ` (${Math.round(details.commissionRate * 100)}% commission)`}
-                            {details.buyerName && ` \u2014 Buyer: ${details.buyerName}`}
+                            {details.buyerName && ` — Buyer: ${details.buyerName}`}
                           </p>
                         )}
                         {event.type === 'payout' && details?.amount && (
@@ -434,23 +441,24 @@ export default function WorkDetail() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                   )
                 })}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
       {/* FAB */}
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.3 }}
         onClick={() => setFabOpen(true)}
-        className="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_24px_rgba(201,169,110,0.2)] transition-colors hover:bg-gold/90"
+        className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_20px_rgba(201,169,110,0.3)] md:bottom-8 md:right-8"
       >
-        <Plus className="h-6 w-6" />
+        <Plus className="h-6 w-6" strokeWidth={1.5} />
       </motion.button>
 
       {/* FAB menu */}
