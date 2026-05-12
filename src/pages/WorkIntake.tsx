@@ -244,7 +244,7 @@ export default function WorkIntake() {
     <div>
       <TopBar title="New Work" showBack onBack={handleBack} />
 
-      <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 pb-24 space-y-6">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 pb-8 space-y-6">
         {/* Section 1: Photos */}
         <div>
           <h2 className="font-heading text-base font-medium mb-3">Photos</h2>
@@ -469,13 +469,9 @@ export default function WorkIntake() {
         )}
 
         {/* Save button */}
-        <div className="fixed bottom-16 left-0 right-0 z-30 border-t border-border/50 bg-background/95 backdrop-blur-xl px-4 py-3">
-          <div className="mx-auto max-w-[640px]">
-            <Button type="submit" className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" disabled={saving}>
-              {saving ? 'Saving...' : 'Save Work'}
-            </Button>
-          </div>
-        </div>
+        <Button type="submit" className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" disabled={saving}>
+          {saving ? 'Saving...' : 'Save Work'}
+        </Button>
       </form>
 
       {/* Discard confirmation */}
