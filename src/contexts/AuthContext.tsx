@@ -102,7 +102,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function resetPassword(email: string) {
-    await sendPasswordResetEmail(auth, email)
+    await sendPasswordResetEmail(auth, email, {
+      url: `${window.location.origin}/signin`,
+      handleCodeInApp: false,
+    })
   }
 
   async function updateGalleryName(name: string) {
