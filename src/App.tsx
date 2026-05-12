@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
+import { LayoutGroup } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AuthGuard, PublicRoute } from '@/components/AuthGuard'
@@ -31,7 +32,7 @@ export default function App() {
           <Route path="/onboarding" element={<AuthGuard><Onboarding /></AuthGuard>} />
 
           {/* Authenticated routes with app shell */}
-          <Route element={<AuthGuard><AppShell /></AuthGuard>}>
+          <Route element={<AuthGuard><LayoutGroup><AppShell /></LayoutGroup></AuthGuard>}>
             <Route path="works" element={<WorkList />} />
             <Route path="works/new" element={<WorkIntake />} />
             <Route path="works/:workId" element={<WorkDetail />} />
