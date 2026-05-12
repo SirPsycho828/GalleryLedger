@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AuthGuard, PublicRoute } from '@/components/AuthGuard'
 import { AppShell } from '@/components/AppShell'
+import LandingPage from '@/pages/LandingPage'
 import SignIn from '@/pages/SignIn'
 import SignUp from '@/pages/SignUp'
 import ResetPassword from '@/pages/ResetPassword'
@@ -21,6 +22,7 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public routes */}
+          <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
           <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
           <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
           <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
@@ -30,7 +32,7 @@ export default function App() {
 
           {/* Authenticated routes with app shell */}
           <Route element={<AuthGuard><AppShell /></AuthGuard>}>
-            <Route index element={<WorkList />} />
+            <Route path="works" element={<WorkList />} />
             <Route path="works/new" element={<WorkIntake />} />
             <Route path="works/:workId" element={<WorkDetail />} />
             <Route path="consignors" element={<ConsignorList />} />
@@ -38,6 +40,9 @@ export default function App() {
             <Route path="consignors/:consignorId" element={<ConsignorDetail />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
+
+          {/* Catch-all redirect */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Toaster position="bottom-center" />
       </AuthProvider>

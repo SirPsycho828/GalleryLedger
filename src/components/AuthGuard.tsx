@@ -41,7 +41,7 @@ export function PublicRoute({ children }: { children: React.ReactNode }) {
     if (gallery && !gallery.name) {
       return <Navigate to="/onboarding" replace />
     }
-    return <Navigate to="/" replace />
+    return <Navigate to="/works" replace />
   }
 
   return <>{children}</>
