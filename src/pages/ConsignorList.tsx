@@ -86,7 +86,7 @@ export default function ConsignorList() {
         }
       />
 
-      <div className="mx-auto max-w-[640px] px-4 pt-4">
+      <div className="mx-auto max-w-4xl px-4 pt-4">
         {loading ? (
           <div className="space-y-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -111,7 +111,7 @@ export default function ConsignorList() {
             </Button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.length === 0 ? (
               <p className="py-16 text-center text-sm text-muted-foreground">No matching consignors</p>
             ) : (

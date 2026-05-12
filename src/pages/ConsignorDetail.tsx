@@ -123,7 +123,7 @@ export default function ConsignorDetail() {
     return (
       <div>
         <TopBar title="..." showBack />
-        <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-4">
+        <div className="mx-auto max-w-3xl px-4 pt-4 space-y-4">
           <Skeleton className="h-6 w-1/2" />
           <Skeleton className="h-4 w-1/3" />
           <Skeleton className="h-32 w-full" />
@@ -136,7 +136,7 @@ export default function ConsignorDetail() {
     return (
       <div>
         <TopBar title="Not Found" showBack />
-        <div className="mx-auto max-w-[640px] px-4 pt-8 text-center">
+        <div className="mx-auto max-w-3xl px-4 pt-8 text-center">
           <p className="text-muted-foreground">Consignor not found</p>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function ConsignorDetail() {
         }
       />
 
-      <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-6">
+      <div className="mx-auto max-w-3xl px-4 pt-4 space-y-6">
         {/* Contact info */}
         <div className="space-y-2">
           {consignor.email && (
