@@ -230,12 +230,22 @@ export default function WorkDetail() {
         <div className="relative bg-black lg:sticky lg:top-0 lg:h-screen lg:w-1/2">
           {photos.length > 0 ? (
             <div className="relative h-[50vh] lg:h-full">
-              <motion.img
-                layoutId={`work-image-${workId}`}
-                src={photos[carouselIndex]?.storageUrl ?? work.coverPhotoUrl}
-                alt=""
-                className="h-full w-full object-contain"
-              />
+              <div
+                ref={carouselRef}
+                onScroll={handleCarouselScroll}
+                className="flex h-full snap-x snap-mandatory overflow-x-auto scrollbar-hide"
+              >
+                {photos.map((photo, idx) => (
+                  <div key={photo.id} className="h-full w-full flex-shrink-0 snap-center">
+                    <motion.img
+                      {...(idx === 0 ? { layoutId: `work-image-${workId}` } : {})}
+                      src={photo.storageUrl}
+                      alt=""
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
               {photos.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
                   {photos.map((_, idx) => (
@@ -286,9 +296,32 @@ export default function WorkDetail() {
           </motion.div>
 
           {/* Details section */}
-          <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="border-t border-border/30 px-4 py-6 lg:px-8"
+          >
             <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">Details</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              {work.medium && (
+                <div>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Medium</span>
+                  <p className="mt-0.5 text-foreground">{work.medium}</p>
+                </div>
+              )}
+              {work.dimensions && (
+                <div>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Dimensions</span>
+                  <p className="mt-0.5 text-foreground">{work.dimensions}</p>
+                </div>
+              )}
+              {work.year && (
+                <div>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Year</span>
+                  <p className="mt-0.5 text-foreground">{work.year}</p>
+                </div>
+              )}
               <div>
                 <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Location</span>
                 <p className="mt-0.5 text-foreground">{currentLocation || 'Not recorded'}</p>
@@ -301,11 +334,16 @@ export default function WorkDetail() {
             {work.notes && (
               <p className="mt-3 text-sm text-muted-foreground line-clamp-3">{work.notes}</p>
             )}
-          </div>
+          </motion.div>
 
           {/* Financial summary */}
           {work.salePrice != null && (
-            <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="border-t border-border/30 px-4 py-6 lg:px-8"
+            >
               <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-4">Financial Summary</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -343,11 +381,16 @@ export default function WorkDetail() {
                   </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Timeline */}
-          <div className="border-t border-border/30 px-4 py-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="border-t border-border/30 px-4 py-6 lg:px-8"
+          >
             <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-6">
               Timeline ({events.length} event{events.length !== 1 ? 's' : ''})
             </h3>
@@ -446,7 +489,7 @@ export default function WorkDetail() {
                 })}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
 
