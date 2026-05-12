@@ -127,4 +127,16 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #3A3A3E;
     }
+
+    /* Shimmer animation for loading skeletons */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Ken Burns slow zoom for landing hero */
+    @keyframes ken-burns {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
 }
