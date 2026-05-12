@@ -15,8 +15,8 @@ export default defineConfig({
         short_name: 'GalleryLedger',
         display: 'standalone',
         orientation: 'portrait',
-        theme_color: '#FFFFFF',
-        background_color: '#FFFFFF',
+        theme_color: '#0a0a0a',
+        background_color: '#0a0a0a',
         start_url: '/',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -24,6 +24,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        navigateFallbackDenylist: [/^\/__\//],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/i,
