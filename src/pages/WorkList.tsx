@@ -6,81 +6,79 @@ import { subscribeToWorks } from '@/lib/services'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Skeleton } from '@/components/ui/skeleton'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Work, WorkStatus } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS } from '@/types'
 import { cn } from '@/lib/utils'
 
-const STATUS_COLORS: Record<WorkStatus, { bg: string; text: string; dot: string }> = {
-  intake: { bg: 'bg-blue-500/10', text: 'text-blue-400', dot: 'bg-blue-400' },
-  in_storage: { bg: 'bg-zinc-500/10', text: 'text-zinc-400', dot: 'bg-zinc-400' },
-  on_display: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', dot: 'bg-emerald-400' },
-  on_loan: { bg: 'bg-amber-500/10', text: 'text-amber-400', dot: 'bg-amber-400' },
-  shipped: { bg: 'bg-purple-500/10', text: 'text-purple-400', dot: 'bg-purple-400' },
-  sold: { bg: 'bg-gold/10', text: 'text-gold', dot: 'bg-gold' },
-  returned: { bg: 'bg-zinc-500/10', text: 'text-zinc-500', dot: 'bg-zinc-500' },
+const STATUS_COLORS: Record<WorkStatus, string> = {
+  intake: 'bg-blue-400',
+  in_storage: 'bg-zinc-400',
+  on_display: 'bg-emerald-400',
+  on_loan: 'bg-amber-400',
+  shipped: 'bg-purple-400',
+  sold: 'bg-gold',
+  returned: 'bg-zinc-500',
 }
 
 export function StatusBadge({ status }: { status: WorkStatus }) {
-  const colors = STATUS_COLORS[status]
   return (
-    <span className={cn(
-      'inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider',
-      colors.bg, colors.text
-    )}>
-      <span className={cn('h-1 w-1 rounded-full', colors.dot)} />
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider bg-black/40 backdrop-blur-sm">
+      <span className={cn('h-1.5 w-1.5 rounded-full', STATUS_COLORS[status])} />
       {STATUS_LABELS[status]}
     </span>
   )
 }
 
-function WorkCard({ work, onClick, index }: { work: Work; onClick: () => void; index: number }) {
+function ArtCard({ work, onClick, index }: { work: Work; onClick: () => void; index: number }) {
   return (
     <motion.button
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.04 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
       onClick={onClick}
-      className="group flex w-full items-start gap-4 border-b border-border/50 bg-transparent p-4 text-left transition-colors hover:bg-card"
+      className="group relative aspect-[4/5] w-full overflow-hidden bg-card text-left"
     >
       {work.coverPhotoUrl ? (
-        <img
+        <motion.img
+          layoutId={`work-image-${work.id}`}
           src={work.coverPhotoUrl}
           alt=""
-          className="h-[80px] w-[80px] flex-shrink-0 object-cover transition-transform group-hover:scale-[1.02]"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
       ) : (
-        <div className="flex h-[80px] w-[80px] flex-shrink-0 items-center justify-center bg-secondary">
-          <ImagePlus className="h-5 w-5 text-muted-foreground" strokeWidth={1} />
+        <div className="flex h-full w-full items-center justify-center bg-secondary">
+          <ImagePlus className="h-8 w-8 text-muted-foreground/30" strokeWidth={1} />
         </div>
       )}
-      <div className="flex-1 min-w-0 space-y-1 py-0.5">
-        <p className="truncate text-sm font-medium text-foreground">{work.artist}</p>
-        <p className="truncate text-sm italic text-muted-foreground">{work.title}</p>
-        {(work.medium || work.dimensions) && (
-          <p className="truncate text-xs text-muted-foreground/70">
-            {[work.medium, work.dimensions].filter(Boolean).join(' \u2014 ')}
-          </p>
-        )}
-        <StatusBadge status={work.status} />
+
+      {/* Status dot */}
+      <div className="absolute top-2.5 right-2.5">
+        <span className={cn('block h-2 w-2 rounded-full', STATUS_COLORS[work.status])} />
       </div>
+
+      {/* Text overlay */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-3 pt-10">
+        <p className="truncate font-heading text-[13px] font-medium leading-tight text-white">
+          {work.artist}
+        </p>
+        <p className="mt-0.5 truncate text-[11px] italic text-white/65">
+          {work.title}
+        </p>
+      </div>
+
+      {/* Hover border (desktop) */}
+      <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-200 group-hover:border-gold/40" />
     </motion.button>
   )
 }
 
-function WorkListSkeleton() {
+function GridSkeleton() {
   return (
-    <div className="divide-y divide-border/50">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="flex items-start gap-4 p-4">
-          <Skeleton className="h-[80px] w-[80px]" />
-          <div className="flex-1 space-y-2 py-1">
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-3 w-1/3" />
-          </div>
-        </div>
+    <div className="grid grid-cols-2 gap-0.5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-1">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="aspect-[4/5] animate-[shimmer_1.5s_ease-in-out_infinite] rounded-none bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%]" />
       ))}
     </div>
   )
@@ -172,9 +170,11 @@ export default function WorkList() {
         }
       />
 
-      <div className="mx-auto max-w-[640px]">
+      <div className="mx-auto max-w-6xl">
         {loading ? (
-          <WorkListSkeleton />
+          <div className="px-0.5 pt-2 lg:px-4">
+            <GridSkeleton />
+          </div>
         ) : !hasWorks ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -228,7 +228,7 @@ export default function WorkList() {
               ))}
             </div>
 
-            {/* Work list */}
+            {/* Art grid */}
             {filteredWorks.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -238,15 +238,17 @@ export default function WorkList() {
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-border/30">
-                {filteredWorks.map((work, i) => (
-                  <WorkCard
-                    key={work.id}
-                    work={work}
-                    onClick={() => navigate(`/works/${work.id}`)}
-                    index={i}
-                  />
-                ))}
+              <div className="grid grid-cols-2 gap-0.5 px-0.5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-1 lg:px-4">
+                <AnimatePresence mode="popLayout">
+                  {filteredWorks.map((work, i) => (
+                    <ArtCard
+                      key={work.id}
+                      work={work}
+                      onClick={() => navigate(`/works/${work.id}`)}
+                      index={i}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
             )}
           </>
