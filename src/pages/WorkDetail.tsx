@@ -499,7 +499,7 @@ export default function WorkDetail() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.3 }}
         onClick={() => setFabOpen(true)}
-        className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_20px_rgba(201,169,110,0.3)] md:bottom-8 md:right-8"
+        className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_20px_rgba(184,149,106,0.3)] md:bottom-8 md:right-8"
       >
         <Plus className="h-6 w-6" strokeWidth={1.5} />
       </motion.button>

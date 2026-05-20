@@ -116,7 +116,7 @@ export default function ResetPassword() {
 
           <Button
             type="submit"
-            className="h-12 w-full bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground transition-all hover:bg-gold/90 hover:shadow-[0_0_20px_rgba(201,169,110,0.15)]"
+            className="h-12 w-full bg-gold text-[13px] font-medium uppercase tracking-[0.08em] text-gold-foreground transition-all hover:bg-gold/90 hover:shadow-[0_0_20px_rgba(184,149,106,0.15)]"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Send Reset Link'}

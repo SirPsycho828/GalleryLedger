@@ -1,4 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="4" fill="#1a1a1a"/>
-  <text x="16" y="22.5" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="500" fill="#C9A96E" letter-spacing="-0.5">GL</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #0B0A09; }
+    .frame { fill: none; stroke: #B8956A; stroke-width: 1.5; }
+    .inner { fill: none; stroke: #B8956A; stroke-width: 0.75; opacity: 0.5; }
+    .canvas { fill: #151413; }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #F7F3ED; }
+      .frame { stroke: #8B7355; }
+      .inner { stroke: #8B7355; }
+      .canvas { fill: #EDE8E0; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="4"/>
+  <!-- Outer frame -->
+  <rect class="frame" x="5" y="6" width="22" height="20" rx="1"/>
+  <!-- Inner mat -->
+  <rect class="inner" x="8" y="9" width="16" height="14" rx="0.5"/>
+  <!-- Canvas/artwork area -->
+  <rect class="canvas" x="9.5" y="10.5" width="13" height="11" rx="0.25"/>
+  <!-- Stylized landscape in the frame — abstract mountain + sun -->
+  <circle cx="19" cy="14" r="1.5" fill="#B8956A" opacity="0.6"/>
+  <path d="M10 20 L14 14.5 L17 17 L20 13 L22 20Z" fill="#B8956A" opacity="0.35"/>
 </svg>

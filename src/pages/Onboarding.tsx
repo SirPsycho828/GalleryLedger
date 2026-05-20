@@ -70,7 +70,7 @@ export default function Onboarding() {
 
             <Button
               type="submit"
-              className="h-12 w-full bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground transition-all hover:bg-gold/90"
+              className="h-12 w-full bg-gold text-[13px] font-medium uppercase tracking-[0.08em] text-gold-foreground transition-all hover:bg-gold/90"
               disabled={!galleryName.trim() || loading}
             >
               {loading ? 'Saving...' : 'Continue'}
@@ -105,7 +105,7 @@ export default function Onboarding() {
 
         <div className="mt-8 space-y-3">
           <Button
-            className="h-12 w-full bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground transition-all hover:bg-gold/90"
+            className="h-12 w-full bg-gold text-[13px] font-medium uppercase tracking-[0.08em] text-gold-foreground transition-all hover:bg-gold/90"
             onClick={() => navigate('/works/new')}
           >
             Add Your First Work
