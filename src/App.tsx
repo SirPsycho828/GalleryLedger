@@ -3,6 +3,7 @@ import { LayoutGroup } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AuthGuard, PublicRoute } from '@/components/AuthGuard'
+import { TourProvider } from '@/contexts/TourContext'
 import { AppShell } from '@/components/AppShell'
 import LandingPage from '@/pages/LandingPage'
 import SignIn from '@/pages/SignIn'
@@ -32,7 +33,7 @@ export default function App() {
           <Route path="/onboarding" element={<AuthGuard><Onboarding /></AuthGuard>} />
 
           {/* Authenticated routes with app shell */}
-          <Route element={<AuthGuard><LayoutGroup><AppShell /></LayoutGroup></AuthGuard>}>
+          <Route element={<AuthGuard><TourProvider><LayoutGroup><AppShell /></LayoutGroup></TourProvider></AuthGuard>}>
             <Route path="works" element={<WorkList />} />
             <Route path="works/new" element={<WorkIntake />} />
             <Route path="works/:workId" element={<WorkDetail />} />

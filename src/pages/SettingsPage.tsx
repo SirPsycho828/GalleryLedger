@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
+import { STORAGE_KEY as TOUR_STORAGE_KEY } from '@/contexts/TourContext'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -12,6 +14,13 @@ export default function SettingsPage() {
   const [showSignOutDialog, setShowSignOutDialog] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [newName, setNewName] = useState(gallery?.name ?? '')
+  const navigate = useNavigate()
+
+  function handleReplayTour() {
+    localStorage.removeItem(TOUR_STORAGE_KEY)
+    navigate('/works')
+    // WorkList's auto-start useEffect handles setFirstWorkId + startTour
+  }
 
   async function handleSaveName() {
     if (newName.trim()) {
@@ -45,6 +54,34 @@ export default function SettingsPage() {
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
         </div>
+
+        <Separator className="opacity-50" />
+
+        {/* Restart Setup Wizard */}
+        <button
+          onClick={() => navigate('/onboarding?restart=true')}
+          className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
+        >
+          <div>
+            <p className="text-sm font-medium">Restart Setup Wizard</p>
+            <p className="text-sm text-muted-foreground">Re-run the onboarding flow</p>
+          </div>
+          <span className="text-xs text-gold/70">Start</span>
+        </button>
+
+        <Separator className="opacity-50" />
+
+        {/* Replay App Tour */}
+        <button
+          onClick={handleReplayTour}
+          className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
+        >
+          <div>
+            <p className="text-sm font-medium">Replay App Tour</p>
+            <p className="text-sm text-muted-foreground">Re-run the guided walkthrough</p>
+          </div>
+          <span className="text-xs text-gold/70">Start</span>
+        </button>
 
         <Separator className="opacity-50" />
 

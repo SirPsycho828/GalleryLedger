@@ -11,6 +11,7 @@ import type { Work, WorkStatus } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS } from '@/types'
 import { cn } from '@/lib/utils'
 import { GuidanceTip } from '@/components/ux/GuidanceTip'
+import { useTour, isTourCompleted } from '@/contexts/TourContext'
 
 const STATUS_COLORS: Record<WorkStatus, string> = {
   intake: 'bg-blue-400',
@@ -93,6 +94,7 @@ export default function WorkList() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<WorkStatus | 'all'>('all')
+  const tour = useTour()
 
   useEffect(() => {
     if (!gallery) return
@@ -102,6 +104,19 @@ export default function WorkList() {
     })
     return unsub
   }, [gallery])
+
+  // Auto-start tour on first visit
+  useEffect(() => {
+    if (loading || isTourCompleted()) return
+    // Give DOM time to render targets
+    const timer = setTimeout(() => {
+      tour.setFirstWorkId(works.length > 0 ? works[0].id : null)
+      tour.startTour()
+    }, 600)
+    return () => clearTimeout(timer)
+    // Intentionally depends only on `loading` — we want this to fire exactly once
+    // when works finish loading. `works` and `tour` are captured at that moment.
+  }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: works.length }
@@ -165,6 +180,7 @@ export default function WorkList() {
               <button
                 onClick={() => navigate('/works/new')}
                 aria-label="Add new work"
+                data-tour="add-work"
                 className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors"
               >
                 <Plus className="h-5 w-5" strokeWidth={1.5} />
