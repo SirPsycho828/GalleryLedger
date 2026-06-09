@@ -1,5 +1,7 @@
+import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { TopBar } from '@/components/TopBar'
+import { useTour } from '@/contexts/TourContext'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
@@ -12,6 +14,15 @@ export default function SettingsPage() {
   const [showSignOutDialog, setShowSignOutDialog] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [newName, setNewName] = useState(gallery?.name ?? '')
+  const navigate = useNavigate()
+  const tour = useTour()
+
+  function handleReplayTour() {
+    localStorage.removeItem('gl-tour-completed')
+    navigate('/works')
+    // Small delay to let navigation complete, then start
+    setTimeout(() => tour.startTour(), 700)
+  }
 
   async function handleSaveName() {
     if (newName.trim()) {
@@ -45,6 +56,20 @@ export default function SettingsPage() {
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
         </div>
+
+        <Separator className="opacity-50" />
+
+        {/* Replay App Tour */}
+        <button
+          onClick={handleReplayTour}
+          className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
+        >
+          <div>
+            <p className="text-sm font-medium">Replay App Tour</p>
+            <p className="text-sm text-muted-foreground">Re-run the guided walkthrough</p>
+          </div>
+          <span className="text-xs text-gold/70">Start</span>
+        </button>
 
         <Separator className="opacity-50" />
 
