@@ -79,7 +79,7 @@ export default function WorkDetail() {
   const [exportMode, setExportMode] = useState<'full' | 'selective' | null>(null)
   const [selectedEventIds, setSelectedEventIds] = useState<Set<string>>(new Set())
   const [exportProgress, setExportProgress] = useState<string | null>(null)
-  const tour = useTour()
+  const { pendingStep, resumeAtStep } = useTour()
 
   useEffect(() => {
     if (!gallery || !workId) return
@@ -96,14 +96,14 @@ export default function WorkDetail() {
 
   // Resume tour for stops 5-6 (cross-page navigation from stop 4)
   useEffect(() => {
-    if (tour.pendingStep !== null && !loading) {
-      const step = tour.pendingStep
+    if (pendingStep !== null && !loading) {
+      const step = pendingStep
       const timer = setTimeout(() => {
-        tour.resumeAtStep(step)
+        resumeAtStep(step)
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [tour.pendingStep, loading]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pendingStep, loading, resumeAtStep])
 
   const currentLocation = useMemo(() => {
     const locationEvents = events.filter((e) => e.type === 'location_change')

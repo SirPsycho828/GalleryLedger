@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
+import { STORAGE_KEY as TOUR_STORAGE_KEY } from '@/contexts/TourContext'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -16,7 +17,7 @@ export default function SettingsPage() {
   const navigate = useNavigate()
 
   function handleReplayTour() {
-    localStorage.removeItem('gl-tour-completed')
+    localStorage.removeItem(TOUR_STORAGE_KEY)
     navigate('/works')
     // WorkList's auto-start useEffect handles setFirstWorkId + startTour
   }

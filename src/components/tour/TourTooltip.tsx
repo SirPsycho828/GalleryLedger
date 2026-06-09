@@ -26,6 +26,8 @@ export function TourTooltip({
 
   return (
     <motion.div
+      role="dialog"
+      aria-label={`Tour step ${currentStep + 1} of ${totalSteps}: ${title}`}
       initial={{ opacity: 0, y: placement === 'top' ? -8 : 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: placement === 'top' ? -8 : 8 }}
@@ -64,12 +66,15 @@ export function TourTooltip({
           <div className="flex items-center gap-3">
             <button
               onClick={onSkip}
+              aria-label="Skip tour"
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               Skip
             </button>
             <button
               onClick={onNext}
+              aria-label={isLast ? 'Finish tour' : 'Next step'}
+              autoFocus
               className="bg-gold px-3 py-1.5 text-xs font-medium text-gold-foreground transition-colors hover:bg-gold/90"
             >
               {isLast ? 'Done' : 'Next'}

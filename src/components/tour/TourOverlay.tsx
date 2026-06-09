@@ -57,7 +57,7 @@ function computeTooltipPosition(
       }
     case 'top':
       return {
-        top: rect.top - TOOLTIP_GAP - 140,
+        top: rect.top - TOOLTIP_GAP - 170, // approximate: title + 2-line content + dots/buttons + padding
         left: Math.max(16, Math.min(rect.left, window.innerWidth - tooltipWidth - 16)),
       }
     case 'right':
@@ -82,10 +82,10 @@ export function TourOverlay({ stops, currentStep, onNext, onSkip }: TourOverlayP
     const rect = getTargetRect(stop.target)
     if (rect) {
       setTargetRect(rect)
-    } else {
-      onNext()
     }
-  }, [stop, onNext])
+    // Don't call onNext here — only the mount effect handles missing targets.
+    // The resize handler should silently ignore a disappeared element.
+  }, [stop])
 
   useEffect(() => {
     if (!stop) return
@@ -102,10 +102,20 @@ export function TourOverlay({ stops, currentStep, onNext, onSkip }: TourOverlayP
     }
   }, [stop, updateRect, onNext])
 
+  // Recalculate on resize
   useEffect(() => {
     window.addEventListener('resize', updateRect)
     return () => window.removeEventListener('resize', updateRect)
   }, [updateRect])
+
+  // Escape key dismisses the tour
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onSkip()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onSkip])
 
   if (!stop || !targetRect) return null
 

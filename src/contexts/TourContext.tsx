@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { TourOverlay, type TourStop } from '@/components/tour/TourOverlay'
 
-const STORAGE_KEY = 'gl-tour-completed'
+export const STORAGE_KEY = 'gl-tour-completed'
 
 interface TourContextValue {
   isTourActive: boolean
@@ -68,7 +68,10 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const [pendingStep, setPendingStep] = useState<number | null>(null)
   const [firstWorkId, setFirstWorkId] = useState<string | null>(null)
 
-  const stops = firstWorkId ? [...BASE_STOPS, ...DETAIL_STOPS] : BASE_STOPS
+  const stops = useMemo(
+    () => (firstWorkId ? [...BASE_STOPS, ...DETAIL_STOPS] : BASE_STOPS),
+    [firstWorkId],
+  )
 
   const endTour = useCallback(() => {
     setActive(false)

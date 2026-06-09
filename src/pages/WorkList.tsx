@@ -114,6 +114,8 @@ export default function WorkList() {
       tour.startTour()
     }, 600)
     return () => clearTimeout(timer)
+    // Intentionally depends only on `loading` — we want this to fire exactly once
+    // when works finish loading. `works` and `tour` are captured at that moment.
   }, [loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const statusCounts = useMemo(() => {
