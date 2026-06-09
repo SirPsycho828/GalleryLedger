@@ -29,6 +29,7 @@ import { motion } from 'framer-motion'
 import { StatusBadge } from '@/pages/WorkList'
 import type { Work, TimelineEvent, Photo, Consignor, EventType, WorkStatus, ConditionRating } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS, CONDITION_RATINGS, EVENT_TYPE_LABELS, CURRENCIES } from '@/types'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 
 const EVENT_ICONS: Record<EventType, typeof Plus> = {
   intake: ImagePlus,
@@ -41,14 +42,14 @@ const EVENT_ICONS: Record<EventType, typeof Plus> = {
   document_attach: Paperclip,
 }
 
-const FAB_MENU: { type: EventType; label: string; icon: typeof Plus }[] = [
-  { type: 'condition_update', label: 'Condition Update', icon: RefreshCw },
-  { type: 'location_change', label: 'Location Change', icon: MapPin },
-  { type: 'status_change', label: 'Status Change', icon: RefreshCw },
-  { type: 'note', label: 'Note', icon: MessageSquare },
-  { type: 'sale', label: 'Sale', icon: DollarSign },
-  { type: 'payout', label: 'Payout', icon: CreditCard },
-  { type: 'document_attach', label: 'Attach Document', icon: Paperclip },
+const FAB_MENU: { type: EventType; label: string; icon: typeof Plus; description: string }[] = [
+  { type: 'condition_update', label: 'Condition Update', icon: RefreshCw, description: "Record changes to the artwork's physical condition" },
+  { type: 'location_change', label: 'Location Change', icon: MapPin, description: 'Log where the work has been moved to' },
+  { type: 'status_change', label: 'Status Change', icon: RefreshCw, description: 'Update intake, display, storage, or sold status' },
+  { type: 'note', label: 'Note', icon: MessageSquare, description: 'Add a freeform observation or memo' },
+  { type: 'sale', label: 'Sale', icon: DollarSign, description: 'Record sale price and commission details' },
+  { type: 'payout', label: 'Payout', icon: CreditCard, description: 'Log a payment made to the consignor' },
+  { type: 'document_attach', label: 'Attach Document', icon: Paperclip, description: 'Attach a contract, receipt, or certificate' },
 ]
 
 const CONDITION_LABELS: Record<ConditionRating, string> = {
@@ -209,8 +210,9 @@ export default function WorkDetail() {
           <ArrowLeft className="h-5 w-5" strokeWidth={1.5} />
         </button>
         <h1 className="flex-1 truncate font-heading text-lg font-medium">{work.title}</h1>
-        <button onClick={() => setExportOpen(true)} className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors">
+        <button onClick={() => setExportOpen(true)} aria-label="Export provenance PDF" className="flex h-11 items-center justify-center gap-1.5 px-2 text-muted-foreground hover:text-gold transition-colors">
           <Share className="h-5 w-5" strokeWidth={1.5} />
+          <span className="text-xs font-medium">Export</span>
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -336,6 +338,78 @@ export default function WorkDetail() {
             )}
           </motion.div>
 
+          {/* UX-005: Guidance tip — timeline orientation */}
+          <div className="px-4 lg:px-8 pb-2">
+            <GuidanceTip id="work-detail-timeline">
+              Every change to this work is recorded in the timeline below. Use the + button to log condition updates, location moves, sales, and more.
+            </GuidanceTip>
+          </div>
+
+          {/* UX-001: State-aware next-step card */}
+          {(() => {
+            const hasLocationEvents = events.some((e) => e.type === 'location_change')
+            const hasPayoutEvents = events.some((e) => e.type === 'payout')
+            const nonIntakeEvents = events.filter((e) => e.type !== 'intake')
+            if (work.status === 'intake' && !hasLocationEvents) {
+              return (
+                <div className="px-4 lg:px-8 pb-4">
+                  <button
+                    onClick={() => { setFabOpen(true) }}
+                    className="flex w-full items-center gap-4 border-l-2 border-l-gold/50 bg-card px-4 py-3.5 text-left transition-colors hover:bg-secondary"
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-gold/20 bg-gold/5 text-gold">
+                      <MapPin className="h-4 w-4" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">Log storage location</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Record where this work is currently stored</p>
+                    </div>
+                    <span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-gold/70">Add</span>
+                  </button>
+                </div>
+              )
+            }
+            if (work.status === 'sold' && !hasPayoutEvents) {
+              return (
+                <div className="px-4 lg:px-8 pb-4">
+                  <button
+                    onClick={() => { setFabOpen(true) }}
+                    className="flex w-full items-center gap-4 border-l-2 border-l-gold/50 bg-card px-4 py-3.5 text-left transition-colors hover:bg-secondary"
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-gold/20 bg-gold/5 text-gold">
+                      <CreditCard className="h-4 w-4" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">Record consignor payout</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Log the payment made to the consignor for this sale</p>
+                    </div>
+                    <span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-gold/70">Add</span>
+                  </button>
+                </div>
+              )
+            }
+            if (nonIntakeEvents.length === 0) {
+              return (
+                <div className="px-4 lg:px-8 pb-4">
+                  <button
+                    onClick={() => { setFabOpen(true) }}
+                    className="flex w-full items-center gap-4 border-l-2 border-l-gold/50 bg-card px-4 py-3.5 text-left transition-colors hover:bg-secondary"
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-gold/20 bg-gold/5 text-gold">
+                      <Plus className="h-4 w-4" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium">Start building provenance</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">Log a condition update or location change to begin the record</p>
+                    </div>
+                    <span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-gold/70">Add</span>
+                  </button>
+                </div>
+              )
+            }
+            return null
+          })()}
+
           {/* Financial summary */}
           {work.salePrice != null && (
             <motion.div
@@ -395,9 +469,10 @@ export default function WorkDetail() {
               Timeline ({events.length} event{events.length !== 1 ? 's' : ''})
             </h3>
 
-            {events.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No events yet</p>
-            ) : (
+            {events.filter((e) => e.type !== 'intake').length === 0 && (
+              <p className="text-sm text-muted-foreground mb-4">No events recorded yet. Use the + button below to start building this work's provenance trail.</p>
+            )}
+            {events.length === 0 ? null : (
               <div className="relative pl-6">
                 {/* Vertical gold line */}
                 <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gold/30" />
@@ -515,8 +590,11 @@ export default function WorkDetail() {
                 onClick={() => { setFabOpen(false); setEventFormType(item.type) }}
                 className="flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-secondary"
               >
-                <item.icon className="h-5 w-5 text-gold/70" strokeWidth={1.5} />
-                <span className="text-sm font-medium">{item.label}</span>
+                <item.icon className="h-5 w-5 shrink-0 text-gold/70" strokeWidth={1.5} />
+                <div className="min-w-0">
+                  <span className="block text-sm font-medium">{item.label}</span>
+                  <span className="block text-xs text-muted-foreground">{item.description}</span>
+                </div>
               </button>
             ))}
           </div>
@@ -560,6 +638,9 @@ export default function WorkDetail() {
       <Sheet open={exportOpen} onOpenChange={(o) => { if (!o) { setExportOpen(false); setExportMode(null) } }}>
         <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
           <SheetHeader><SheetTitle>Export Provenance Pack</SheetTitle></SheetHeader>
+          <p className="mt-2 text-sm text-muted-foreground px-0">
+            Generate a PDF provenance report with cover photo, condition history, timeline events, and financial summary. Choose full export or select specific events.
+          </p>
           {!exportMode ? (
             <div className="space-y-2 pt-4">
               <button

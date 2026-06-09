@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { Work, WorkStatus } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS } from '@/types'
 import { cn } from '@/lib/utils'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 
 const STATUS_COLORS: Record<WorkStatus, string> = {
   intake: 'bg-blue-400',
@@ -127,6 +128,7 @@ export default function WorkList() {
   }, [works, statusFilter, searchQuery])
 
   const hasWorks = works.length > 0
+  const allIntake = hasWorks && works.every((w) => w.status === 'intake')
 
   return (
     <div>
@@ -154,6 +156,7 @@ export default function WorkList() {
               {hasWorks && (
                 <button
                   onClick={() => setSearchOpen(true)}
+                  aria-label="Search works"
                   className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors"
                 >
                   <Search className="h-5 w-5" strokeWidth={1.5} />
@@ -161,6 +164,7 @@ export default function WorkList() {
               )}
               <button
                 onClick={() => navigate('/works/new')}
+                aria-label="Add new work"
                 className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-gold transition-colors"
               >
                 <Plus className="h-5 w-5" strokeWidth={1.5} />
@@ -197,6 +201,27 @@ export default function WorkList() {
           </motion.div>
         ) : (
           <>
+            {/* Metrics summary */}
+            <div className="px-4 pt-3 pb-1">
+              <p className="text-xs text-muted-foreground">
+                {works.length} {works.length === 1 ? 'work' : 'works'}
+                {statusCounts['on_display'] > 0 && ` — ${statusCounts['on_display']} on display`}
+                {statusCounts['sold'] > 0 && ` — ${statusCounts['sold']} sold`}
+              </p>
+            </div>
+
+            {/* Guidance tip */}
+            <div className="px-4 pb-1">
+              <GuidanceTip id="works-list-guide">
+                Filter by status to find works quickly. Tap any work to view its full provenance history.
+              </GuidanceTip>
+              {allIntake && (
+                <GuidanceTip id="works-all-intake" className="mt-1">
+                  All your works are in intake status. Tap a work and use the + button to log a location change or status update.
+                </GuidanceTip>
+              )}
+            </div>
+
             {/* Status filter chips */}
             <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide">
               <button

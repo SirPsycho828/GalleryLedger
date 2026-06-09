@@ -62,6 +62,7 @@ export default function SignUp() {
           <p className="mt-4 text-sm tracking-wide text-muted-foreground">
             Create your gallery account
           </p>
+          <p className="mt-1 text-xs text-muted-foreground/50">You'll set up your gallery name next</p>
         </div>
 
         {/* Form */}
@@ -111,6 +112,7 @@ export default function SignUp() {
               autoComplete="new-password"
               className="h-12 border-border/60 bg-card px-4 text-foreground transition-colors placeholder:text-muted-foreground/50 focus-visible:border-gold focus-visible:ring-gold/30"
             />
+            <p className="text-[11px] text-muted-foreground/60">At least 6 characters</p>
           </div>
 
           <div className="space-y-2">

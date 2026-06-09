@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 
 export default function ConsignorNew() {
   const { gallery } = useAuth()
@@ -44,6 +45,10 @@ export default function ConsignorNew() {
     <div>
       <TopBar title="New Consignor" showBack />
       <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 space-y-4">
+        <GuidanceTip id="consignor-new-guide">
+          Only the name is required. You can add contact details now or update them later.
+        </GuidanceTip>
+        <p className="text-xs text-muted-foreground mb-2">Add an artist, collector, or owner who entrusts works to your gallery.</p>
         <div className="space-y-2">
           <Label htmlFor="name">Name *</Label>
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={200} required className="h-11 bg-card border-border/60" />

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Consignor } from '@/types'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 
 function ConsignorCard({ consignor, onClick }: { consignor: Consignor; onClick: () => void }) {
   return (
@@ -74,11 +75,11 @@ export default function ConsignorList() {
           ) : (
             <>
               {consignors.length > 0 && (
-                <button onClick={() => setSearchOpen(true)} className="flex h-11 w-11 items-center justify-center">
+                <button onClick={() => setSearchOpen(true)} aria-label="Search consignors" className="flex h-11 w-11 items-center justify-center">
                   <Search className="h-5 w-5" strokeWidth={1.5} />
                 </button>
               )}
-              <button onClick={() => navigate('/consignors/new')} className="flex h-11 w-11 items-center justify-center">
+              <button onClick={() => navigate('/consignors/new')} aria-label="Add new consignor" className="flex h-11 w-11 items-center justify-center">
                 <Plus className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </>
@@ -111,15 +112,35 @@ export default function ConsignorList() {
             </Button>
           </div>
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.length === 0 ? (
-              <p className="py-16 text-center text-sm text-muted-foreground">No matching consignors</p>
-            ) : (
-              filtered.map((c) => (
-                <ConsignorCard key={c.id} consignor={c} onClick={() => navigate(`/consignors/${c.id}`)} />
-              ))
-            )}
-          </div>
+          <>
+            {/* Metrics summary */}
+            <div className="pb-2">
+              <p className="text-xs text-muted-foreground">
+                {consignors.length} {consignors.length === 1 ? 'consignor' : 'consignors'}
+                {(() => {
+                  const totalWorks = consignors.reduce((sum, c) => sum + (c.workCount ?? 0), 0)
+                  return totalWorks > 0 ? ` — ${totalWorks} linked ${totalWorks === 1 ? 'work' : 'works'}` : ''
+                })()}
+              </p>
+            </div>
+
+            {/* Guidance tip */}
+            <div className="pb-3">
+              <GuidanceTip id="consignors-list-guide">
+                Consignors are the artists or owners who entrust works to your gallery. Tap one to see their linked works and financial summary.
+              </GuidanceTip>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.length === 0 ? (
+                <p className="py-16 text-center text-sm text-muted-foreground">No matching consignors</p>
+              ) : (
+                filtered.map((c) => (
+                  <ConsignorCard key={c.id} consignor={c} onClick={() => navigate(`/consignors/${c.id}`)} />
+                ))
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>

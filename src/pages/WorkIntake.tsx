@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { SignatureCapture } from '@/components/SignatureCapture'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 import type { Consignor, ConditionRating, Work } from '@/types'
 import { CONDITION_RATINGS, CONDITION_CHECKLIST_ITEMS } from '@/types'
 
@@ -245,9 +246,17 @@ export default function WorkIntake() {
       <TopBar title="New Work" showBack onBack={handleBack} />
 
       <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 pb-8 space-y-6">
+        {/* UX-015: Page intro */}
+        <p className="text-xs text-muted-foreground mb-4">Document a new artwork with photos, details, and condition assessment.</p>
+
+        {/* UX-005: Guidance tip */}
+        <GuidanceTip id="work-intake-guide">
+          Capture photos first, then fill in the artwork details. The condition checklist and consignor signature complete the intake record.
+        </GuidanceTip>
+
         {/* Section 1: Photos */}
         <div>
-          <h2 className="font-heading text-base font-medium mb-3">Photos</h2>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Photographs</h3>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {photos.map((photo, i) => (
               <div key={i} className="relative flex-shrink-0">
@@ -284,7 +293,7 @@ export default function WorkIntake() {
 
         {/* Section 2: Work Details */}
         <div className="space-y-4">
-          <h2 className="font-heading text-base font-medium">Work Details</h2>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Work Details</h3>
 
           <div className="space-y-2" data-error={errors.artist ? '' : undefined}>
             <Label htmlFor="artist">Artist *</Label>
@@ -324,6 +333,16 @@ export default function WorkIntake() {
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={2000} rows={4} />
+          </div>
+        </div>
+
+        {/* Section 3: Consignor */}
+        <div className="space-y-4">
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Consignor</h3>
+
+          <div className="space-y-2">
             <Label>Consignor</Label>
             <Select value={consignorId || ''} onValueChange={(val) => {
               if (val === '__new__') {
@@ -347,16 +366,11 @@ export default function WorkIntake() {
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
-            <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={2000} rows={4} />
-          </div>
         </div>
 
-        {/* Section 3: Condition Assessment */}
+        {/* Section 4: Condition Assessment */}
         <div className="space-y-4">
-          <h2 className="font-heading text-base font-medium">Condition Assessment</h2>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Condition Assessment</h3>
 
           <div data-error={errors.condition ? '' : undefined}>
             <Label className="mb-2 block">Overall Condition *</Label>
@@ -420,9 +434,9 @@ export default function WorkIntake() {
           </div>
         </div>
 
-        {/* Section 4: Signature */}
+        {/* Section 5: Signature */}
         <div>
-          <h2 className="font-heading text-base font-medium mb-2">Signature</h2>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Signature</h3>
           <p className="text-xs text-muted-foreground mb-2">Optional — confirms consignor acknowledgment of condition at intake</p>
           {signaturePreview ? (
             <div className="flex items-start gap-3">

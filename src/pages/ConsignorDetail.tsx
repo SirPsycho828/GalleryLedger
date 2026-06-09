@@ -15,6 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { toast } from 'sonner'
 import type { Consignor, Work, TimelineEvent } from '@/types'
 import { StatusBadge } from '@/pages/WorkList'
+import { GuidanceTip } from '@/components/ux/GuidanceTip'
 
 export default function ConsignorDetail() {
   const { consignorId } = useParams<{ consignorId: string }>()
@@ -164,6 +165,10 @@ export default function ConsignorDetail() {
       />
 
       <div className="mx-auto max-w-3xl px-4 pt-4 space-y-6">
+        <GuidanceTip id="consignor-detail-guide">
+          This consignor's linked works and financial summary update automatically as you record sales and payouts on individual works.
+        </GuidanceTip>
+
         {/* Contact info */}
         <div className="space-y-2">
           {consignor.email && (
@@ -223,7 +228,15 @@ export default function ConsignorDetail() {
         <div>
           <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Works ({linkedWorks.length})</h3>
           {linkedWorks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No works from this consignor</p>
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">No works from this consignor</p>
+              <Button
+                onClick={() => navigate('/works/new')}
+                className="h-11 bg-gold px-8 text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90"
+              >
+                Add a Work
+              </Button>
+            </div>
           ) : (
             <div className="space-y-3">
               {linkedWorks.map((work) => (

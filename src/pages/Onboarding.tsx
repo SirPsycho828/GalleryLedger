@@ -51,6 +51,11 @@ export default function Onboarding() {
             </p>
           </div>
 
+          <div className="flex justify-center gap-2 mb-6">
+            <div className={`h-1.5 w-1.5 rounded-full ${step === 1 ? 'bg-gold' : 'bg-gold/30'}`} />
+            <div className={`h-1.5 w-1.5 rounded-full ${step === 2 ? 'bg-gold' : 'bg-gold/30'}`} />
+          </div>
+
           <form onSubmit={handleNameSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="galleryName" className="text-xs uppercase tracking-widest text-muted-foreground">
@@ -93,6 +98,11 @@ export default function Onboarding() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="relative w-full max-w-sm text-center"
       >
+        <div className="flex justify-center gap-2 mb-6">
+          <div className={`h-1.5 w-1.5 rounded-full ${step === 1 ? 'bg-gold' : 'bg-gold/30'}`} />
+          <div className={`h-1.5 w-1.5 rounded-full ${step === 2 ? 'bg-gold' : 'bg-gold/30'}`} />
+        </div>
+
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-gold/20 bg-gold/5">
           <svg className="h-7 w-7 text-gold" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
