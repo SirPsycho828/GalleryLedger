@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 import { useScrollDirection } from '@/hooks/useScrollDirection'
 
 const tabs = [
-  { path: '/works', icon: Image, label: 'Works' },
-  { path: '/consignors', icon: Users, label: 'Consignors' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
+  { path: '/works', icon: Image, label: 'Works', dataTour: 'nav-works' },
+  { path: '/consignors', icon: Users, label: 'Consignors', dataTour: 'nav-consignors' },
+  { path: '/settings', icon: Settings, label: 'Settings', dataTour: 'nav-settings' },
 ] as const
 
 export function AppShell() {
@@ -41,6 +41,7 @@ export function AppShell() {
               <button
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
+                data-tour={tab.dataTour}
                 className={cn(
                   'relative flex flex-col items-center justify-center gap-1 py-3 px-2 w-full transition-colors',
                   active ? 'text-gold' : 'text-muted-foreground hover:text-foreground/70'
@@ -83,6 +84,7 @@ export function AppShell() {
               <button
                 key={tab.path}
                 onClick={() => navigate(tab.path)}
+                data-tour={tab.dataTour}
                 className={cn(
                   'relative flex flex-col items-center justify-center gap-1 py-2 px-5 min-w-[72px] transition-colors',
                   active ? 'text-gold' : 'text-muted-foreground hover:text-foreground/70'
