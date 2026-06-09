@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { TourOverlay, type TourStop } from '@/components/tour/TourOverlay'
 
@@ -67,6 +67,17 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(0)
   const [pendingStep, setPendingStep] = useState<number | null>(null)
   const [firstWorkId, setFirstWorkId] = useState<string | null>(null)
+
+  // On initial mount, redirect to /works if tour hasn't been completed
+  // This ensures existing users who land on other pages still see the tour
+  const hasCheckedTour = useRef(false)
+  useEffect(() => {
+    if (hasCheckedTour.current) return
+    hasCheckedTour.current = true
+    if (!isTourCompleted() && location.pathname !== '/works') {
+      navigate('/works', { replace: true })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stops = useMemo(
     () => (firstWorkId ? [...BASE_STOPS, ...DETAIL_STOPS] : BASE_STOPS),
