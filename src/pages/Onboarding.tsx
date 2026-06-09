@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,8 +9,10 @@ import { motion } from 'framer-motion'
 export default function Onboarding() {
   const { gallery, updateGalleryName } = useAuth()
   const navigate = useNavigate()
-  const [step, setStep] = useState(gallery?.name ? 2 : 1)
-  const [galleryName, setGalleryName] = useState('')
+  const [searchParams] = useSearchParams()
+  const isRestart = searchParams.get('restart') === 'true'
+  const [step, setStep] = useState(gallery?.name && !isRestart ? 2 : 1)
+  const [galleryName, setGalleryName] = useState(isRestart ? (gallery?.name ?? '') : '')
   const [loading, setLoading] = useState(false)
 
   async function handleNameSubmit(e: FormEvent) {

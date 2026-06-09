@@ -57,6 +57,20 @@ export default function SettingsPage() {
 
         <Separator className="opacity-50" />
 
+        {/* Restart Setup Wizard */}
+        <button
+          onClick={() => navigate('/onboarding?restart=true')}
+          className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
+        >
+          <div>
+            <p className="text-sm font-medium">Restart Setup Wizard</p>
+            <p className="text-sm text-muted-foreground">Re-run the onboarding flow</p>
+          </div>
+          <span className="text-xs text-gold/70">Start</span>
+        </button>
+
+        <Separator className="opacity-50" />
+
         {/* Replay App Tour */}
         <button
           onClick={handleReplayTour}
