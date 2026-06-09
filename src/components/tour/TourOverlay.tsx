@@ -146,7 +146,7 @@ export function TourOverlay({ stops, currentStep, onNext, onSkip }: TourOverlayP
         />
 
         <motion.div
-          className="absolute border border-gold/30"
+          className="absolute border border-gold/20"
           animate={{
             top: cutout.top,
             left: cutout.left,

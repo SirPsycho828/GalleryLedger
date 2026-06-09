@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import { TopBar } from '@/components/TopBar'
-import { useTour } from '@/contexts/TourContext'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
@@ -15,13 +14,11 @@ export default function SettingsPage() {
   const [editingName, setEditingName] = useState(false)
   const [newName, setNewName] = useState(gallery?.name ?? '')
   const navigate = useNavigate()
-  const tour = useTour()
 
   function handleReplayTour() {
     localStorage.removeItem('gl-tour-completed')
     navigate('/works')
-    // Small delay to let navigation complete, then start
-    setTimeout(() => tour.startTour(), 700)
+    // WorkList's auto-start useEffect handles setFirstWorkId + startTour
   }
 
   async function handleSaveName() {
