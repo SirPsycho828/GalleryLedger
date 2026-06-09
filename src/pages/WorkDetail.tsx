@@ -30,6 +30,7 @@ import { StatusBadge } from '@/pages/WorkList'
 import type { Work, TimelineEvent, Photo, Consignor, EventType, WorkStatus, ConditionRating } from '@/types'
 import { WORK_STATUSES, STATUS_LABELS, CONDITION_RATINGS, EVENT_TYPE_LABELS, CURRENCIES } from '@/types'
 import { GuidanceTip } from '@/components/ux/GuidanceTip'
+import { useTour } from '@/contexts/TourContext'
 
 const EVENT_ICONS: Record<EventType, typeof Plus> = {
   intake: ImagePlus,
@@ -78,6 +79,7 @@ export default function WorkDetail() {
   const [exportMode, setExportMode] = useState<'full' | 'selective' | null>(null)
   const [selectedEventIds, setSelectedEventIds] = useState<Set<string>>(new Set())
   const [exportProgress, setExportProgress] = useState<string | null>(null)
+  const tour = useTour()
 
   useEffect(() => {
     if (!gallery || !workId) return
@@ -91,6 +93,17 @@ export default function WorkDetail() {
     if (!gallery || !work?.consignorId) { setConsignorName(null); return }
     getConsignor(gallery.id, work.consignorId).then((c) => setConsignorName(c?.name ?? 'Unknown'))
   }, [gallery, work?.consignorId])
+
+  // Resume tour for stops 5-6 (cross-page navigation from stop 4)
+  useEffect(() => {
+    if (tour.pendingStep !== null && !loading) {
+      const step = tour.pendingStep
+      const timer = setTimeout(() => {
+        tour.resumeAtStep(step)
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [tour.pendingStep, loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const currentLocation = useMemo(() => {
     const locationEvents = events.filter((e) => e.type === 'location_change')
@@ -210,7 +223,7 @@ export default function WorkDetail() {
           <ArrowLeft className="h-5 w-5" strokeWidth={1.5} />
         </button>
         <h1 className="flex-1 truncate font-heading text-lg font-medium">{work.title}</h1>
-        <button onClick={() => setExportOpen(true)} aria-label="Export provenance PDF" className="flex h-11 items-center justify-center gap-1.5 px-2 text-muted-foreground hover:text-gold transition-colors">
+        <button onClick={() => setExportOpen(true)} aria-label="Export provenance PDF" data-tour="export-provenance" className="flex h-11 items-center justify-center gap-1.5 px-2 text-muted-foreground hover:text-gold transition-colors">
           <Share className="h-5 w-5" strokeWidth={1.5} />
           <span className="text-xs font-medium">Export</span>
         </button>
@@ -574,6 +587,7 @@ export default function WorkDetail() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.3 }}
         onClick={() => setFabOpen(true)}
+        data-tour="fab-add-event"
         className="fixed bottom-24 right-4 z-30 flex h-14 w-14 items-center justify-center bg-gold text-gold-foreground shadow-[0_0_20px_rgba(184,149,106,0.3)] md:bottom-8 md:right-8"
       >
         <Plus className="h-6 w-6" strokeWidth={1.5} />
