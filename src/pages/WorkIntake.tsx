@@ -21,8 +21,21 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { SignatureCapture } from '@/components/SignatureCapture'
@@ -82,13 +95,26 @@ export default function WorkIntake() {
     if (!gallery) return
     const unsub1 = subscribeToConsignors(gallery.id, setConsignors)
     const unsub2 = subscribeToWorks(gallery.id, setExistingWorks)
-    return () => { unsub1(); unsub2() }
+    return () => {
+      unsub1()
+      unsub2()
+    }
   }, [gallery])
 
   // Artist autocomplete suggestions
   const artistSuggestions = [...new Set(existingWorks.map((w) => w.artist))].filter(Boolean)
 
-  const isModified = artist || title || medium || dimensions || year || notes || condition || photos.length > 0 || consignorId || signatureBlob
+  const isModified =
+    artist ||
+    title ||
+    medium ||
+    dimensions ||
+    year ||
+    notes ||
+    condition ||
+    photos.length > 0 ||
+    consignorId ||
+    signatureBlob
 
   function handleBack() {
     if (isModified) {
@@ -197,12 +223,19 @@ export default function WorkIntake() {
 
       // Create intake event
       const description = `Work received \u2014 condition: ${CONDITION_LABELS[condition!]}`
-      await createEvent(gallery.id, workId, 'intake', description, {
-        conditionSummary: condition!,
-        conditionNotes: conditionNotes.trim(),
-        checklist: checklistData,
-        signatureUrl,
-      }, photoUrls)
+      await createEvent(
+        gallery.id,
+        workId,
+        'intake',
+        description,
+        {
+          conditionSummary: condition!,
+          conditionNotes: conditionNotes.trim(),
+          checklist: checklistData,
+          signatureUrl,
+        },
+        photoUrls
+      )
 
       // Update consignor work count
       if (consignorId) {
@@ -247,16 +280,21 @@ export default function WorkIntake() {
 
       <form onSubmit={handleSubmit} className="mx-auto max-w-[640px] px-4 pt-4 pb-8 space-y-6">
         {/* UX-015: Page intro */}
-        <p className="text-xs text-muted-foreground mb-4">Document a new artwork with photos, details, and condition assessment.</p>
+        <p className="text-xs text-muted-foreground mb-4">
+          Document a new artwork with photos, details, and condition assessment.
+        </p>
 
         {/* UX-005: Guidance tip */}
         <GuidanceTip id="work-intake-guide">
-          Capture photos first, then fill in the artwork details. The condition checklist and consignor signature complete the intake record.
+          Capture photos first, then fill in the artwork details. The condition checklist and
+          consignor signature complete the intake record.
         </GuidanceTip>
 
         {/* Section 1: Photos */}
         <div>
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Photographs</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Photographs
+          </h3>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {photos.map((photo, i) => (
               <div key={i} className="relative flex-shrink-0">
@@ -293,70 +331,120 @@ export default function WorkIntake() {
 
         {/* Section 2: Work Details */}
         <div className="space-y-4">
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Work Details</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Work Details
+          </h3>
 
           <div className="space-y-2" data-error={errors.artist ? '' : undefined}>
             <Label htmlFor="artist">Artist *</Label>
             <Input
               id="artist"
               value={artist}
-              onChange={(e) => { setArtist(e.target.value); setErrors((prev) => ({ ...prev, artist: '' })) }}
+              onChange={(e) => {
+                setArtist(e.target.value)
+                setErrors((prev) => ({ ...prev, artist: '' }))
+              }}
               maxLength={200}
               list="artist-suggestions"
               className="h-11"
             />
             <datalist id="artist-suggestions">
-              {artistSuggestions.map((a) => <option key={a} value={a} />)}
+              {artistSuggestions.map((a) => (
+                <option key={a} value={a} />
+              ))}
             </datalist>
             {errors.artist && <p className="text-xs text-destructive">{errors.artist}</p>}
           </div>
 
           <div className="space-y-2" data-error={errors.title ? '' : undefined}>
             <Label htmlFor="title">Title *</Label>
-            <Input id="title" value={title} onChange={(e) => { setTitle(e.target.value); setErrors((prev) => ({ ...prev, title: '' })) }} maxLength={200} className="h-11" />
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value)
+                setErrors((prev) => ({ ...prev, title: '' }))
+              }}
+              maxLength={200}
+              className="h-11"
+            />
             {errors.title && <p className="text-xs text-destructive">{errors.title}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="medium">Medium</Label>
-            <Input id="medium" value={medium} onChange={(e) => setMedium(e.target.value)} maxLength={200} placeholder="Oil on canvas" className="h-11" />
+            <Input
+              id="medium"
+              value={medium}
+              onChange={(e) => setMedium(e.target.value)}
+              maxLength={200}
+              placeholder="Oil on canvas"
+              className="h-11"
+            />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="dimensions">Dimensions</Label>
-            <Input id="dimensions" value={dimensions} onChange={(e) => setDimensions(e.target.value)} maxLength={100} placeholder="24 x 36 in" className="h-11" />
+            <Input
+              id="dimensions"
+              value={dimensions}
+              onChange={(e) => setDimensions(e.target.value)}
+              maxLength={100}
+              placeholder="24 x 36 in"
+              className="h-11"
+            />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="year">Year</Label>
-            <Input id="year" value={year} onChange={(e) => setYear(e.target.value)} maxLength={20} placeholder="2024" className="h-11" />
+            <Input
+              id="year"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              maxLength={20}
+              placeholder="2024"
+              className="h-11"
+            />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
-            <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={2000} rows={4} />
+            <Textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              maxLength={2000}
+              rows={4}
+            />
           </div>
         </div>
 
         {/* Section 3: Consignor */}
         <div className="space-y-4">
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Consignor</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Consignor
+          </h3>
 
           <div className="space-y-2">
             <Label>Consignor</Label>
-            <Select value={consignorId || ''} onValueChange={(val) => {
-              if (val === '__new__') {
-                setShowNewConsignor(true)
-              } else {
-                setConsignorId(val || null)
-              }
-            }}>
+            <Select
+              value={consignorId || ''}
+              onValueChange={(val) => {
+                if (val === '__new__') {
+                  setShowNewConsignor(true)
+                } else {
+                  setConsignorId(val || null)
+                }
+              }}
+            >
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Select consignor" />
               </SelectTrigger>
               <SelectContent>
                 {consignors.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
                 ))}
                 <SelectItem value="__new__">
                   <span className="flex items-center gap-1">
@@ -370,7 +458,9 @@ export default function WorkIntake() {
 
         {/* Section 4: Condition Assessment */}
         <div className="space-y-4">
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Condition Assessment</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Condition Assessment
+          </h3>
 
           <div data-error={errors.condition ? '' : undefined}>
             <Label className="mb-2 block">Overall Condition *</Label>
@@ -379,7 +469,10 @@ export default function WorkIntake() {
                 <button
                   key={rating}
                   type="button"
-                  onClick={() => { setCondition(rating); setErrors((prev) => ({ ...prev, condition: '' })) }}
+                  onClick={() => {
+                    setCondition(rating)
+                    setErrors((prev) => ({ ...prev, condition: '' }))
+                  }}
                   className={cn(
                     'px-4 py-2 text-sm font-medium border transition-colors',
                     condition === rating
@@ -391,7 +484,9 @@ export default function WorkIntake() {
                 </button>
               ))}
             </div>
-            {errors.condition && <p className="text-xs text-destructive mt-1">{errors.condition}</p>}
+            {errors.condition && (
+              <p className="text-xs text-destructive mt-1">{errors.condition}</p>
+            )}
           </div>
 
           <div>
@@ -403,14 +498,20 @@ export default function WorkIntake() {
                     <Checkbox
                       id={`check-${item}`}
                       checked={checklist[item] || false}
-                      onCheckedChange={(checked) => setChecklist((prev) => ({ ...prev, [item]: !!checked }))}
+                      onCheckedChange={(checked) =>
+                        setChecklist((prev) => ({ ...prev, [item]: !!checked }))
+                      }
                     />
-                    <label htmlFor={`check-${item}`} className="text-sm cursor-pointer">{item}</label>
+                    <label htmlFor={`check-${item}`} className="text-sm cursor-pointer">
+                      {item}
+                    </label>
                   </div>
                   {checklist[item] && (
                     <Input
                       value={checklistNotes[item] || ''}
-                      onChange={(e) => setChecklistNotes((prev) => ({ ...prev, [item]: e.target.value }))}
+                      onChange={(e) =>
+                        setChecklistNotes((prev) => ({ ...prev, [item]: e.target.value }))
+                      }
                       placeholder={`Describe ${item.toLowerCase()}`}
                       maxLength={500}
                       className="mt-1 ml-6 h-9 text-sm"
@@ -436,15 +537,24 @@ export default function WorkIntake() {
 
         {/* Section 5: Signature */}
         <div>
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Signature</h3>
-          <p className="text-xs text-muted-foreground mb-2">Optional — confirms consignor acknowledgment of condition at intake</p>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Signature
+          </h3>
+          <p className="text-xs text-muted-foreground mb-2">
+            Optional — confirms consignor acknowledgment of condition at intake
+          </p>
           {signaturePreview ? (
             <div className="flex items-start gap-3">
               <div className="rounded-md border border-border bg-white p-2">
                 <img src={signaturePreview} alt="Signature" className="h-16 w-auto" />
               </div>
               <div className="flex flex-col gap-1">
-                <Button type="button" variant="outline" size="sm" onClick={() => setShowSignature(true)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowSignature(true)}
+                >
                   Redo
                 </Button>
                 <Button
@@ -463,7 +573,12 @@ export default function WorkIntake() {
               </div>
             </div>
           ) : (
-            <Button type="button" variant="outline" className="h-11" onClick={() => setShowSignature(true)}>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11"
+              onClick={() => setShowSignature(true)}
+            >
               <PenTool className="mr-2 h-4 w-4" />
               Capture consignor signature
             </Button>
@@ -483,7 +598,11 @@ export default function WorkIntake() {
         )}
 
         {/* Save button */}
-        <Button type="submit" className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" disabled={saving}>
+        <Button
+          type="submit"
+          className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90"
+          disabled={saving}
+        >
           {saving ? 'Saving...' : 'Save Work'}
         </Button>
       </form>
@@ -496,8 +615,12 @@ export default function WorkIntake() {
             <DialogDescription>Your changes will be lost.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDiscard(false)}>Keep editing</Button>
-            <Button variant="destructive" onClick={() => navigate(-1)}>Discard</Button>
+            <Button variant="outline" onClick={() => setShowDiscard(false)}>
+              Keep editing
+            </Button>
+            <Button variant="destructive" onClick={() => navigate(-1)}>
+              Discard
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -505,21 +628,42 @@ export default function WorkIntake() {
       {/* New consignor sheet */}
       <Sheet open={showNewConsignor} onOpenChange={setShowNewConsignor}>
         <SheetContent side="bottom" className="max-h-[85vh]">
-          <SheetHeader><SheetTitle>New Consignor</SheetTitle></SheetHeader>
+          <SheetHeader>
+            <SheetTitle>New Consignor</SheetTitle>
+          </SheetHeader>
           <div className="space-y-4 pt-4">
             <div className="space-y-2">
               <Label>Name *</Label>
-              <Input value={newConsignorName} onChange={(e) => setNewConsignorName(e.target.value)} maxLength={200} className="h-11" />
+              <Input
+                value={newConsignorName}
+                onChange={(e) => setNewConsignorName(e.target.value)}
+                maxLength={200}
+                className="h-11"
+              />
             </div>
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input type="email" value={newConsignorEmail} onChange={(e) => setNewConsignorEmail(e.target.value)} className="h-11" />
+              <Input
+                type="email"
+                value={newConsignorEmail}
+                onChange={(e) => setNewConsignorEmail(e.target.value)}
+                className="h-11"
+              />
             </div>
             <div className="space-y-2">
               <Label>Phone</Label>
-              <Input type="tel" value={newConsignorPhone} onChange={(e) => setNewConsignorPhone(e.target.value)} className="h-11" />
+              <Input
+                type="tel"
+                value={newConsignorPhone}
+                onChange={(e) => setNewConsignorPhone(e.target.value)}
+                className="h-11"
+              />
             </div>
-            <Button onClick={handleCreateConsignor} className="w-full h-11" disabled={!newConsignorName.trim()}>
+            <Button
+              onClick={handleCreateConsignor}
+              className="w-full h-11"
+              disabled={!newConsignorName.trim()}
+            >
               Add Consignor
             </Button>
           </div>

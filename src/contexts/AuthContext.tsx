@@ -1,7 +1,25 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, type User } from 'firebase/auth'
-import { collection, query, where, getDocs, addDoc, serverTimestamp, limit, doc, updateDoc } from 'firebase/firestore'
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  sendPasswordResetEmail,
+  type User,
+} from 'firebase/auth'
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  limit,
+  doc,
+  updateDoc,
+} from 'firebase/firestore'
 import { auth, db } from '@/lib/firebase'
+import { sanitizeGalleryName } from '@/lib/validation'
 import type { Gallery } from '@/types'
 
 interface AuthContextType {
@@ -30,11 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Load gallery for authenticated user
   async function loadGallery(uid: string) {
-    const q = query(
-      collection(db, 'galleries'),
-      where('ownerId', '==', uid),
-      limit(1)
-    )
+    const q = query(collection(db, 'galleries'), where('ownerId', '==', uid), limit(1))
     const snapshot = await getDocs(q)
     if (!snapshot.empty) {
       const docSnap = snapshot.docs[0]
@@ -110,13 +124,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function updateGalleryName(name: string) {
     if (!gallery) return
+    const sanitized = sanitizeGalleryName(name)
+    if (!sanitized) return
     const galleryRef = doc(db, 'galleries', gallery.id)
-    await updateDoc(galleryRef, { name })
-    setGallery({ ...gallery, name })
+    await updateDoc(galleryRef, { name: sanitized })
+    setGallery({ ...gallery, name: sanitized })
   }
 
   return (
-    <AuthContext.Provider value={{ user, gallery, loading, signUp, signIn, signOut, resetPassword, updateGalleryName }}>
+    <AuthContext.Provider
+      value={{ user, gallery, loading, signUp, signIn, signOut, resetPassword, updateGalleryName }}
+    >
       {children}
     </AuthContext.Provider>
   )

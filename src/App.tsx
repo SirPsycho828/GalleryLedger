@@ -24,16 +24,61 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-          <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
-          <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
-          <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <LandingPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <PublicRoute>
+                <SignIn />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
 
           {/* Onboarding */}
-          <Route path="/onboarding" element={<AuthGuard><Onboarding /></AuthGuard>} />
+          <Route
+            path="/onboarding"
+            element={
+              <AuthGuard>
+                <Onboarding />
+              </AuthGuard>
+            }
+          />
 
           {/* Authenticated routes with app shell */}
-          <Route element={<AuthGuard><TourProvider><LayoutGroup><AppShell /></LayoutGroup></TourProvider></AuthGuard>}>
+          <Route
+            element={
+              <AuthGuard>
+                <TourProvider>
+                  <LayoutGroup>
+                    <AppShell />
+                  </LayoutGroup>
+                </TourProvider>
+              </AuthGuard>
+            }
+          >
             <Route path="works" element={<WorkList />} />
             <Route path="works/new" element={<WorkIntake />} />
             <Route path="works/:workId" element={<WorkDetail />} />

@@ -14,6 +14,7 @@ Touch-drawn signature capture allows gallery operators to record a consignor's a
 Only during work intake. The signature captures the consignor's acknowledgment that they have seen the intake condition assessment. It is attached to the intake timeline event.
 
 Signatures do not appear on:
+
 - Condition updates
 - Location changes
 - Sales or payouts
@@ -109,6 +110,7 @@ When the user taps "Done":
 3. Typical file size: 10-50 KB for a signature on white background (well under the 5 MB Storage limit)
 
 PNG chosen over JPEG because:
+
 - Signatures are line art on a solid background -- PNG compresses this more efficiently
 - No compression artifacts on sharp lines
 - Transparent background possible if needed in future (though MVP uses white)
@@ -118,6 +120,7 @@ PNG chosen over JPEG because:
 **Storage path**: `galleries/{galleryId}/works/{workId}/signatures/{timestamp}_{randomId}.png`
 
 Same upload pattern as photos (see `07_Photo_Capture_And_Storage.md`):
+
 - If online: upload immediately, get download URL
 - If offline: queue in IndexedDB alongside photo queue, upload when connectivity returns
 
@@ -157,12 +160,12 @@ There is no way to add a signature to an existing work after the initial intake 
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Legal validity | Not a legal e-signature | No ESIGN/UETA compliance. The signature is a visual record, not a binding contract. If legal signatures are needed, the gallery uses their existing paper process. |
-| Typed name with signature | Not captured | No typed name field accompanies the drawn signature. The consignor's identity is established by the `consignorId` on the work record. |
-| Date/time stamp on signature image | Not embedded | The timestamp comes from the intake event's `createdAt` field, not from text burned into the signature image. |
-| Stylus support | Supported via Pointer Events | Pointer Events API handles stylus pressure natively, but stroke width is fixed at 2.5px (no pressure sensitivity). Pressure-variable width is a post-MVP enhancement. |
-| Signature pad orientation | Both portrait and landscape | No forced orientation. Landscape gives more signing space but is not required. |
-| Undo last stroke | Not implemented | Only "Clear all" is available. Single-stroke undo adds complexity for minimal value -- most signatures are drawn in one continuous motion. |
-| Accessibility | Limited | Signature capture is inherently visual and touch-dependent. No alternative input method at MVP. |  
+| Item                               | Default                      | Notes                                                                                                                                                                 |
+| ---------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Legal validity                     | Not a legal e-signature      | No ESIGN/UETA compliance. The signature is a visual record, not a binding contract. If legal signatures are needed, the gallery uses their existing paper process.    |
+| Typed name with signature          | Not captured                 | No typed name field accompanies the drawn signature. The consignor's identity is established by the `consignorId` on the work record.                                 |
+| Date/time stamp on signature image | Not embedded                 | The timestamp comes from the intake event's `createdAt` field, not from text burned into the signature image.                                                         |
+| Stylus support                     | Supported via Pointer Events | Pointer Events API handles stylus pressure natively, but stroke width is fixed at 2.5px (no pressure sensitivity). Pressure-variable width is a post-MVP enhancement. |
+| Signature pad orientation          | Both portrait and landscape  | No forced orientation. Landscape gives more signing space but is not required.                                                                                        |
+| Undo last stroke                   | Not implemented              | Only "Clear all" is available. Single-stroke undo adds complexity for minimal value -- most signatures are drawn in one continuous motion.                            |
+| Accessibility                      | Limited                      | Signature capture is inherently visual and touch-dependent. No alternative input method at MVP.                                                                       |

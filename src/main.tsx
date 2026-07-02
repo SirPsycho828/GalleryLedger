@@ -9,22 +9,26 @@ processQueue()
 
 // Console branding
 console.log(
-  '%c' + [
-    '  ┌──────────────────────────────────┐',
-    '  │  ╔═╗ ╔═╗ ╦   ╦   ╔═╗ ╦═╗ ╦ ╦  │',
-    '  │  ║ ╦ ╠═╣ ║   ║   ╠═  ╠╦╝ ╚╦╝  │',
-    '  │  ╚═╝ ╩ ╩ ╩═╝ ╩═╝ ╚═╝ ╩╚   ╩   │',
-    '  │       ╦   ╔═╗ ╔═╗ ╔═╗ ╔═╗ ╦═╗  │',
-    '  │       ║   ╠═  ║ ║ ║ ╦ ╠═  ╠╦╝  │',
-    '  │       ╩═╝ ╚═╝ ╚═╝ ╚═╝ ╚═╝ ╩╚   │',
-    '  └──────────────────────────────────┘',
-  ].join('\n'),
+  '%c' +
+    [
+      '  ┌──────────────────────────────────┐',
+      '  │  ╔═╗ ╔═╗ ╦   ╦   ╔═╗ ╦═╗ ╦ ╦  │',
+      '  │  ║ ╦ ╠═╣ ║   ║   ╠═  ╠╦╝ ╚╦╝  │',
+      '  │  ╚═╝ ╩ ╩ ╩═╝ ╩═╝ ╚═╝ ╩╚   ╩   │',
+      '  │       ╦   ╔═╗ ╔═╗ ╔═╗ ╔═╗ ╦═╗  │',
+      '  │       ║   ╠═  ║ ║ ║ ╦ ╠═  ╠╦╝  │',
+      '  │       ╩═╝ ╚═╝ ╚═╝ ╚═╝ ╚═╝ ╩╚   │',
+      '  └──────────────────────────────────┘',
+    ].join('\n'),
   'color: #B8956A; font-family: monospace; font-size: 12px;'
 )
-console.log('%cEvery masterpiece deserves a paper trail.', 'color: #8B7355; font-size: 12px; font-style: italic;')
+console.log(
+  '%cEvery masterpiece deserves a paper trail.',
+  'color: #8B7355; font-size: 12px; font-style: italic;'
+)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 )

@@ -88,16 +88,16 @@ No user-selectable sort options at MVP. The default sort handles the primary use
 
 A horizontal scrollable row of filter chips below the top bar. One chip per status plus an "All" chip.
 
-| Chip | Filter |
-|------|--------|
-| All | No filter (default, selected on load) |
-| Intake | `status == "intake"` |
-| In Storage | `status == "in_storage"` |
-| On Display | `status == "on_display"` |
-| On Loan | `status == "on_loan"` |
-| Shipped | `status == "shipped"` |
-| Sold | `status == "sold"` |
-| Returned | `status == "returned"` |
+| Chip       | Filter                                |
+| ---------- | ------------------------------------- |
+| All        | No filter (default, selected on load) |
+| Intake     | `status == "intake"`                  |
+| In Storage | `status == "in_storage"`              |
+| On Display | `status == "on_display"`              |
+| On Loan    | `status == "on_loan"`                 |
+| Shipped    | `status == "shipped"`                 |
+| Sold       | `status == "sold"`                    |
+| Returned   | `status == "returned"`                |
 
 **Chip styling**: Unselected chips use `surface` background with `border`. Selected chip uses `accent-subtle` background with `accent` text. `caption` font size.
 
@@ -182,21 +182,21 @@ If performance becomes a concern post-MVP (galleries with 500+ works), add curso
 
 ## Responsive Behavior
 
-| Breakpoint | Layout |
-|-----------|--------|
-| Default (< 768px) | Single-column list of horizontal cards |
-| `md` (768px+) | 2-column grid of cards. Cards retain the same horizontal layout but arrange in two columns. |
+| Breakpoint        | Layout                                                                                      |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| Default (< 768px) | Single-column list of horizontal cards                                                      |
+| `md` (768px+)     | 2-column grid of cards. Cards retain the same horizontal layout but arrange in two columns. |
 
 At `md` breakpoint, the top bar and filter chips remain full-width. Only the card grid changes.
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Sort options | `updatedAt` DESC only | No user-selectable sorting. Covers 90% of the use case. Post-MVP: add sort by artist, title, intake date. |
-| Multi-status filter | Not supported | Single status filter only. Multi-select (e.g., "show On Display and On Loan") deferred. |
-| Work count display | Not shown | Total work count is not displayed in the top bar. Could be added easily but not specified. |
-| Bulk actions | Not supported | No multi-select, no bulk status change, no bulk delete. Post-MVP. |
-| List vs. grid toggle | Not offered | Single list layout. A grid/thumbnail view could be added post-MVP for visual browsing. |
-| Fuzzy search | Not implemented | Exact substring matching only. Typo tolerance or fuzzy matching deferred. |
-| Recently viewed | Not tracked | No "recently viewed" section or sort. `updatedAt` sort serves a similar purpose. |  
+| Item                 | Default               | Notes                                                                                                     |
+| -------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- |
+| Sort options         | `updatedAt` DESC only | No user-selectable sorting. Covers 90% of the use case. Post-MVP: add sort by artist, title, intake date. |
+| Multi-status filter  | Not supported         | Single status filter only. Multi-select (e.g., "show On Display and On Loan") deferred.                   |
+| Work count display   | Not shown             | Total work count is not displayed in the top bar. Could be added easily but not specified.                |
+| Bulk actions         | Not supported         | No multi-select, no bulk status change, no bulk delete. Post-MVP.                                         |
+| List vs. grid toggle | Not offered           | Single list layout. A grid/thumbnail view could be added post-MVP for visual browsing.                    |
+| Fuzzy search         | Not implemented       | Exact substring matching only. Typo tolerance or fuzzy matching deferred.                                 |
+| Recently viewed      | Not tracked           | No "recently viewed" section or sort. `updatedAt` sort serves a similar purpose.                          |

@@ -1,169 +1,179 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/cormorant-garamond";
-@import "@fontsource-variable/outfit";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/cormorant-garamond';
+@import '@fontsource-variable/outfit';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: 'Cormorant Garamond Variable', Georgia, 'Times New Roman', serif;
-    --font-sans: 'Outfit Variable', system-ui, sans-serif;
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
-    --color-success: var(--success);
-    --color-warning: var(--warning);
-    --color-gold: var(--gold);
-    --color-gold-foreground: var(--gold-foreground);
-    --color-copper: var(--copper);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+  --font-heading: 'Cormorant Garamond Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Outfit Variable', system-ui, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-copper: var(--copper);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 /* GalleryLedger Design System — "The Vault" */
 :root {
-    /* Deep warm black — archival gallery walls */
-    --background: #0B0A09;
-    /* Warm ivory text */
-    --foreground: #EDE8E0;
+  /* Deep warm black — archival gallery walls */
+  --background: #0b0a09;
+  /* Warm ivory text */
+  --foreground: #ede8e0;
 
-    /* Card surfaces — elevated dark */
-    --card: #151413;
-    --card-foreground: #EDE8E0;
+  /* Card surfaces — elevated dark */
+  --card: #151413;
+  --card-foreground: #ede8e0;
 
-    /* Popovers/dialogs */
-    --popover: #1B1918;
-    --popover-foreground: #EDE8E0;
+  /* Popovers/dialogs */
+  --popover: #1b1918;
+  --popover-foreground: #ede8e0;
 
-    /* Primary: antique gold */
-    --primary: #B8956A;
-    --primary-foreground: #0B0A09;
+  /* Primary: antique gold */
+  --primary: #b8956a;
+  --primary-foreground: #0b0a09;
 
-    /* Secondary: muted warm surface */
-    --secondary: #1E1C1A;
-    --secondary-foreground: #D5CEC4;
+  /* Secondary: muted warm surface */
+  --secondary: #1e1c1a;
+  --secondary-foreground: #d5cec4;
 
-    /* Muted elements */
-    --muted: #1E1C1A;
-    --muted-foreground: #7A7570;
+  /* Muted elements */
+  --muted: #1e1c1a;
+  --muted-foreground: #7a7570;
 
-    /* Accent: subtle warm highlight */
-    --accent: #1A1610;
-    --accent-foreground: #B8956A;
+  /* Accent: subtle warm highlight */
+  --accent: #1a1610;
+  --accent-foreground: #b8956a;
 
-    /* Destructive */
-    --destructive: #D94444;
+  /* Destructive */
+  --destructive: #d94444;
 
-    /* Borders — warm-tinted, subtle */
-    --border: #2A2725;
-    --input: #2A2725;
+  /* Borders — warm-tinted, subtle */
+  --border: #2a2725;
+  --input: #2a2725;
 
-    /* Focus ring — gold */
-    --ring: #B8956A;
+  /* Focus ring — gold */
+  --ring: #b8956a;
 
-    /* Radius — sharp for gallery aesthetic */
-    --radius: 0.25rem;
+  /* Radius — sharp for gallery aesthetic */
+  --radius: 0.25rem;
 
-    /* Status colors */
-    --success: #4ADE80;
-    --warning: #FBBF24;
+  /* Status colors */
+  --success: #4ade80;
+  --warning: #fbbf24;
 
-    /* Gold accent system */
-    --gold: #B8956A;
-    --gold-foreground: #0B0A09;
+  /* Gold accent system */
+  --gold: #b8956a;
+  --gold-foreground: #0b0a09;
 
-    /* Patina copper — muted metallic */
-    --copper: #8B7355;
+  /* Patina copper — muted metallic */
+  --copper: #8b7355;
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-        margin: 0;
-    }
-    html {
-        @apply font-sans;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        scroll-behavior: smooth;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+  }
+  html {
+    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
 
-    /* Selection color — gold tint */
-    ::selection {
-        background: rgba(184, 149, 106, 0.25);
-        color: #EDE8E0;
-    }
+  /* Selection color — gold tint */
+  ::selection {
+    background: rgba(184, 149, 106, 0.25);
+    color: #ede8e0;
+  }
 
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #2A2725;
-        border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #3A3735;
-    }
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2725;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3735;
+  }
 
-    /* Shimmer animation for loading skeletons */
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
+  /* Shimmer animation for loading skeletons */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
     }
+    100% {
+      background-position: 200% 0;
+    }
+  }
 
-    /* Ken Burns slow zoom for landing hero */
-    @keyframes ken-burns {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.05); }
+  /* Ken Burns slow zoom for landing hero */
+  @keyframes ken-burns {
+    0% {
+      transform: scale(1);
     }
+    100% {
+      transform: scale(1.05);
+    }
+  }
 
-    /* Spotlight reveal — signature animation */
-    @keyframes spotlight-reveal {
-      0% {
-        opacity: 0;
-        filter: blur(8px);
-      }
-      100% {
-        opacity: 1;
-        filter: blur(0px);
-      }
+  /* Spotlight reveal — signature animation */
+  @keyframes spotlight-reveal {
+    0% {
+      opacity: 0;
+      filter: blur(8px);
     }
+    100% {
+      opacity: 1;
+      filter: blur(0px);
+    }
+  }
 }
 
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

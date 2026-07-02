@@ -65,9 +65,7 @@ function ArtCard({ work, onClick, index }: { work: Work; onClick: () => void; in
         <p className="truncate font-heading text-[13px] font-medium leading-tight text-white">
           {work.artist}
         </p>
-        <p className="mt-0.5 truncate text-[11px] italic text-white/65">
-          {work.title}
-        </p>
+        <p className="mt-0.5 truncate text-[11px] italic text-white/65">{work.title}</p>
       </div>
 
       {/* Hover border (desktop) */}
@@ -80,7 +78,10 @@ function GridSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-0.5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-1">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="aspect-[4/5] animate-[shimmer_1.5s_ease-in-out_infinite] rounded-none bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%]" />
+        <div
+          key={i}
+          className="aspect-[4/5] animate-[shimmer_1.5s_ease-in-out_infinite] rounded-none bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%]"
+        />
       ))}
     </div>
   )
@@ -132,11 +133,12 @@ export default function WorkList() {
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
-      result = result.filter((w) =>
-        w.artist.toLowerCase().includes(q) ||
-        w.title.toLowerCase().includes(q) ||
-        w.medium.toLowerCase().includes(q) ||
-        w.notes.toLowerCase().includes(q)
+      result = result.filter(
+        (w) =>
+          w.artist.toLowerCase().includes(q) ||
+          w.title.toLowerCase().includes(q) ||
+          w.medium.toLowerCase().includes(q) ||
+          w.notes.toLowerCase().includes(q)
       )
     }
     return result
@@ -160,7 +162,10 @@ export default function WorkList() {
                 className="h-9 border-border/60 bg-card"
               />
               <button
-                onClick={() => { setSearchOpen(false); setSearchQuery('') }}
+                onClick={() => {
+                  setSearchOpen(false)
+                  setSearchQuery('')
+                }}
                 className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-foreground"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
@@ -229,11 +234,13 @@ export default function WorkList() {
             {/* Guidance tip */}
             <div className="px-4 pb-1">
               <GuidanceTip id="works-list-guide">
-                Filter by status to find works quickly. Tap any work to view its full provenance history.
+                Filter by status to find works quickly. Tap any work to view its full provenance
+                history.
               </GuidanceTip>
               {allIntake && (
                 <GuidanceTip id="works-all-intake" className="mt-1">
-                  All your works are in intake status. Tap a work and use the + button to log a location change or status update.
+                  All your works are in intake status. Tap a work and use the + button to log a
+                  location change or status update.
                 </GuidanceTip>
               )}
             </div>
@@ -251,31 +258,34 @@ export default function WorkList() {
               >
                 All ({statusCounts.all})
               </button>
-              {WORK_STATUSES.map((s) => (
-                statusCounts[s] > 0 && (
-                  <button
-                    key={s}
-                    onClick={() => setStatusFilter(s)}
-                    className={cn(
-                      'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
-                      statusFilter === s
-                        ? 'border-gold/30 bg-gold/10 text-gold'
-                        : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                    )}
-                  >
-                    {STATUS_LABELS[s]} ({statusCounts[s]})
-                  </button>
-                )
-              ))}
+              {WORK_STATUSES.map(
+                (s) =>
+                  statusCounts[s] > 0 && (
+                    <button
+                      key={s}
+                      onClick={() => setStatusFilter(s)}
+                      className={cn(
+                        'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
+                        statusFilter === s
+                          ? 'border-gold/30 bg-gold/10 text-gold'
+                          : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                      )}
+                    >
+                      {STATUS_LABELS[s]} ({statusCounts[s]})
+                    </button>
+                  )
+              )}
             </div>
 
             {/* Art grid */}
             {filteredWorks.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-sm text-muted-foreground">
-                  {searchQuery ? `No works matching "${searchQuery}"` :
-                   statusFilter !== 'all' ? `No works with status "${STATUS_LABELS[statusFilter]}"` :
-                   'No matching works'}
+                  {searchQuery
+                    ? `No works matching "${searchQuery}"`
+                    : statusFilter !== 'all'
+                      ? `No works with status "${STATUS_LABELS[statusFilter]}"`
+                      : 'No matching works'}
                 </p>
               </div>
             ) : (

@@ -48,28 +48,67 @@ export default function ConsignorNew() {
         <GuidanceTip id="consignor-new-guide">
           Only the name is required. You can add contact details now or update them later.
         </GuidanceTip>
-        <p className="text-xs text-muted-foreground mb-2">Add an artist, collector, or owner who entrusts works to your gallery.</p>
+        <p className="text-xs text-muted-foreground mb-2">
+          Add an artist, collector, or owner who entrusts works to your gallery.
+        </p>
         <div className="space-y-2">
           <Label htmlFor="name">Name *</Label>
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={200} required className="h-11 bg-card border-border/60" />
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={200}
+            required
+            className="h-11 bg-card border-border/60"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 bg-card border-border/60" />
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-11 bg-card border-border/60"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11 bg-card border-border/60" />
+          <Input
+            id="phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="h-11 bg-card border-border/60"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="address">Address</Label>
-          <Textarea id="address" value={address} onChange={(e) => setAddress(e.target.value)} maxLength={500} rows={3} className="bg-card border-border/60" />
+          <Textarea
+            id="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            maxLength={500}
+            rows={3}
+            className="bg-card border-border/60"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="notes">Notes</Label>
-          <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={2000} rows={3} className="bg-card border-border/60" />
+          <Textarea
+            id="notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            maxLength={2000}
+            rows={3}
+            className="bg-card border-border/60"
+          />
         </div>
-        <Button type="submit" className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" disabled={!name.trim() || saving}>
+        <Button
+          type="submit"
+          className="w-full h-11 bg-gold text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90"
+          disabled={!name.trim() || saving}
+        >
           {saving ? 'Saving...' : 'Save Consignor'}
         </Button>
       </form>

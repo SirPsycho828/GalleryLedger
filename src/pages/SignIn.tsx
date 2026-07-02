@@ -76,7 +76,10 @@ export default function SignIn() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-xs uppercase tracking-widest text-muted-foreground">
+            <Label
+              htmlFor="email"
+              className="text-xs uppercase tracking-widest text-muted-foreground"
+            >
               Email
             </Label>
             <Input
@@ -91,7 +94,10 @@ export default function SignIn() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-xs uppercase tracking-widest text-muted-foreground">
+            <Label
+              htmlFor="password"
+              className="text-xs uppercase tracking-widest text-muted-foreground"
+            >
               Password
             </Label>
             <Input

@@ -1,11 +1,19 @@
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/contexts/AuthContext'
+import { safeInternalPath } from '@/lib/validation'
 import { STORAGE_KEY as TOUR_STORAGE_KEY } from '@/contexts/TourContext'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -35,7 +43,10 @@ export default function SettingsPage() {
       <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-1">
         {/* Gallery Name */}
         <button
-          onClick={() => { setNewName(gallery?.name ?? ''); setEditingName(true) }}
+          onClick={() => {
+            setNewName(gallery?.name ?? '')
+            setEditingName(true)
+          }}
           className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
         >
           <div>
@@ -59,7 +70,7 @@ export default function SettingsPage() {
 
         {/* Restart Setup Wizard */}
         <button
-          onClick={() => navigate('/onboarding?restart=true')}
+          onClick={() => navigate(safeInternalPath('/onboarding?restart=true', '/works'))}
           className="flex w-full items-center justify-between p-3 text-left hover:bg-secondary transition-colors"
         >
           <div>
@@ -97,7 +108,9 @@ export default function SettingsPage() {
 
         {/* App Version */}
         <div className="p-3 pt-6 text-center">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">GalleryLedger v0.1.0</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">
+            GalleryLedger v0.1.0
+          </p>
         </div>
       </div>
 
@@ -118,8 +131,16 @@ export default function SettingsPage() {
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingName(false)}>Cancel</Button>
-            <Button onClick={handleSaveName} disabled={!newName.trim()} className="bg-gold text-gold-foreground hover:bg-gold/90">Save</Button>
+            <Button variant="outline" onClick={() => setEditingName(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveName}
+              disabled={!newName.trim()}
+              className="bg-gold text-gold-foreground hover:bg-gold/90"
+            >
+              Save
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -129,11 +150,17 @@ export default function SettingsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Sign out?</DialogTitle>
-            <DialogDescription>You can sign back in anytime to access your gallery.</DialogDescription>
+            <DialogDescription>
+              You can sign back in anytime to access your gallery.
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSignOutDialog(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={signOut}>Sign Out</Button>
+            <Button variant="outline" onClick={() => setShowSignOutDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={signOut}>
+              Sign Out
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -41,7 +41,9 @@ function getDb() {
   return dbPromise
 }
 
-export async function addToQueue(entry: Omit<QueueEntry, 'id' | 'status' | 'retryCount' | 'createdAt'>): Promise<number> {
+export async function addToQueue(
+  entry: Omit<QueueEntry, 'id' | 'status' | 'retryCount' | 'createdAt'>
+): Promise<number> {
   const db = await getDb()
   const id = await db.add(STORE_NAME, {
     ...entry,
@@ -68,7 +70,9 @@ export async function getQueueCountForWork(workId: string): Promise<number> {
 export async function getPendingCount(): Promise<number> {
   const db = await getDb()
   const all = await db.getAll(STORE_NAME)
-  return all.filter((e) => e.status === 'pending' || e.status === 'uploading' || e.status === 'failed').length
+  return all.filter(
+    (e) => e.status === 'pending' || e.status === 'uploading' || e.status === 'failed'
+  ).length
 }
 
 export async function retryFailed(): Promise<void> {
@@ -92,7 +96,9 @@ export async function processQueue(): Promise<void> {
   try {
     const db = await getDb()
     const all = await db.getAll(STORE_NAME)
-    const pending = all.filter((e) => e.status === 'pending').sort((a, b) => a.createdAt - b.createdAt)
+    const pending = all
+      .filter((e) => e.status === 'pending')
+      .sort((a, b) => a.createdAt - b.createdAt)
 
     for (const entry of pending) {
       if (!navigator.onLine) break
@@ -104,7 +110,12 @@ export async function processQueue(): Promise<void> {
       try {
         switch (entry.type) {
           case 'photo': {
-            const { url, path } = await uploadPhoto(entry.galleryId, entry.workId, entry.blob, entry.fileName)
+            const { url, path } = await uploadPhoto(
+              entry.galleryId,
+              entry.workId,
+              entry.blob,
+              entry.fileName
+            )
             await createPhotoDoc(entry.galleryId, entry.workId, {
               storageUrl: url,
               storagePath: path,

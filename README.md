@@ -66,19 +66,19 @@ Record sales with commission rates, track consignor payouts, and see real-time r
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 19 + TypeScript 6 |
-| Build | Vite 8 with SWC |
-| Styling | Tailwind CSS 4 + shadcn/ui |
-| Auth | Firebase Authentication (email/password) |
-| Database | Cloud Firestore with offline persistence |
-| Storage | Firebase Storage (photos, signatures, documents) |
-| PDF | jsPDF + jspdf-autotable (client-side generation) |
-| Offline | Firestore cache + IndexedDB upload queue |
-| PWA | vite-plugin-pwa with Workbox |
-| Font | DM Sans (variable) |
-| Icons | Lucide React |
+| Layer     | Technology                                       |
+| --------- | ------------------------------------------------ |
+| Framework | React 19 + TypeScript 6                          |
+| Build     | Vite 8 with SWC                                  |
+| Styling   | Tailwind CSS 4 + shadcn/ui                       |
+| Auth      | Firebase Authentication (email/password)         |
+| Database  | Cloud Firestore with offline persistence         |
+| Storage   | Firebase Storage (photos, signatures, documents) |
+| PDF       | jsPDF + jspdf-autotable (client-side generation) |
+| Offline   | Firestore cache + IndexedDB upload queue         |
+| PWA       | vite-plugin-pwa with Workbox                     |
+| Font      | DM Sans (variable)                               |
+| Icons     | Lucide React                                     |
 
 ## Project Structure
 
@@ -141,6 +141,7 @@ cp .env.example .env
 ```
 
 Required variables:
+
 ```
 VITE_FIREBASE_API_KEY=
 VITE_FIREBASE_AUTH_DOMAIN=

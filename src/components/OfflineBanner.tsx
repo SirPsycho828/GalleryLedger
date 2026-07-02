@@ -6,8 +6,12 @@ export function OfflineBanner() {
   const [queueCount, setQueueCount] = useState(0)
 
   useEffect(() => {
-    function handleOnline() { setOffline(false) }
-    function handleOffline() { setOffline(true) }
+    function handleOnline() {
+      setOffline(false)
+    }
+    function handleOffline() {
+      setOffline(true)
+    }
 
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
@@ -19,7 +23,9 @@ export function OfflineBanner() {
   }, [])
 
   useEffect(() => {
-    function refresh() { getPendingCount().then(setQueueCount) }
+    function refresh() {
+      getPendingCount().then(setQueueCount)
+    }
     refresh()
     const unsub = subscribeToQueueChanges(refresh)
     return unsub

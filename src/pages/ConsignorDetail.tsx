@@ -2,15 +2,34 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { Mail, Phone, MapPin, MoreVertical, ImagePlus } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
-import { getConsignor, updateConsignor, deleteConsignor, subscribeToWorks, subscribeToEvents, formatCurrency } from '@/lib/services'
+import {
+  getConsignor,
+  updateConsignor,
+  deleteConsignor,
+  subscribeToWorks,
+  subscribeToEvents,
+  formatCurrency,
+} from '@/lib/services'
 import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { toast } from 'sonner'
 import type { Consignor, Work, TimelineEvent } from '@/types'
@@ -54,7 +73,10 @@ export default function ConsignorDetail() {
       const soldWorks = linked.filter((w) => w.salePrice !== null)
       const totals: Record<string, number> = {}
       let pending = soldWorks.length
-      if (pending === 0) { setPayoutTotals({}); return }
+      if (pending === 0) {
+        setPayoutTotals({})
+        return
+      }
 
       soldWorks.forEach((work) => {
         const unsubEvents = subscribeToEvents(gallery.id, work.id, (events) => {
@@ -91,7 +113,18 @@ export default function ConsignorDetail() {
         address: editAddress.trim(),
         notes: editNotes.trim(),
       })
-      setConsignor((prev) => prev ? { ...prev, name: editName.trim(), email: editEmail.trim(), phone: editPhone.trim(), address: editAddress.trim(), notes: editNotes.trim() } : prev)
+      setConsignor((prev) =>
+        prev
+          ? {
+              ...prev,
+              name: editName.trim(),
+              email: editEmail.trim(),
+              phone: editPhone.trim(),
+              address: editAddress.trim(),
+              notes: editNotes.trim(),
+            }
+          : prev
+      )
       setEditOpen(false)
       toast.success('Consignor updated')
     } catch {
@@ -158,7 +191,12 @@ export default function ConsignorDetail() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={openEdit}>Edit</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive" onClick={() => setShowDeleteDialog(true)}>Delete</DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         }
@@ -166,7 +204,8 @@ export default function ConsignorDetail() {
 
       <div className="mx-auto max-w-3xl px-4 pt-4 space-y-6">
         <GuidanceTip id="consignor-detail-guide">
-          This consignor's linked works and financial summary update automatically as you record sales and payouts on individual works.
+          This consignor's linked works and financial summary update automatically as you record
+          sales and payouts on individual works.
         </GuidanceTip>
 
         {/* Contact info */}
@@ -190,7 +229,12 @@ export default function ConsignorDetail() {
             </div>
           )}
           {!consignor.email && !consignor.phone && !consignor.address && (
-            <p className="text-sm text-muted-foreground">No contact info. <button onClick={openEdit} className="text-gold underline">Edit</button></p>
+            <p className="text-sm text-muted-foreground">
+              No contact info.{' '}
+              <button onClick={openEdit} className="text-gold underline">
+                Edit
+              </button>
+            </p>
           )}
         </div>
 
@@ -204,17 +248,41 @@ export default function ConsignorDetail() {
         {/* Financial summary */}
         {linkedWorks.length > 0 && (
           <div className="border border-border/50 bg-card p-4 space-y-2">
-            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Financial Summary</h3>
+            <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+              Financial Summary
+            </h3>
             <div className="space-y-1 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">Works sold</span><span>{soldWorks.length} of {linkedWorks.length}</span></div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Works sold</span>
+                <span>
+                  {soldWorks.length} of {linkedWorks.length}
+                </span>
+              </div>
               {soldWorks.length > 0 && (
                 <>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Total sales</span><span>{formatCurrency(totalSales, 'USD')}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Consignor share</span><span>{formatCurrency(Math.round(totalConsignorShare), 'USD')}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Paid out</span><span>{formatCurrency(totalPaidOut, 'USD')}</span></div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total sales</span>
+                    <span>{formatCurrency(totalSales, 'USD')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Consignor share</span>
+                    <span>{formatCurrency(Math.round(totalConsignorShare), 'USD')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Paid out</span>
+                    <span>{formatCurrency(totalPaidOut, 'USD')}</span>
+                  </div>
                   <div className="flex justify-between font-medium border-t border-border/50 pt-1 mt-1">
                     <span>Outstanding</span>
-                    <span className={outstanding < 0 ? 'text-destructive' : outstanding === 0 ? 'text-success' : ''}>
+                    <span
+                      className={
+                        outstanding < 0
+                          ? 'text-destructive'
+                          : outstanding === 0
+                            ? 'text-success'
+                            : ''
+                      }
+                    >
                       {formatCurrency(Math.round(outstanding), 'USD')}
                     </span>
                   </div>
@@ -226,7 +294,9 @@ export default function ConsignorDetail() {
 
         {/* Linked works */}
         <div>
-          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">Works ({linkedWorks.length})</h3>
+          <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-3">
+            Works ({linkedWorks.length})
+          </h3>
           {linkedWorks.length === 0 ? (
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">No works from this consignor</p>
@@ -246,7 +316,11 @@ export default function ConsignorDetail() {
                   className="flex w-full items-start gap-3 border border-border/50 bg-card p-3 text-left hover:bg-secondary transition-colors"
                 >
                   {work.coverPhotoUrl ? (
-                    <img src={work.coverPhotoUrl} alt="" className="h-[56px] w-[56px] object-cover" />
+                    <img
+                      src={work.coverPhotoUrl}
+                      alt=""
+                      className="h-[56px] w-[56px] object-cover"
+                    />
                   ) : (
                     <div className="flex h-[56px] w-[56px] items-center justify-center bg-secondary">
                       <ImagePlus className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
@@ -267,29 +341,64 @@ export default function ConsignorDetail() {
       {/* Edit Sheet */}
       <Sheet open={editOpen} onOpenChange={setEditOpen}>
         <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
-          <SheetHeader><SheetTitle>Edit Consignor</SheetTitle></SheetHeader>
+          <SheetHeader>
+            <SheetTitle>Edit Consignor</SheetTitle>
+          </SheetHeader>
           <div className="space-y-4 pt-4">
             <div className="space-y-2">
               <Label>Name *</Label>
-              <Input value={editName} onChange={(e) => setEditName(e.target.value)} maxLength={200} className="h-11 bg-card border-border/60" />
+              <Input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                maxLength={200}
+                className="h-11 bg-card border-border/60"
+              />
             </div>
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} className="h-11 bg-card border-border/60" />
+              <Input
+                type="email"
+                value={editEmail}
+                onChange={(e) => setEditEmail(e.target.value)}
+                className="h-11 bg-card border-border/60"
+              />
             </div>
             <div className="space-y-2">
               <Label>Phone</Label>
-              <Input type="tel" value={editPhone} onChange={(e) => setEditPhone(e.target.value)} className="h-11 bg-card border-border/60" />
+              <Input
+                type="tel"
+                value={editPhone}
+                onChange={(e) => setEditPhone(e.target.value)}
+                className="h-11 bg-card border-border/60"
+              />
             </div>
             <div className="space-y-2">
               <Label>Address</Label>
-              <Textarea value={editAddress} onChange={(e) => setEditAddress(e.target.value)} maxLength={500} rows={3} className="bg-card border-border/60" />
+              <Textarea
+                value={editAddress}
+                onChange={(e) => setEditAddress(e.target.value)}
+                maxLength={500}
+                rows={3}
+                className="bg-card border-border/60"
+              />
             </div>
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea value={editNotes} onChange={(e) => setEditNotes(e.target.value)} maxLength={2000} rows={3} className="bg-card border-border/60" />
+              <Textarea
+                value={editNotes}
+                onChange={(e) => setEditNotes(e.target.value)}
+                maxLength={2000}
+                rows={3}
+                className="bg-card border-border/60"
+              />
             </div>
-            <Button onClick={handleSaveEdit} className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90" disabled={!editName.trim()}>Save</Button>
+            <Button
+              onClick={handleSaveEdit}
+              className="w-full h-11 bg-gold text-gold-foreground hover:bg-gold/90"
+              disabled={!editName.trim()}
+            >
+              Save
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
@@ -304,8 +413,12 @@ export default function ConsignorDetail() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -69,23 +69,23 @@ Sits at the top of the scrollable content area, above the timeline.
 
 Below the carousel, plain text layout:
 
-| Element | Style | Content |
-|---------|-------|---------|
-| Artist | `heading-md`, `text-primary` | `work.artist` |
-| Title | `body`, `text-primary`, italic | `work.title` |
-| Metadata | `small`, `text-secondary` | Medium, dimensions, year joined with " -- ". Omit empty fields. |
-| Consignor | `small`, `text-secondary` | "Consignor: {name}" -- tappable, navigates to consignor detail. Hidden if no consignor linked. |
-| Status badge | Status pill per design system | `work.status` |
+| Element      | Style                          | Content                                                                                        |
+| ------------ | ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Artist       | `heading-md`, `text-primary`   | `work.artist`                                                                                  |
+| Title        | `body`, `text-primary`, italic | `work.title`                                                                                   |
+| Metadata     | `small`, `text-secondary`      | Medium, dimensions, year joined with " -- ". Omit empty fields.                                |
+| Consignor    | `small`, `text-secondary`      | "Consignor: {name}" -- tappable, navigates to consignor detail. Hidden if no consignor linked. |
+| Status badge | Status pill per design system  | `work.status`                                                                                  |
 
 ### Derived State Summary
 
 A subtle divider separates work details from derived state. This section shows values computed from timeline events (see `09_Timeline_Architecture.md`).
 
-| Field | Source | Display |
-|-------|--------|---------|
-| Current location | Latest `location_change` event `details.to` | "Location: {value}" or "Location: Not recorded" |
-| Current condition | Latest `condition_update` or intake event | "Condition: {conditionSummary}" |
-| Notes | `work.notes` | Shown only if non-empty. Truncated to 3 lines with "Show more" toggle. |
+| Field             | Source                                      | Display                                                                |
+| ----------------- | ------------------------------------------- | ---------------------------------------------------------------------- |
+| Current location  | Latest `location_change` event `details.to` | "Location: {value}" or "Location: Not recorded"                        |
+| Current condition | Latest `condition_update` or intake event   | "Condition: {conditionSummary}"                                        |
+| Notes             | `work.notes`                                | Shown only if non-empty. Truncated to 3 lines with "Show more" toggle. |
 
 Style: `small` / `text-secondary` for labels, `body` / `text-primary` for values.
 
@@ -232,12 +232,12 @@ Show skeleton placeholder for the header section and 3 skeleton timeline cards w
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Timeline pagination | Not implemented | All events loaded in one query. Sufficient for 5-30 events typical. |
+| Item                         | Default              | Notes                                                                                                          |
+| ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Timeline pagination          | Not implemented      | All events loaded in one query. Sufficient for 5-30 events typical.                                            |
 | Event type icons in timeline | Optional enhancement | Each event type could have a distinct icon on the timeline dot. Not specified, but would improve scannability. |
-| Edit history | Not visible | Edits during the grace period are silent. No "edited" indicator on the event card. |
-| Share single event | Not supported | Cannot share or link to a specific timeline event. Only full work export via PDF. |
-| Reorder photos | Not supported at MVP | Photo carousel shows `sortOrder` from upload sequence. Manual reordering deferred. |
-| Work archive vs delete | Delete only | No soft archive. Deleted works are gone. See `17_Future_Features.md` for archive feature. |
-| Print timeline | Via PDF export only | No browser print styling for this screen. Use the PDF provenance pack. |  
+| Edit history                 | Not visible          | Edits during the grace period are silent. No "edited" indicator on the event card.                             |
+| Share single event           | Not supported        | Cannot share or link to a specific timeline event. Only full work export via PDF.                              |
+| Reorder photos               | Not supported at MVP | Photo carousel shows `sortOrder` from upload sequence. Manual reordering deferred.                             |
+| Work archive vs delete       | Delete only          | No soft archive. Deleted works are gone. See `17_Future_Features.md` for archive feature.                      |
+| Print timeline               | Via PDF export only  | No browser print styling for this screen. Use the PDF provenance pack.                                         |

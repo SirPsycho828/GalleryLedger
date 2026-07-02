@@ -15,14 +15,14 @@ A lightweight, custom-built app tour that introduces new users to GalleryLedger'
 
 6 stops maximum. Stops 5-6 are conditional on the user having existing works.
 
-| # | Target | `data-tour` attribute | Title | Content | Page |
-|---|--------|-----------------------|-------|---------|------|
-| 1 | Works nav tab (sidebar on desktop, bottom bar on mobile) | `nav-works` | Your Collection | All artwork in your gallery lives here. Filter by status and tap any piece to see its full provenance. | `/works` |
-| 2 | + button in TopBar (add work) | `add-work` | Intake a Work | Tap here to document a new artwork — photos, details, condition assessment, and consignor signature. | `/works` |
-| 3 | Consignors nav tab | `nav-consignors` | Consignors | Track the artists and owners who entrust works to your gallery. See their linked works and financial summary. | `/works` |
-| 4 | Settings nav tab | `nav-settings` | Settings | Manage your gallery name, account, and replay this tour anytime. | `/works` |
-| 5 | FAB (+ event button) on WorkDetail | `fab-add-event` | Build Provenance | Every condition change, location move, sale, and payout is logged here. This timeline is your dispute-proof record. | `/works/:id` (first work) |
-| 6 | Export button in WorkDetail top bar | `export-provenance` | Export a Provenance Pack | Generate a PDF report with the full timeline, photos, and financials — ready for buyers, insurers, or legal. | `/works/:id` |
+| #   | Target                                                   | `data-tour` attribute | Title                    | Content                                                                                                             | Page                      |
+| --- | -------------------------------------------------------- | --------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| 1   | Works nav tab (sidebar on desktop, bottom bar on mobile) | `nav-works`           | Your Collection          | All artwork in your gallery lives here. Filter by status and tap any piece to see its full provenance.              | `/works`                  |
+| 2   | + button in TopBar (add work)                            | `add-work`            | Intake a Work            | Tap here to document a new artwork — photos, details, condition assessment, and consignor signature.                | `/works`                  |
+| 3   | Consignors nav tab                                       | `nav-consignors`      | Consignors               | Track the artists and owners who entrust works to your gallery. See their linked works and financial summary.       | `/works`                  |
+| 4   | Settings nav tab                                         | `nav-settings`        | Settings                 | Manage your gallery name, account, and replay this tour anytime.                                                    | `/works`                  |
+| 5   | FAB (+ event button) on WorkDetail                       | `fab-add-event`       | Build Provenance         | Every condition change, location move, sale, and payout is logged here. This timeline is your dispute-proof record. | `/works/:id` (first work) |
+| 6   | Export button in WorkDetail top bar                      | `export-provenance`   | Export a Provenance Pack | Generate a PDF report with the full timeline, photos, and financials — ready for buyers, insurers, or legal.        | `/works/:id`              |
 
 ### Conditional logic
 
@@ -34,19 +34,19 @@ A lightweight, custom-built app tour that introduces new users to GalleryLedger'
 
 ### Files
 
-| File | Purpose |
-|------|---------|
-| `src/contexts/TourContext.tsx` | `TourProvider` + `useTour()` hook. Manages tour state, step progression, localStorage persistence |
-| `src/components/tour/TourOverlay.tsx` | Full-screen overlay with spotlight cutout + positioned tooltip. Rendered at app root level |
-| `src/components/tour/TourTooltip.tsx` | The styled tooltip component (title, content, navigation buttons, step dots) |
+| File                                  | Purpose                                                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `src/contexts/TourContext.tsx`        | `TourProvider` + `useTour()` hook. Manages tour state, step progression, localStorage persistence |
+| `src/components/tour/TourOverlay.tsx` | Full-screen overlay with spotlight cutout + positioned tooltip. Rendered at app root level        |
+| `src/components/tour/TourTooltip.tsx` | The styled tooltip component (title, content, navigation buttons, step dots)                      |
 
 ### TourContext API
 
 ```tsx
 interface TourContextValue {
   isTourActive: boolean
-  startTour: () => void   // called from Settings "Replay" or auto-start
-  endTour: () => void     // called on skip or completion
+  startTour: () => void // called from Settings "Replay" or auto-start
+  endTour: () => void // called on skip or completion
   currentStep: number
   totalSteps: number
 }
@@ -110,14 +110,14 @@ Clicking it: clears `gl-tour-completed` from localStorage, navigates to `/works`
 
 ## data-tour Attributes to Add
 
-| Component | File | Element | Attribute |
-|-----------|------|---------|-----------|
-| AppShell | `AppShell.tsx` | Works nav button (both sidebar + mobile) | `data-tour="nav-works"` |
-| AppShell | `AppShell.tsx` | Consignors nav button (both sidebar + mobile) | `data-tour="nav-consignors"` |
-| AppShell | `AppShell.tsx` | Settings nav button (both sidebar + mobile) | `data-tour="nav-settings"` |
-| WorkList TopBar | `WorkList.tsx` | + (add work) button | `data-tour="add-work"` |
-| WorkDetail | `WorkDetail.tsx` | FAB button | `data-tour="fab-add-event"` |
-| WorkDetail | `WorkDetail.tsx` | Export button in top bar | `data-tour="export-provenance"` |
+| Component       | File             | Element                                       | Attribute                       |
+| --------------- | ---------------- | --------------------------------------------- | ------------------------------- |
+| AppShell        | `AppShell.tsx`   | Works nav button (both sidebar + mobile)      | `data-tour="nav-works"`         |
+| AppShell        | `AppShell.tsx`   | Consignors nav button (both sidebar + mobile) | `data-tour="nav-consignors"`    |
+| AppShell        | `AppShell.tsx`   | Settings nav button (both sidebar + mobile)   | `data-tour="nav-settings"`      |
+| WorkList TopBar | `WorkList.tsx`   | + (add work) button                           | `data-tour="add-work"`          |
+| WorkDetail      | `WorkDetail.tsx` | FAB button                                    | `data-tour="fab-add-event"`     |
+| WorkDetail      | `WorkDetail.tsx` | Export button in top bar                      | `data-tour="export-provenance"` |
 
 ## State Management
 

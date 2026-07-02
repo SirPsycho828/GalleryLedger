@@ -1,4 +1,5 @@
-▸ Extended thinking (741 chars)  
+▸ Extended thinking (741 chars)
+
 ## Overview
 
 Design system for GalleryLedger built on Tailwind CSS 4 and shadcn/ui. The visual language is clean, restrained, and gallery-appropriate -- the UI should feel like a professional tool for the art world, not a tech startup dashboard. DM Sans as the primary typeface. 6-8px border radius throughout. Mobile-first, single-column layouts for all primary workflows.
@@ -14,15 +15,15 @@ Design system for GalleryLedger built on Tailwind CSS 4 and shadcn/ui. The visua
 
 **Scale** (mobile-first, rem-based):
 
-| Token | Size | Weight | Use |
-|-------|------|--------|-----|
-| `heading-lg` | 1.5rem / 24px | 700 | Screen titles |
-| `heading-md` | 1.25rem / 20px | 700 | Section headers |
-| `heading-sm` | 1.125rem / 18px | 600 | Card titles, work names |
-| `body` | 1rem / 16px | 400 | Default text |
-| `body-medium` | 1rem / 16px | 500 | Emphasized body text, labels |
-| `small` | 0.875rem / 14px | 400 | Secondary info, timestamps, metadata |
-| `caption` | 0.75rem / 12px | 500 | Badges, overlines, status labels |
+| Token         | Size            | Weight | Use                                  |
+| ------------- | --------------- | ------ | ------------------------------------ |
+| `heading-lg`  | 1.5rem / 24px   | 700    | Screen titles                        |
+| `heading-md`  | 1.25rem / 20px  | 700    | Section headers                      |
+| `heading-sm`  | 1.125rem / 18px | 600    | Card titles, work names              |
+| `body`        | 1rem / 16px     | 400    | Default text                         |
+| `body-medium` | 1rem / 16px     | 500    | Emphasized body text, labels         |
+| `small`       | 0.875rem / 14px | 400    | Secondary info, timestamps, metadata |
+| `caption`     | 0.75rem / 12px  | 500    | Badges, overlines, status labels     |
 
 No serif font at MVP. DM Sans handles everything.
 
@@ -32,22 +33,22 @@ Neutral-forward with a single accent color. The palette avoids competing with ar
 
 ### Semantic Tokens
 
-| Token | Light Mode | Purpose |
-|-------|-----------|---------|
-| `background` | `#FFFFFF` | Page background |
-| `surface` | `#F9FAFB` (gray-50) | Card backgrounds, input fills |
-| `surface-raised` | `#FFFFFF` | Elevated cards, modals |
-| `border` | `#E5E7EB` (gray-200) | Dividers, card borders, input borders |
-| `border-strong` | `#D1D5DB` (gray-300) | Active input borders, emphasized dividers |
-| `text-primary` | `#111827` (gray-900) | Headings, primary content |
-| `text-secondary` | `#6B7280` (gray-500) | Metadata, timestamps, helper text |
-| `text-tertiary` | `#9CA3AF` (gray-400) | Placeholder text, disabled labels |
-| `accent` | `#1D4ED8` (blue-700) | Primary buttons, links, active states |
-| `accent-hover` | `#1E40AF` (blue-800) | Button hover |
-| `accent-subtle` | `#EFF6FF` (blue-50) | Selected states, accent backgrounds |
-| `success` | `#059669` (emerald-600) | Sale recorded, payout complete |
-| `warning` | `#D97706` (amber-600) | Condition concerns, pending items |
-| `destructive` | `#DC2626` (red-600) | Error states, destructive actions |
+| Token            | Light Mode              | Purpose                                   |
+| ---------------- | ----------------------- | ----------------------------------------- |
+| `background`     | `#FFFFFF`               | Page background                           |
+| `surface`        | `#F9FAFB` (gray-50)     | Card backgrounds, input fills             |
+| `surface-raised` | `#FFFFFF`               | Elevated cards, modals                    |
+| `border`         | `#E5E7EB` (gray-200)    | Dividers, card borders, input borders     |
+| `border-strong`  | `#D1D5DB` (gray-300)    | Active input borders, emphasized dividers |
+| `text-primary`   | `#111827` (gray-900)    | Headings, primary content                 |
+| `text-secondary` | `#6B7280` (gray-500)    | Metadata, timestamps, helper text         |
+| `text-tertiary`  | `#9CA3AF` (gray-400)    | Placeholder text, disabled labels         |
+| `accent`         | `#1D4ED8` (blue-700)    | Primary buttons, links, active states     |
+| `accent-hover`   | `#1E40AF` (blue-800)    | Button hover                              |
+| `accent-subtle`  | `#EFF6FF` (blue-50)     | Selected states, accent backgrounds       |
+| `success`        | `#059669` (emerald-600) | Sale recorded, payout complete            |
+| `warning`        | `#D97706` (amber-600)   | Condition concerns, pending items         |
+| `destructive`    | `#DC2626` (red-600)     | Error states, destructive actions         |
 
 No dark mode at MVP. Single light theme only.
 
@@ -55,15 +56,15 @@ No dark mode at MVP. Single light theme only.
 
 Work status badges use these background/text pairs:
 
-| Status | Background | Text |
-|--------|-----------|------|
-| `intake` | blue-50 | blue-700 |
-| `in_storage` | gray-100 | gray-700 |
+| Status       | Background | Text        |
+| ------------ | ---------- | ----------- |
+| `intake`     | blue-50    | blue-700    |
+| `in_storage` | gray-100   | gray-700    |
 | `on_display` | emerald-50 | emerald-700 |
-| `on_loan` | amber-50 | amber-700 |
-| `shipped` | purple-50 | purple-700 |
-| `sold` | emerald-50 | emerald-700 |
-| `returned` | gray-100 | gray-600 |
+| `on_loan`    | amber-50   | amber-700   |
+| `shipped`    | purple-50  | purple-700  |
+| `sold`       | emerald-50 | emerald-700 |
+| `returned`   | gray-100   | gray-600    |
 
 ## Spacing and Layout
 
@@ -87,11 +88,11 @@ Built on shadcn/ui primitives. Only document non-obvious customizations below.
 
 Three variants, all with 6px radius and DM Sans 500 weight:
 
-| Variant | Style | Use |
-|---------|-------|-----|
-| Primary | Solid `accent` background, white text | Main actions: "Save", "Add Work", "Export PDF" |
-| Secondary | `border` outline, `text-primary` text | Alternate actions: "Cancel", "Skip" |
-| Ghost | No border, `text-secondary` text | Tertiary actions, navigation links |
+| Variant   | Style                                 | Use                                            |
+| --------- | ------------------------------------- | ---------------------------------------------- |
+| Primary   | Solid `accent` background, white text | Main actions: "Save", "Add Work", "Export PDF" |
+| Secondary | `border` outline, `text-primary` text | Alternate actions: "Cancel", "Skip"            |
+| Ghost     | No border, `text-secondary` text      | Tertiary actions, navigation links             |
 
 Full-width buttons on mobile for primary actions (form submissions, major CTAs). Inline/auto-width for secondary actions and toolbar items.
 
@@ -179,22 +180,22 @@ Minimal. The app should feel fast and direct, not decorative.
 
 Mobile-first. Use Tailwind's default breakpoints:
 
-| Breakpoint | Width | Layout Adaptation |
-|-----------|-------|-------------------|
-| Default | < 640px | Single column. Full-width cards and buttons. Bottom navigation. |
-| `sm` | 640px+ | Minimal changes. Slightly wider content padding. |
-| `md` | 768px+ | Work list can show 2-column grid. Content max-width kicks in. |
-| `lg` | 1024px+ | Optional sidebar navigation instead of bottom tabs. Not required for MVP. |
+| Breakpoint | Width   | Layout Adaptation                                                         |
+| ---------- | ------- | ------------------------------------------------------------------------- |
+| Default    | < 640px | Single column. Full-width cards and buttons. Bottom navigation.           |
+| `sm`       | 640px+  | Minimal changes. Slightly wider content padding.                          |
+| `md`       | 768px+  | Work list can show 2-column grid. Content max-width kicks in.             |
+| `lg`       | 1024px+ | Optional sidebar navigation instead of bottom tabs. Not required for MVP. |
 
 MVP priority is the default (mobile) breakpoint. `md` breakpoint gets basic grid treatment. `lg` is stretch goal only.
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Brand logo / wordmark | Text-only "GalleryLedger" in `heading-lg` DM Sans 700 | No logo designed. Text treatment sufficient for MVP. |
-| Dark mode | Deferred | Single light theme. Art photography displays most accurately on white/light backgrounds. See `17_Future_Features.md`. |
-| Illustration style | Lucide icons only | No custom illustrations for empty states or onboarding. Icons keep the visual language consistent. |
-| Color palette validation | Not tested with art photography | The neutral palette should recede behind artwork photos, but real-world testing with various art styles is needed. |
-| Accessibility | WCAG AA target | Color contrast ratios meet AA at the specified values. Touch targets meet 44px minimum. Full audit deferred to post-MVP. |
-| Print styles | Not addressed | PDF export handles printable output (see `15_PDF_Provenance_Pack.md`). No browser print stylesheet needed. |  
+| Item                     | Default                                               | Notes                                                                                                                    |
+| ------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Brand logo / wordmark    | Text-only "GalleryLedger" in `heading-lg` DM Sans 700 | No logo designed. Text treatment sufficient for MVP.                                                                     |
+| Dark mode                | Deferred                                              | Single light theme. Art photography displays most accurately on white/light backgrounds. See `17_Future_Features.md`.    |
+| Illustration style       | Lucide icons only                                     | No custom illustrations for empty states or onboarding. Icons keep the visual language consistent.                       |
+| Color palette validation | Not tested with art photography                       | The neutral palette should recede behind artwork photos, but real-world testing with various art styles is needed.       |
+| Accessibility            | WCAG AA target                                        | Color contrast ratios meet AA at the specified values. Touch targets meet 44px minimum. Full audit deferred to post-MVP. |
+| Print styles             | Not addressed                                         | PDF export handles printable output (see `15_PDF_Provenance_Pack.md`). No browser print stylesheet needed.               |

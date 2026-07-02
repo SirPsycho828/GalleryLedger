@@ -11,6 +11,7 @@
 **Spec:** `docs/superpowers/specs/2026-05-11-exhibition-redesign-design.md`
 
 **Verification:** This project has no test suite. Verify each task with:
+
 1. `npx tsc --noEmit` — must pass with no errors
 2. Visual verification via Playwright MCP screenshots against the running dev server
 
@@ -19,21 +20,25 @@
 ## File Structure
 
 **New files:**
+
 - `src/pages/LandingPage.tsx` — public cinematic landing page (hero + features + CTA)
 - `src/hooks/useScrollDirection.ts` — hook for detecting scroll up/down (bottom nav auto-hide)
 - `public/images/hero.jpg` — static hero image for landing page (royalty-free gallery photograph)
 
 **Major rewrites (preserve all business logic, change layout/presentation):**
+
 - `src/pages/WorkList.tsx` — art grid layout, 4:5 cards, shared-element anchors, responsive grid
 - `src/pages/WorkDetail.tsx` — full-bleed hero, visual timeline, desktop two-column layout
 - `src/components/AppShell.tsx` — responsive nav: bottom nav (mobile) + left sidebar (desktop), auto-hide
 
 **Moderate changes:**
+
 - `src/App.tsx` — add landing page route, update works route to `/works`, wrap in LayoutGroup
 - `src/components/AuthGuard.tsx` — update PublicRoute redirect from `/` to `/works`
 - `src/components/TopBar.tsx` — scroll-linked border opacity, responsive sidebar awareness
 
 **Minor changes (micro-interactions):**
+
 - `src/index.css` — shimmer keyframe animation, Ken Burns keyframe
 - `src/components/ui/skeleton.tsx` — shimmer animation class
 - `src/components/ui/button.tsx` — (optional) whileTap via per-component usage
@@ -43,6 +48,7 @@
 ### Task 1: CSS Foundations — Shimmer & Ken Burns Keyframes
 
 **Files:**
+
 - Modify: `src/index.css`
 - Modify: `src/components/ui/skeleton.tsx`
 
@@ -53,14 +59,22 @@ Add these keyframes inside the `@layer base` block in `src/index.css`, after the
 ```css
 /* Shimmer animation for loading skeletons */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Ken Burns slow zoom for landing hero */
 @keyframes ken-burns {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
 }
 ```
 
@@ -69,14 +83,14 @@ Add these keyframes inside the `@layer base` block in `src/index.css`, after the
 Replace the Skeleton component in `src/components/ui/skeleton.tsx`:
 
 ```tsx
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils'
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="skeleton"
       className={cn(
-        "rounded-md bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%] animate-[shimmer_1.5s_ease-in-out_infinite]",
+        'rounded-md bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%] animate-[shimmer_1.5s_ease-in-out_infinite]',
         className
       )}
       {...props}
@@ -104,6 +118,7 @@ git commit -m "feat: add shimmer and Ken Burns CSS keyframes"
 ### Task 2: Scroll Direction Hook
 
 **Files:**
+
 - Create: `src/hooks/useScrollDirection.ts`
 
 - [ ] **Step 1: Create the hook**
@@ -153,6 +168,7 @@ git commit -m "feat: add useScrollDirection hook for nav auto-hide"
 ### Task 3: Responsive AppShell — Sidebar + Bottom Nav
 
 **Files:**
+
 - Modify: `src/components/AppShell.tsx`
 
 This is a full rewrite of AppShell. The bottom nav stays for mobile but auto-hides on scroll down. On tablet/desktop (>= 768px), a slim left sidebar replaces the bottom nav.
@@ -181,7 +197,8 @@ export function AppShell() {
   const navHidden = useScrollDirection()
 
   function isActive(path: string) {
-    if (path === '/works') return location.pathname === '/works' || location.pathname.startsWith('/works/')
+    if (path === '/works')
+      return location.pathname === '/works' || location.pathname.startsWith('/works/')
     return location.pathname.startsWith(path)
   }
 
@@ -260,7 +277,9 @@ export function AppShell() {
                   />
                 )}
                 <tab.icon className="h-5 w-5" strokeWidth={1.5} />
-                <span className="text-[10px] font-medium uppercase tracking-wider">{tab.label}</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider">
+                  {tab.label}
+                </span>
               </button>
             )
           })}
@@ -288,6 +307,7 @@ git commit -m "feat: responsive AppShell with sidebar and auto-hide bottom nav"
 ### Task 4: Routing Changes — Landing Page Route & Works Path
 
 **Files:**
+
 - Modify: `src/App.tsx`
 - Modify: `src/components/AuthGuard.tsx`
 - Create: `src/pages/LandingPage.tsx` (placeholder for now — full implementation in Task 6)
@@ -309,7 +329,9 @@ export default function LandingPage() {
           Gallery<span className="text-gold">Ledger</span>
         </h1>
         <p className="mt-4 text-muted-foreground">Coming soon</p>
-        <Link to="/signin" className="mt-8 inline-block text-gold underline">Sign In</Link>
+        <Link to="/signin" className="mt-8 inline-block text-gold underline">
+          Sign In
+        </Link>
       </div>
     </div>
   )
@@ -345,16 +367,57 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-          <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
-          <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
-          <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <LandingPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <PublicRoute>
+                <SignIn />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            }
+          />
 
           {/* Onboarding */}
-          <Route path="/onboarding" element={<AuthGuard><Onboarding /></AuthGuard>} />
+          <Route
+            path="/onboarding"
+            element={
+              <AuthGuard>
+                <Onboarding />
+              </AuthGuard>
+            }
+          />
 
           {/* Authenticated routes with app shell */}
-          <Route element={<AuthGuard><AppShell /></AuthGuard>}>
+          <Route
+            element={
+              <AuthGuard>
+                <AppShell />
+              </AuthGuard>
+            }
+          >
             <Route path="works" element={<WorkList />} />
             <Route path="works/new" element={<WorkIntake />} />
             <Route path="works/:workId" element={<WorkDetail />} />
@@ -379,12 +442,15 @@ export default function App() {
 In `src/components/AuthGuard.tsx`, update `PublicRoute` to redirect authenticated users to `/works` instead of `/`:
 
 Change line 44 from:
+
 ```tsx
-    return <Navigate to="/" replace />
+return <Navigate to="/" replace />
 ```
+
 to:
+
 ```tsx
-    return <Navigate to="/works" replace />
+return <Navigate to="/works" replace />
 ```
 
 - [ ] **Step 4: Verify build**
@@ -395,6 +461,7 @@ Expected: No errors
 - [ ] **Step 5: Visual verification**
 
 Start dev server and verify:
+
 1. Unauthenticated: `/` shows landing page placeholder
 2. `/signin` still shows sign-in form
 3. Authenticated: redirects to `/works` and shows works list
@@ -412,6 +479,7 @@ git commit -m "feat: add landing page route, move works list to /works"
 ### Task 5: TopBar — Scroll-Linked Border & Responsive Awareness
 
 **Files:**
+
 - Modify: `src/components/TopBar.tsx`
 
 - [ ] **Step 1: Rewrite TopBar with scroll-linked border and responsive layout**
@@ -492,6 +560,7 @@ git commit -m "feat: TopBar with scroll-linked border and responsive awareness"
 ### Task 6: Landing Page — Full Cinematic Implementation
 
 **Files:**
+
 - Modify: `src/pages/LandingPage.tsx` (replace placeholder)
 - Create: `public/images/hero.jpg` (download a royalty-free gallery image)
 
@@ -520,17 +589,20 @@ const features = [
   {
     icon: ClipboardCheck,
     title: 'Track Every Detail',
-    description: 'Document intake, provenance, and location history for every work in your collection. Full timeline from arrival to sale.',
+    description:
+      'Document intake, provenance, and location history for every work in your collection. Full timeline from arrival to sale.',
   },
   {
     icon: Shield,
     title: 'Document Condition',
-    description: 'Detailed condition assessments with photo evidence, checklists, and digital signature capture at intake.',
+    description:
+      'Detailed condition assessments with photo evidence, checklists, and digital signature capture at intake.',
   },
   {
     icon: Users,
     title: 'Manage Consignors',
-    description: 'Track consignor relationships, commission structures, payouts, and outstanding balances in one place.',
+    description:
+      'Track consignor relationships, commission structures, payouts, and outstanding balances in one place.',
   },
 ]
 
@@ -641,7 +713,10 @@ export default function LandingPage() {
           <p className="mt-4 text-muted-foreground">Start managing your collection</p>
           <div className="mt-8 flex items-center justify-center gap-4">
             <Link to="/signin">
-              <Button variant="outline" className="h-11 px-8 border-gold/30 text-gold hover:bg-gold/10 text-sm font-medium uppercase tracking-widest">
+              <Button
+                variant="outline"
+                className="h-11 px-8 border-gold/30 text-gold hover:bg-gold/10 text-sm font-medium uppercase tracking-widest"
+              >
                 Sign In
               </Button>
             </Link>
@@ -673,6 +748,7 @@ Expected: No errors
 - [ ] **Step 4: Visual verification**
 
 Navigate to `http://localhost:<port>/` (unauthenticated) and take screenshots:
+
 1. Hero section — full viewport, Ken Burns image, wordmark, CTA
 2. Scroll down — feature sections animate in
 3. Bottom — closing CTA with two buttons
@@ -689,6 +765,7 @@ git commit -m "feat: cinematic landing page with hero, features, and CTA"
 ### Task 7: Works List — Art Grid with Responsive Layout
 
 **Files:**
+
 - Modify: `src/pages/WorkList.tsx`
 
 This is a major rewrite. The flat list becomes a responsive art-forward grid. Each card is an image-dominant 4:5 card with text overlay. All business logic (filtering, search, subscriptions) stays identical.
@@ -763,9 +840,7 @@ function ArtCard({ work, onClick, index }: { work: Work; onClick: () => void; in
         <p className="truncate font-heading text-[13px] font-medium leading-tight text-white">
           {work.artist}
         </p>
-        <p className="mt-0.5 truncate text-[11px] italic text-white/65">
-          {work.title}
-        </p>
+        <p className="mt-0.5 truncate text-[11px] italic text-white/65">{work.title}</p>
       </div>
 
       {/* Hover border (desktop) */}
@@ -778,7 +853,10 @@ function GridSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-0.5 sm:grid-cols-3 lg:grid-cols-4 lg:gap-1">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="aspect-[4/5] animate-[shimmer_1.5s_ease-in-out_infinite] rounded-none bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%]" />
+        <div
+          key={i}
+          className="aspect-[4/5] animate-[shimmer_1.5s_ease-in-out_infinite] rounded-none bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%]"
+        />
       ))}
     </div>
   )
@@ -816,11 +894,12 @@ export default function WorkList() {
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
-      result = result.filter((w) =>
-        w.artist.toLowerCase().includes(q) ||
-        w.title.toLowerCase().includes(q) ||
-        w.medium.toLowerCase().includes(q) ||
-        w.notes.toLowerCase().includes(q)
+      result = result.filter(
+        (w) =>
+          w.artist.toLowerCase().includes(q) ||
+          w.title.toLowerCase().includes(q) ||
+          w.medium.toLowerCase().includes(q) ||
+          w.notes.toLowerCase().includes(q)
       )
     }
     return result
@@ -843,7 +922,10 @@ export default function WorkList() {
                 className="h-9 border-border/60 bg-card"
               />
               <button
-                onClick={() => { setSearchOpen(false); setSearchQuery('') }}
+                onClick={() => {
+                  setSearchOpen(false)
+                  setSearchQuery('')
+                }}
                 className="flex h-11 w-11 items-center justify-center text-muted-foreground hover:text-foreground"
               >
                 <X className="h-5 w-5" strokeWidth={1.5} />
@@ -910,31 +992,34 @@ export default function WorkList() {
               >
                 All ({statusCounts.all})
               </button>
-              {WORK_STATUSES.map((s) => (
-                statusCounts[s] > 0 && (
-                  <button
-                    key={s}
-                    onClick={() => setStatusFilter(s)}
-                    className={cn(
-                      'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
-                      statusFilter === s
-                        ? 'border-gold/30 bg-gold/10 text-gold'
-                        : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
-                    )}
-                  >
-                    {STATUS_LABELS[s]} ({statusCounts[s]})
-                  </button>
-                )
-              ))}
+              {WORK_STATUSES.map(
+                (s) =>
+                  statusCounts[s] > 0 && (
+                    <button
+                      key={s}
+                      onClick={() => setStatusFilter(s)}
+                      className={cn(
+                        'flex-shrink-0 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border transition-colors',
+                        statusFilter === s
+                          ? 'border-gold/30 bg-gold/10 text-gold'
+                          : 'border-border/50 bg-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                      )}
+                    >
+                      {STATUS_LABELS[s]} ({statusCounts[s]})
+                    </button>
+                  )
+              )}
             </div>
 
             {/* Art grid */}
             {filteredWorks.length === 0 ? (
               <div className="py-16 text-center">
                 <p className="text-sm text-muted-foreground">
-                  {searchQuery ? `No works matching "${searchQuery}"` :
-                   statusFilter !== 'all' ? `No works with status "${STATUS_LABELS[statusFilter]}"` :
-                   'No matching works'}
+                  {searchQuery
+                    ? `No works matching "${searchQuery}"`
+                    : statusFilter !== 'all'
+                      ? `No works with status "${STATUS_LABELS[statusFilter]}"`
+                      : 'No matching works'}
                 </p>
               </div>
             ) : (
@@ -967,6 +1052,7 @@ Expected: No errors
 - [ ] **Step 3: Visual verification**
 
 Navigate to the works list and take screenshots at:
+
 1. Mobile (390px) — 2-column grid with art cards
 2. Desktop (1280px) — 4-column grid with hover effects visible
 
@@ -982,11 +1068,13 @@ git commit -m "feat: art-forward responsive grid for works list"
 ### Task 8: WorkDetail — Full-Bleed Hero, Visual Timeline, Desktop Layout
 
 **Files:**
+
 - Modify: `src/pages/WorkDetail.tsx`
 
 This is the largest task. The WorkDetail page is ~600 lines with extensive business logic (event forms, sale recording, payout, delete, edit, export). We preserve ALL business logic and only change the layout/presentation layer.
 
 The key changes:
+
 1. Full-bleed hero image with `layoutId` for shared-element transition
 2. Visual vertical timeline with gold line + dots
 3. Desktop: two-column layout (sticky image left, content right)
@@ -1004,9 +1092,12 @@ The changes are in the JSX return block and some component extractions. Keep all
 Key JSX changes:
 
 **Hero section** — replace the current photo carousel with:
+
 ```tsx
-{/* Full-bleed hero */}
-<div className="relative bg-black lg:sticky lg:top-0 lg:h-screen lg:w-1/2">
+{
+  /* Full-bleed hero */
+}
+;<div className="relative bg-black lg:sticky lg:top-0 lg:h-screen lg:w-1/2">
   {photos.length > 0 ? (
     <div className="relative h-[50vh] lg:h-full">
       <motion.img
@@ -1039,18 +1130,18 @@ Key JSX changes:
 ```
 
 **Desktop two-column wrapper** — wrap the entire return in:
+
 ```tsx
 <div className="lg:flex">
   {/* Hero section (left on desktop) */}
   ...
   {/* Content section (right on desktop, scrollable) */}
-  <div className="lg:w-1/2 lg:min-h-screen">
-    ...
-  </div>
+  <div className="lg:w-1/2 lg:min-h-screen">...</div>
 </div>
 ```
 
 **Artist info block** — below the hero:
+
 ```tsx
 <div className="px-4 py-6 lg:px-8">
   <h1 className="font-heading text-2xl font-medium">{work.artist}</h1>
@@ -1060,11 +1151,14 @@ Key JSX changes:
       {[work.medium, work.dimensions].filter(Boolean).join(' — ')}
     </p>
   )}
-  <div className="mt-3"><StatusBadge status={work.status} /></div>
+  <div className="mt-3">
+    <StatusBadge status={work.status} />
+  </div>
 </div>
 ```
 
 **Timeline section** — replace the flat event list with a visual timeline:
+
 ```tsx
 <div className="px-4 py-6 lg:px-8">
   <h3 className="text-[10px] font-medium uppercase tracking-wider text-gold mb-6">Timeline</h3>
@@ -1093,7 +1187,10 @@ Key JSX changes:
               <p className="mt-0.5 text-sm">{event.description}</p>
               {event.type === 'payout' && (event.details as any)?.amount && (
                 <p className="mt-1 text-sm font-medium text-gold">
-                  {formatCurrency((event.details as any).amount, (event.details as any).currency ?? 'USD')}
+                  {formatCurrency(
+                    (event.details as any).amount,
+                    (event.details as any).currency ?? 'USD'
+                  )}
                 </p>
               )}
             </div>
@@ -1106,6 +1203,7 @@ Key JSX changes:
 ```
 
 **FAB** — update with gold glow and spring:
+
 ```tsx
 <motion.button
   initial={{ scale: 0.8, opacity: 0 }}
@@ -1126,6 +1224,7 @@ Expected: No errors
 - [ ] **Step 4: Visual verification**
 
 Navigate to a work detail page and take screenshots at:
+
 1. Mobile (390px) — full-bleed hero, artist info, timeline with gold line
 2. Desktop (1280px) — two-column layout, sticky image on left
 
@@ -1141,6 +1240,7 @@ git commit -m "feat: WorkDetail with full-bleed hero, visual timeline, desktop l
 ### Task 9: Shared-Element Transition — LayoutGroup Wrapper
 
 **Files:**
+
 - Modify: `src/App.tsx`
 
 Wrap the authenticated route area in Framer Motion's `LayoutGroup` so `layoutId` animations work across WorkList ↔ WorkDetail navigation.
@@ -1148,6 +1248,7 @@ Wrap the authenticated route area in Framer Motion's `LayoutGroup` so `layoutId`
 - [ ] **Step 1: Add LayoutGroup to App.tsx**
 
 Add the import at the top of `src/App.tsx`:
+
 ```tsx
 import { LayoutGroup } from 'framer-motion'
 ```
@@ -1155,10 +1256,13 @@ import { LayoutGroup } from 'framer-motion'
 Wrap the `<AppShell />` element in the authenticated route:
 
 Change:
+
 ```tsx
 <Route element={<AuthGuard><AppShell /></AuthGuard>}>
 ```
+
 to:
+
 ```tsx
 <Route element={<AuthGuard><LayoutGroup><AppShell /></LayoutGroup></AuthGuard>}>
 ```
@@ -1171,6 +1275,7 @@ Expected: No errors
 - [ ] **Step 3: Visual verification**
 
 Navigate from works list to a work detail and back. Verify:
+
 1. The artwork image animates from its grid position to the full-bleed hero
 2. On back navigation, the image animates back to the grid
 
@@ -1188,6 +1293,7 @@ git commit -m "feat: add LayoutGroup for shared-element transitions"
 ### Task 10: Consignor Pages — Responsive Improvements
 
 **Files:**
+
 - Modify: `src/pages/ConsignorList.tsx`
 - Modify: `src/pages/ConsignorDetail.tsx`
 
@@ -1196,19 +1302,25 @@ Light-touch improvements to make consignor pages responsive. ConsignorList gets 
 - [ ] **Step 1: Update ConsignorList for responsive grid**
 
 In `src/pages/ConsignorList.tsx`, change the container from:
+
 ```tsx
 <div className="mx-auto max-w-[640px] px-4 pt-4">
 ```
+
 to:
+
 ```tsx
 <div className="mx-auto max-w-4xl px-4 pt-4">
 ```
 
 And change the cards container from:
+
 ```tsx
 <div className="space-y-3">
 ```
+
 to:
+
 ```tsx
 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 ```
@@ -1216,10 +1328,13 @@ to:
 - [ ] **Step 2: Update ConsignorDetail max-width**
 
 In `src/pages/ConsignorDetail.tsx`, change:
+
 ```tsx
 <div className="mx-auto max-w-[640px] px-4 pt-4 space-y-6">
 ```
+
 to:
+
 ```tsx
 <div className="mx-auto max-w-3xl px-4 pt-4 space-y-6">
 ```
@@ -1241,6 +1356,7 @@ git commit -m "feat: responsive improvements for consignor pages"
 ### Task 11: Final Polish — Micro-interactions & Cleanup
 
 **Files:**
+
 - Modify: `src/index.css` (if any missed keyframes)
 - Delete: any leftover mockup/temp files
 
@@ -1258,6 +1374,7 @@ Expected: No errors
 - [ ] **Step 3: Full visual walkthrough via Playwright**
 
 Take screenshots of every major screen at mobile (390px) and desktop (1280px):
+
 1. Landing page `/` (unauthenticated)
 2. Sign in page `/signin`
 3. Works list `/works` (authenticated)

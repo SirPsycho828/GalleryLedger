@@ -42,7 +42,7 @@ export function TourTooltip({
           placement === 'bottom' && '-top-[5px] left-6 border-l border-t border-gold/20',
           placement === 'top' && '-bottom-[5px] left-6 border-r border-b border-gold/20',
           placement === 'left' && '-right-[5px] top-4 border-r border-t border-gold/20',
-          placement === 'right' && '-left-[5px] top-4 border-l border-b border-gold/20',
+          placement === 'right' && '-left-[5px] top-4 border-l border-b border-gold/20'
         )}
       />
 
@@ -58,7 +58,7 @@ export function TourTooltip({
                 key={i}
                 className={cn(
                   'h-1.5 w-1.5 rounded-full transition-colors',
-                  i === currentStep ? 'bg-gold' : 'bg-gold/30',
+                  i === currentStep ? 'bg-gold' : 'bg-gold/30'
                 )}
               />
             ))}

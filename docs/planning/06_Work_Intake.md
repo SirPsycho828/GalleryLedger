@@ -37,15 +37,15 @@ Position: top of form, most prominent. This is the first and most critical actio
 
 ### Section 2: Work Details
 
-| Field | Input Type | Required | Notes |
-|-------|-----------|----------|-------|
-| Artist | Text input | Yes | Autocomplete from previous entries in this gallery. Query existing works' `artist` field. |
-| Title | Text input | Yes | Free text |
-| Medium | Text input | No | Autocomplete from previous entries. e.g., "Oil on canvas", "Bronze" |
-| Dimensions | Text input | No | Free text. Placeholder: "24 x 36 in" |
-| Year | Text input | No | Free text to allow "c. 1920", "undated", "2024" |
-| Consignor | Select / create | No | Dropdown of existing consignors + "Add new consignor" option. See below. |
-| Notes | Multiline text | No | General notes about the work. 4-line visible height. |
+| Field      | Input Type      | Required | Notes                                                                                     |
+| ---------- | --------------- | -------- | ----------------------------------------------------------------------------------------- |
+| Artist     | Text input      | Yes      | Autocomplete from previous entries in this gallery. Query existing works' `artist` field. |
+| Title      | Text input      | Yes      | Free text                                                                                 |
+| Medium     | Text input      | No       | Autocomplete from previous entries. e.g., "Oil on canvas", "Bronze"                       |
+| Dimensions | Text input      | No       | Free text. Placeholder: "24 x 36 in"                                                      |
+| Year       | Text input      | No       | Free text to allow "c. 1920", "undated", "2024"                                           |
+| Consignor  | Select / create | No       | Dropdown of existing consignors + "Add new consignor" option. See below.                  |
+| Notes      | Multiline text  | No       | General notes about the work. 4-line visible height.                                      |
 
 **Artist autocomplete**: Query distinct artist names from existing works in this gallery. Client-side filtering over the cached work list (20-100 works). No dedicated search index needed.
 
@@ -57,29 +57,29 @@ A quick structured assessment of the work's condition at the moment of intake. T
 
 **Overall condition**: Required. Single select from four options displayed as tappable chips (not a dropdown):
 
-| Value | Label | When to Use |
-|-------|-------|-------------|
-| `excellent` | Excellent | No visible issues |
-| `good` | Good | Minor wear consistent with age |
-| `fair` | Fair | Noticeable issues present |
-| `poor` | Poor | Significant damage or deterioration |
+| Value       | Label     | When to Use                         |
+| ----------- | --------- | ----------------------------------- |
+| `excellent` | Excellent | No visible issues                   |
+| `good`      | Good      | Minor wear consistent with age      |
+| `fair`      | Fair      | Noticeable issues present           |
+| `poor`      | Poor      | Significant damage or deterioration |
 
 **Condition checklist**: A set of toggle items. Each is either checked (issue present) or unchecked (no issue). Only checked items are stored.
 
-| Checklist Item | Applies To |
-|---------------|-----------|
-| Scratches | All media |
-| Dents | Sculpture, frames |
-| Tears | Canvas, works on paper |
-| Staining | All media |
-| Foxing | Works on paper |
-| Fading | All media |
-| Frame damage | Framed works |
-| Glass damage | Framed works with glass |
-| Loose hardware | Framed works, sculpture |
-| Surface dirt | All media |
-| Previous repairs | All media |
-| Missing parts | Sculpture, mixed media |
+| Checklist Item   | Applies To              |
+| ---------------- | ----------------------- |
+| Scratches        | All media               |
+| Dents            | Sculpture, frames       |
+| Tears            | Canvas, works on paper  |
+| Staining         | All media               |
+| Foxing           | Works on paper          |
+| Fading           | All media               |
+| Frame damage     | Framed works            |
+| Glass damage     | Framed works with glass |
+| Loose hardware   | Framed works, sculpture |
+| Surface dirt     | All media               |
+| Previous repairs | All media               |
+| Missing parts    | Sculpture, mixed media  |
 
 Each checked item can have an optional free-text note (collapsed by default, expands on check). For example, checking "Scratches" reveals a text input for "Describe location and severity."
 
@@ -123,6 +123,7 @@ Saving the intake form performs multiple writes. These should execute as a Fires
 No explicit draft saving at MVP. If the user navigates away from the form (back button, tab switch, app background), unsaved data is lost.
 
 Mitigation:
+
 - Show a confirmation dialog ("Discard this work?") if the user taps back and any field has been modified
 - The form is designed to be fast enough (under 3 minutes) that interruption is uncommon
 - Photo uploads that have already started continue in the background regardless of form state, but the photo documents and work record are not created until "Save Work" is tapped
@@ -131,17 +132,17 @@ Post-MVP consideration: auto-save drafts to local storage. See `17_Future_Featur
 
 ## Validation Rules
 
-| Field | Rule | Error Message |
-|-------|------|---------------|
-| Artist | Non-empty, max 200 chars | "Artist name is required" |
-| Title | Non-empty, max 200 chars | "Title is required" |
-| Medium | Max 200 chars | (no error -- just truncate) |
-| Dimensions | Max 100 chars | (no error -- just truncate) |
-| Year | Max 20 chars | (no error -- just truncate) |
-| Notes | Max 2000 chars | Character count indicator |
-| Condition | One of four values selected | "Select a condition rating" |
-| Checklist notes | Max 500 chars per item | Character count indicator |
-| Condition notes | Max 2000 chars | Character count indicator |
+| Field           | Rule                        | Error Message               |
+| --------------- | --------------------------- | --------------------------- |
+| Artist          | Non-empty, max 200 chars    | "Artist name is required"   |
+| Title           | Non-empty, max 200 chars    | "Title is required"         |
+| Medium          | Max 200 chars               | (no error -- just truncate) |
+| Dimensions      | Max 100 chars               | (no error -- just truncate) |
+| Year            | Max 20 chars                | (no error -- just truncate) |
+| Notes           | Max 2000 chars              | Character count indicator   |
+| Condition       | One of four values selected | "Select a condition rating" |
+| Checklist notes | Max 500 chars per item      | Character count indicator   |
+| Condition notes | Max 2000 chars              | Character count indicator   |
 
 Validation runs on submit, not on blur. Inline errors appear below the relevant field. Scroll to the first error.
 
@@ -154,12 +155,12 @@ Validation runs on submit, not on blur. Inline errors appear below the relevant 
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Condition checklist items | 12 items defined above | These are a reasonable starting set based on common art handling concerns. May need refinement with gallery user feedback. |
-| Medium-specific checklist filtering | Not implemented | All 12 checklist items show regardless of medium. Filtering by artwork type (painting vs. sculpture) deferred. |
-| Import from camera roll | Supported via photo picker | The camera button opens both camera and gallery picker (standard mobile behavior). No dedicated "import existing photos" flow. |
-| Barcode / QR scanning | Not in MVP | Some galleries use inventory labels. Deferred to `17_Future_Features.md`. |
-| Intake without photos | Allowed | No hard requirement for photos. The UI encourages it by placing the photo section first and making it prominent. |
-| Consignor inline creation | Bottom sheet | Creating a new consignor from the intake form uses a bottom sheet with name (required) and optional contact fields. |
-| Batch intake (multiple works) | Not supported | One work at a time. Batch intake for fair shipments deferred. |  
+| Item                                | Default                    | Notes                                                                                                                          |
+| ----------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Condition checklist items           | 12 items defined above     | These are a reasonable starting set based on common art handling concerns. May need refinement with gallery user feedback.     |
+| Medium-specific checklist filtering | Not implemented            | All 12 checklist items show regardless of medium. Filtering by artwork type (painting vs. sculpture) deferred.                 |
+| Import from camera roll             | Supported via photo picker | The camera button opens both camera and gallery picker (standard mobile behavior). No dedicated "import existing photos" flow. |
+| Barcode / QR scanning               | Not in MVP                 | Some galleries use inventory labels. Deferred to `17_Future_Features.md`.                                                      |
+| Intake without photos               | Allowed                    | No hard requirement for photos. The UI encourages it by placing the photo section first and making it prominent.               |
+| Consignor inline creation           | Bottom sheet               | Creating a new consignor from the intake form uses a bottom sheet with name (required) and optional contact fields.            |
+| Batch intake (multiple works)       | Not supported              | One work at a time. Batch intake for fair shipments deferred.                                                                  |

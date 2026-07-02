@@ -17,11 +17,11 @@ function ConsignorCard({ consignor, onClick }: { consignor: Consignor; onClick: 
       className="flex w-full flex-col gap-0.5 rounded-lg border border-border bg-card p-4 text-left shadow-sm hover:bg-muted/50 transition-colors"
     >
       <p className="text-sm font-semibold">{consignor.name}</p>
-      {consignor.email && (
-        <p className="text-xs text-muted-foreground">{consignor.email}</p>
-      )}
+      {consignor.email && <p className="text-xs text-muted-foreground">{consignor.email}</p>}
       <p className="text-xs text-muted-foreground">
-        {consignor.workCount === 0 ? 'No works' : `${consignor.workCount} work${consignor.workCount !== 1 ? 's' : ''}`}
+        {consignor.workCount === 0
+          ? 'No works'
+          : `${consignor.workCount} work${consignor.workCount !== 1 ? 's' : ''}`}
       </p>
     </button>
   )
@@ -47,10 +47,11 @@ export default function ConsignorList() {
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return consignors
     const q = searchQuery.toLowerCase()
-    return consignors.filter((c) =>
-      c.name.toLowerCase().includes(q) ||
-      c.email.toLowerCase().includes(q) ||
-      c.phone.toLowerCase().includes(q)
+    return consignors.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.phone.toLowerCase().includes(q)
     )
   }, [consignors, searchQuery])
 
@@ -68,18 +69,32 @@ export default function ConsignorList() {
                 autoFocus
                 className="h-9"
               />
-              <button onClick={() => { setSearchOpen(false); setSearchQuery('') }} className="flex h-11 w-11 items-center justify-center">
+              <button
+                onClick={() => {
+                  setSearchOpen(false)
+                  setSearchQuery('')
+                }}
+                className="flex h-11 w-11 items-center justify-center"
+              >
                 <X className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </div>
           ) : (
             <>
               {consignors.length > 0 && (
-                <button onClick={() => setSearchOpen(true)} aria-label="Search consignors" className="flex h-11 w-11 items-center justify-center">
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  aria-label="Search consignors"
+                  className="flex h-11 w-11 items-center justify-center"
+                >
                   <Search className="h-5 w-5" strokeWidth={1.5} />
                 </button>
               )}
-              <button onClick={() => navigate('/consignors/new')} aria-label="Add new consignor" className="flex h-11 w-11 items-center justify-center">
+              <button
+                onClick={() => navigate('/consignors/new')}
+                aria-label="Add new consignor"
+                className="flex h-11 w-11 items-center justify-center"
+              >
                 <Plus className="h-5 w-5" strokeWidth={1.5} />
               </button>
             </>
@@ -107,7 +122,10 @@ export default function ConsignorList() {
             <p className="mt-2 text-sm text-muted-foreground max-w-[280px]">
               Consignors will appear here when you add them
             </p>
-            <Button className="mt-8 h-11 bg-gold px-8 text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90" onClick={() => navigate('/consignors/new')}>
+            <Button
+              className="mt-8 h-11 bg-gold px-8 text-sm font-medium uppercase tracking-widest text-gold-foreground hover:bg-gold/90"
+              onClick={() => navigate('/consignors/new')}
+            >
               Add a Consignor
             </Button>
           </div>
@@ -119,7 +137,9 @@ export default function ConsignorList() {
                 {consignors.length} {consignors.length === 1 ? 'consignor' : 'consignors'}
                 {(() => {
                   const totalWorks = consignors.reduce((sum, c) => sum + (c.workCount ?? 0), 0)
-                  return totalWorks > 0 ? ` — ${totalWorks} linked ${totalWorks === 1 ? 'work' : 'works'}` : ''
+                  return totalWorks > 0
+                    ? ` — ${totalWorks} linked ${totalWorks === 1 ? 'work' : 'works'}`
+                    : ''
                 })()}
               </p>
             </div>
@@ -127,16 +147,23 @@ export default function ConsignorList() {
             {/* Guidance tip */}
             <div className="pb-3">
               <GuidanceTip id="consignors-list-guide">
-                Consignors are the artists or owners who entrust works to your gallery. Tap one to see their linked works and financial summary.
+                Consignors are the artists or owners who entrust works to your gallery. Tap one to
+                see their linked works and financial summary.
               </GuidanceTip>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.length === 0 ? (
-                <p className="py-16 text-center text-sm text-muted-foreground">No matching consignors</p>
+                <p className="py-16 text-center text-sm text-muted-foreground">
+                  No matching consignors
+                </p>
               ) : (
                 filtered.map((c) => (
-                  <ConsignorCard key={c.id} consignor={c} onClick={() => navigate(`/consignors/${c.id}`)} />
+                  <ConsignorCard
+                    key={c.id}
+                    consignor={c}
+                    onClick={() => navigate(`/consignors/${c.id}`)}
+                  />
                 ))
               )}
             </div>

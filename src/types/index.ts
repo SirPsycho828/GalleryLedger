@@ -1,16 +1,33 @@
 import type { Timestamp } from 'firebase/firestore'
 
 // Work status enum
-export const WORK_STATUSES = ['intake', 'in_storage', 'on_display', 'on_loan', 'shipped', 'sold', 'returned'] as const
-export type WorkStatus = typeof WORK_STATUSES[number]
+export const WORK_STATUSES = [
+  'intake',
+  'in_storage',
+  'on_display',
+  'on_loan',
+  'shipped',
+  'sold',
+  'returned',
+] as const
+export type WorkStatus = (typeof WORK_STATUSES)[number]
 
 // Event type enum
-export const EVENT_TYPES = ['intake', 'condition_update', 'location_change', 'status_change', 'sale', 'payout', 'note', 'document_attach'] as const
-export type EventType = typeof EVENT_TYPES[number]
+export const EVENT_TYPES = [
+  'intake',
+  'condition_update',
+  'location_change',
+  'status_change',
+  'sale',
+  'payout',
+  'note',
+  'document_attach',
+] as const
+export type EventType = (typeof EVENT_TYPES)[number]
 
 // Condition summary enum
 export const CONDITION_RATINGS = ['excellent', 'good', 'fair', 'poor'] as const
-export type ConditionRating = typeof CONDITION_RATINGS[number]
+export type ConditionRating = (typeof CONDITION_RATINGS)[number]
 
 // Status display labels
 export const STATUS_LABELS: Record<WorkStatus, string> = {

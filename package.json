@@ -2,6 +2,15 @@
   "name": "gallery-ledger",
   "private": true,
   "version": "0.1.0",
+  "description": "Dispute-proof artwork documentation PWA for independent art galleries — provenance, condition, and chain-of-custody records.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SirPsycho828/GalleryLedger.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "imports": {
     "@/*": "./src/*"
@@ -10,6 +19,10 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -47,10 +60,12 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "prettier": "^3.4.2",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12",
-    "vite-plugin-pwa": "^1.3.0"
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^3.0.5"
   }
 }

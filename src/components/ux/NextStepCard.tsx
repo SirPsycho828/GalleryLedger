@@ -11,7 +11,14 @@ interface NextStepCardProps {
   className?: string
 }
 
-export function NextStepCard({ title, description, to, actionLabel, icon, className }: NextStepCardProps) {
+export function NextStepCard({
+  title,
+  description,
+  to,
+  actionLabel,
+  icon,
+  className,
+}: NextStepCardProps) {
   const navigate = useNavigate()
 
   return (
@@ -19,7 +26,7 @@ export function NextStepCard({ title, description, to, actionLabel, icon, classN
       onClick={() => navigate(to)}
       className={cn(
         'flex w-full items-center gap-4 border-l-2 border-l-gold/50 bg-card px-4 py-3.5 text-left transition-colors hover:bg-secondary',
-        className,
+        className
       )}
     >
       {icon && (

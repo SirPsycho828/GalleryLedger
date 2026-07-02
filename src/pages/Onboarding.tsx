@@ -48,9 +48,7 @@ export default function Onboarding() {
               Gallery<span className="text-gold">Ledger</span>
             </h1>
             <div className="mx-auto mt-4 h-px w-12 bg-gold/40" />
-            <p className="mt-4 text-sm text-muted-foreground">
-              What's your gallery called?
-            </p>
+            <p className="mt-4 text-sm text-muted-foreground">What's your gallery called?</p>
           </div>
 
           <div className="flex justify-center gap-2 mb-6">
@@ -60,7 +58,10 @@ export default function Onboarding() {
 
           <form onSubmit={handleNameSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="galleryName" className="text-xs uppercase tracking-widest text-muted-foreground">
+              <Label
+                htmlFor="galleryName"
+                className="text-xs uppercase tracking-widest text-muted-foreground"
+              >
                 Gallery Name
               </Label>
               <Input
@@ -106,7 +107,13 @@ export default function Onboarding() {
         </div>
 
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-gold/20 bg-gold/5">
-          <svg className="h-7 w-7 text-gold" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <svg
+            className="h-7 w-7 text-gold"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
           </svg>
         </div>

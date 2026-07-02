@@ -12,9 +12,7 @@ interface GuidanceTipProps {
 
 export function GuidanceTip({ id, children, icon, className }: GuidanceTipProps) {
   const storageKey = `ux-tip-${id}`
-  const [dismissed, setDismissed] = useState(() =>
-    localStorage.getItem(storageKey) === 'true'
-  )
+  const [dismissed, setDismissed] = useState(() => localStorage.getItem(storageKey) === 'true')
 
   if (dismissed) return null
 
@@ -33,7 +31,7 @@ export function GuidanceTip({ id, children, icon, className }: GuidanceTipProps)
           transition={{ duration: 0.2 }}
           className={cn(
             'flex items-start gap-3 border border-gold/15 bg-gold/[0.04] px-3.5 py-3 text-sm',
-            className,
+            className
           )}
         >
           <span className="mt-0.5 shrink-0 text-gold/60">

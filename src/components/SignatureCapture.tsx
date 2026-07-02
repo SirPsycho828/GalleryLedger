@@ -1,7 +1,14 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface SignatureCaptureProps {
   open: boolean
@@ -181,8 +188,18 @@ export function SignatureCapture({ open, onClose, onComplete }: SignatureCapture
             <DialogDescription>Your signature will not be saved.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDiscard(false)}>Keep</Button>
-            <Button variant="destructive" onClick={() => { setShowDiscard(false); onClose() }}>Discard</Button>
+            <Button variant="outline" onClick={() => setShowDiscard(false)}>
+              Keep
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setShowDiscard(false)
+                onClose()
+              }}
+            >
+              Discard
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

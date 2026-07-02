@@ -18,7 +18,15 @@ import {
 } from 'firebase/firestore'
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '@/lib/firebase'
-import type { Work, TimelineEvent, Photo, Consignor, WorkStatus, EventType, EventDetails } from '@/types'
+import type {
+  Work,
+  TimelineEvent,
+  Photo,
+  Consignor,
+  WorkStatus,
+  EventType,
+  EventDetails,
+} from '@/types'
 
 // --- Collection references ---
 
@@ -46,7 +54,7 @@ export function subscribeToWorks(
 ): Unsubscribe {
   const q = query(worksCol(galleryId), orderBy('updatedAt', 'desc'))
   return onSnapshot(q, (snapshot) => {
-    const works = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Work))
+    const works = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Work)
     callback(works)
   })
 }
@@ -140,7 +148,7 @@ export function subscribeToEvents(
 ): Unsubscribe {
   const q = query(eventsCol(galleryId, workId), orderBy('createdAt', 'asc'))
   return onSnapshot(q, (snapshot) => {
-    const events = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as TimelineEvent))
+    const events = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as TimelineEvent)
     callback(events)
   })
 }
@@ -265,7 +273,7 @@ export function subscribeToPhotos(
 ): Unsubscribe {
   const q = query(photosCol(galleryId, workId), orderBy('sortOrder', 'asc'))
   return onSnapshot(q, (snapshot) => {
-    const photos = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Photo))
+    const photos = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Photo)
     callback(photos)
   })
 }
@@ -289,7 +297,12 @@ export async function createPhotoDoc(
   return docRef.id
 }
 
-export async function deletePhoto(galleryId: string, workId: string, photoId: string, storagePath: string) {
+export async function deletePhoto(
+  galleryId: string,
+  workId: string,
+  photoId: string,
+  storagePath: string
+) {
   await deleteDoc(doc(db, 'galleries', galleryId, 'works', workId, 'photos', photoId))
   try {
     await deleteObject(ref(storage, storagePath))
@@ -381,7 +394,7 @@ export function subscribeToConsignors(
 ): Unsubscribe {
   const q = query(consignorsCol(galleryId), orderBy('name', 'asc'))
   return onSnapshot(q, (snapshot) => {
-    const consignors = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Consignor))
+    const consignors = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Consignor)
     callback(consignors)
   })
 }
@@ -415,13 +428,20 @@ export async function deleteConsignor(galleryId: string, consignorId: string) {
   await deleteDoc(doc(db, 'galleries', galleryId, 'consignors', consignorId))
 }
 
-export async function getConsignor(galleryId: string, consignorId: string): Promise<Consignor | null> {
+export async function getConsignor(
+  galleryId: string,
+  consignorId: string
+): Promise<Consignor | null> {
   const docSnap = await getDoc(doc(db, 'galleries', galleryId, 'consignors', consignorId))
   if (!docSnap.exists()) return null
   return { id: docSnap.id, ...docSnap.data() } as Consignor
 }
 
-export async function incrementConsignorWorkCount(galleryId: string, consignorId: string, delta: number) {
+export async function incrementConsignorWorkCount(
+  galleryId: string,
+  consignorId: string,
+  delta: number
+) {
   const consignorRef = doc(db, 'galleries', galleryId, 'consignors', consignorId)
   await updateDoc(consignorRef, {
     workCount: increment(delta),

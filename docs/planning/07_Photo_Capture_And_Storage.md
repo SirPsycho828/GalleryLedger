@@ -60,11 +60,11 @@ Capture/Select
 
 Before any processing:
 
-| Check | Limit | Action on Failure |
-|-------|-------|-------------------|
-| File type | JPEG, PNG, HEIC, HEIF, WebP | Show toast: "Unsupported image format" and reject |
-| File size | 25 MB max | Show toast: "Photo too large (25 MB max)" and reject |
-| Photo count | 20 per work | Show toast: "Maximum 20 photos per work" and reject |
+| Check       | Limit                       | Action on Failure                                    |
+| ----------- | --------------------------- | ---------------------------------------------------- |
+| File type   | JPEG, PNG, HEIC, HEIF, WebP | Show toast: "Unsupported image format" and reject    |
+| File size   | 25 MB max                   | Show toast: "Photo too large (25 MB max)" and reject |
+| Photo count | 20 per work                 | Show toast: "Maximum 20 photos per work" and reject  |
 
 ### Step 2: Client-Side Thumbnail
 
@@ -86,6 +86,7 @@ Generate a thumbnail immediately for display in the form, before upload begins:
 - This naming scheme avoids collisions and provides natural chronological ordering in Storage
 
 **Upload behavior**:
+
 - Use Firebase Storage `uploadBytesResumable()` for resumable uploads
 - Upload the original file at full resolution. No server-side or client-side compression of the original.
 - Track upload progress per photo for UI display
@@ -96,15 +97,15 @@ Generate a thumbnail immediately for display in the form, before upload begins:
 
 After upload completes, create or update the photo document in `works/{workId}/photos`:
 
-| Field | Value |
-|-------|-------|
-| `storageUrl` | Download URL from `getDownloadURL()` |
-| `storagePath` | Full Storage path (for deletion) |
-| `fileName` | Generated filename |
-| `takenAt` | EXIF date if extractable, otherwise upload timestamp |
-| `eventId` | Associated event ID, or null for standalone photos |
-| `sortOrder` | Sequential integer (0, 1, 2...) based on capture order |
-| `createdAt` | Server timestamp |
+| Field         | Value                                                  |
+| ------------- | ------------------------------------------------------ |
+| `storageUrl`  | Download URL from `getDownloadURL()`                   |
+| `storagePath` | Full Storage path (for deletion)                       |
+| `fileName`    | Generated filename                                     |
+| `takenAt`     | EXIF date if extractable, otherwise upload timestamp   |
+| `eventId`     | Associated event ID, or null for standalone photos     |
+| `sortOrder`   | Sequential integer (0, 1, 2...) based on capture order |
+| `createdAt`   | Server timestamp                                       |
 
 ## Offline Upload Queue
 
@@ -114,19 +115,19 @@ When the device is offline, photos cannot upload to Firebase Storage. The queue 
 
 Use IndexedDB (not localStorage -- binary data can be large). Store:
 
-| Field | Purpose |
-|-------|---------|
-| `id` | Auto-increment key |
-| `galleryId` | Target gallery |
-| `workId` | Target work |
-| `eventId` | Associated event, if any |
-| `blob` | The original photo file as a Blob |
-| `fileName` | Generated filename |
-| `takenAt` | Capture timestamp |
-| `sortOrder` | Display order |
-| `status` | `pending`, `uploading`, `failed` |
-| `retryCount` | Number of failed attempts |
-| `createdAt` | Queue entry timestamp |
+| Field        | Purpose                           |
+| ------------ | --------------------------------- |
+| `id`         | Auto-increment key                |
+| `galleryId`  | Target gallery                    |
+| `workId`     | Target work                       |
+| `eventId`    | Associated event, if any          |
+| `blob`       | The original photo file as a Blob |
+| `fileName`   | Generated filename                |
+| `takenAt`    | Capture timestamp                 |
+| `sortOrder`  | Display order                     |
+| `status`     | `pending`, `uploading`, `failed`  |
+| `retryCount` | Number of failed attempts         |
+| `createdAt`  | Queue entry timestamp             |
 
 ### Queue Processing
 
@@ -186,12 +187,12 @@ Extract the `DateTimeOriginal` EXIF tag from JPEG files to populate `takenAt`. U
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Photo editing/annotation | Not in MVP | No cropping, rotation, or markup tools. Users photograph carefully. See `17_Future_Features.md`. |
-| Video capture | Not supported | Still photos only. Video adds significant storage cost and complexity. |
-| Thumbnail CDN/resize | Not implemented | Serve original files. Firebase Storage CDN handles caching. Image resize via Cloud Functions or Firebase Extensions deferred. |
-| Storage cost at scale | ~$0.026/GB/month | 100 works x 10 photos x 10 MB average = ~10 GB. Roughly $0.26/month. Well within budget. |
-| IndexedDB storage limits | Browser-dependent | Most browsers allow several hundred MB in IndexedDB. Sufficient for queuing 20-50 photos temporarily. |
-| Duplicate photo detection | None | No check for identical photos uploaded twice. User manages manually. |
-| Cover photo selection | First photo auto-selected | No explicit "set as cover" action at MVP. User controls order via `sortOrder` which could be reorderable post-MVP. |  
+| Item                      | Default                   | Notes                                                                                                                         |
+| ------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Photo editing/annotation  | Not in MVP                | No cropping, rotation, or markup tools. Users photograph carefully. See `17_Future_Features.md`.                              |
+| Video capture             | Not supported             | Still photos only. Video adds significant storage cost and complexity.                                                        |
+| Thumbnail CDN/resize      | Not implemented           | Serve original files. Firebase Storage CDN handles caching. Image resize via Cloud Functions or Firebase Extensions deferred. |
+| Storage cost at scale     | ~$0.026/GB/month          | 100 works x 10 photos x 10 MB average = ~10 GB. Roughly $0.26/month. Well within budget.                                      |
+| IndexedDB storage limits  | Browser-dependent         | Most browsers allow several hundred MB in IndexedDB. Sufficient for queuing 20-50 photos temporarily.                         |
+| Duplicate photo detection | None                      | No check for identical photos uploaded twice. User manages manually.                                                          |
+| Cover photo selection     | First photo auto-selected | No explicit "set as cover" action at MVP. User controls order via `sortOrder` which could be reorderable post-MVP.            |

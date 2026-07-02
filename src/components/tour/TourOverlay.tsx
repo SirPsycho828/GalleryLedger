@@ -45,7 +45,7 @@ function computePlacement(rect: Rect): 'top' | 'bottom' | 'left' | 'right' {
 
 function computeTooltipPosition(
   rect: Rect,
-  placement: 'top' | 'bottom' | 'left' | 'right',
+  placement: 'top' | 'bottom' | 'left' | 'right'
 ): { top: number; left: number } {
   const tooltipWidth = Math.min(320, window.innerWidth - 32)
 
@@ -179,6 +179,6 @@ export function TourOverlay({ stops, currentStep, onNext, onSkip }: TourOverlayP
         />
       </motion.div>
     </AnimatePresence>,
-    document.body,
+    document.body
   )
 }

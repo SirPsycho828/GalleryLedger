@@ -40,7 +40,7 @@ const features = [
     image: '/images/feature-gallery.jpg',
     title: 'Manage Consignors with Clarity',
     description:
-      'Track consignor relationships, commission structures, payouts, and outstanding balances in one place. Know exactly what you owe and what\'s been paid — always.',
+      "Track consignor relationships, commission structures, payouts, and outstanding balances in one place. Know exactly what you owe and what's been paid — always.",
     alt: 'Classical oil painting',
   },
   {
@@ -62,12 +62,14 @@ const steps = [
   {
     num: '02',
     title: 'Intake Your First Work',
-    description: 'Photograph the artwork, assess condition, capture the consignor\'s signature, and create a complete record.',
+    description:
+      "Photograph the artwork, assess condition, capture the consignor's signature, and create a complete record.",
   },
   {
     num: '03',
     title: 'Track Everything After',
-    description: 'Log condition changes, location moves, sales, and payouts. Export provenance packs whenever you need them.',
+    description:
+      'Log condition changes, location moves, sales, and payouts. Export provenance packs whenever you need them.',
   },
 ]
 
@@ -115,9 +117,7 @@ function LandingNav() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-background/90 backdrop-blur-xl border-b border-border/40'
-          : 'bg-transparent'
+        scrolled ? 'bg-background/90 backdrop-blur-xl border-b border-border/40' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -144,10 +144,7 @@ function LandingNav() {
         </div>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="text-foreground md:hidden"
-        >
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="text-foreground md:hidden">
           {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
@@ -224,9 +221,8 @@ function HeroSection() {
             variants={spotlightReveal}
             className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg"
           >
-            Document intake, track condition, manage consignors, and export
-            provenance packs — all from your phone. An unalterable record that
-            protects your gallery.
+            Document intake, track condition, manage consignors, and export provenance packs — all
+            from your phone. An unalterable record that protects your gallery.
           </motion.p>
 
           <motion.div
@@ -362,7 +358,11 @@ function HowItWorks() {
           className="grid gap-10 md:grid-cols-3 md:gap-8"
         >
           {steps.map((step) => (
-            <motion.div key={step.num} variants={fadeUp} className="relative text-center md:text-left">
+            <motion.div
+              key={step.num}
+              variants={fadeUp}
+              className="relative text-center md:text-left"
+            >
               <span className="font-heading text-5xl font-semibold text-gold/15">{step.num}</span>
               <h3 className="mt-2 font-heading text-xl font-medium">{step.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -426,8 +426,8 @@ function FinalCTA() {
           <span className="text-gold">Your Collection?</span>
         </h2>
         <p className="mt-5 text-muted-foreground">
-          Join galleries who document every artwork with confidence.
-          Free to start — no credit card required.
+          Join galleries who document every artwork with confidence. Free to start — no credit card
+          required.
         </p>
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link to="/signup">

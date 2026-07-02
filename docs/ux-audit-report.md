@@ -1,6 +1,7 @@
 # UX Intuitiveness Audit
 
 ## App Context
+
 - **Name:** GalleryLedger
 - **Domain:** Art gallery provenance documentation
 - **Target Users:** Independent art gallery operators (1-10 person teams), non-technical
@@ -11,66 +12,80 @@
 ## Workflow Map
 
 ### Workflow 1: First-time user setup — Bumpy
+
 Path: Landing -> Sign Up -> Onboarding (name) -> Onboarding (done) -> Work Intake -> Work Detail
 Gaps:
+
 - [WF-001] Unclear sequence at Onboarding — no step indicator for 2-step flow
 - [WF-002] Dead end at Onboarding step 2 — "I'll do this later" path is indirect (PublicRoute redirect)
 - [WF-003] Missing handoff at Work Detail — no post-intake lifecycle guidance
 
 ### Workflow 2: Sign in (returning) — Smooth
+
 Path: Landing/Sign In -> Works List
 Gaps: none
 
 ### Workflow 3: Intake a new work — Bumpy
+
 Path: Works List -> Work Intake -> Work Detail
 Gaps:
+
 - [WF-004] Unclear sequence at Work Intake — long form, no progress indicator
 - [WF-005] Hidden prerequisite at Work Intake — consignor dropdown may be empty (handled with inline creation, but no upfront guidance)
 - [WF-006] Dead end at Work Detail — no next-steps after intake
 
 ### Workflow 4: Manage a work's lifecycle — Bumpy
+
 Path: Work Detail -> FAB -> Event forms
 Gaps:
+
 - [WF-007] Unclear sequence at FAB — 7 event types with no descriptions
 - [WF-008] Missing handoff — no lifecycle progression guidance
 - [WF-009] Hidden prerequisite — payout without prior sale has no warning
 
 ### Workflow 5: Export provenance pack — Bumpy
+
 Path: Work Detail -> Share icon -> Export dialog -> PDF
 Gaps:
+
 - [WF-010] Missing handoff — share icon not labeled
 - [WF-011] Missing handoff — export dialog doesn't explain provenance pack contents
 
 ### Workflow 6: Add a consignor — Smooth
+
 Path: Consignor List -> Consignor New -> Consignor Detail
 Gaps:
+
 - [WF-012] Dead end — no CTA to add a work for this consignor
 
 ### Workflow 7: Manage a consignor — Smooth
+
 Path: Consignor List -> Consignor Detail -> (edit, linked works)
 Gaps:
+
 - [WF-013] Dead end — empty works section has no add-work CTA
 
 ### Workflow 8: Password reset — Smooth
+
 Path: Sign In -> Reset Password -> (email sent) -> Sign In
 Gaps: none
 
 ## Page Scorecard
 
-| Page | Orient. | Actions | Progress | Guidance | Metrics | Empty | Next | Feedback | Intent | Score |
-|------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Landing | P | P | - | P | - | - | P | - | P | 5/5 |
-| Sign In | P | P | - | / | - | - | P | P | P | 5/6 |
-| Sign Up | P | P | / | / | - | - | / | P | P | 4/7 |
-| Reset Password | P | P | - | P | - | - | P | P | P | 6/6 |
-| Onboarding | P | P | M | / | - | - | P | P | P | 5/7 |
-| Works List | P | P | P | M | / | P | / | P | / | 5/9 |
-| Work Intake | / | P | M | M | - | - | / | P | / | 2/7 |
-| Work Detail | P | / | P | M | / | / | M | P | / | 3/9 |
-| Consignor List | P | P | / | M | / | P | / | P | / | 4/9 |
-| Consignor New | / | P | - | M | - | - | / | P | / | 2/6 |
-| Consignor Detail | P | / | / | M | P | / | M | P | / | 3/9 |
-| Settings | P | P | - | - | - | - | - | P | P | 4/4 |
+| Page             | Orient. | Actions | Progress | Guidance | Metrics | Empty | Next | Feedback | Intent | Score |
+| ---------------- | :-----: | :-----: | :------: | :------: | :-----: | :---: | :--: | :------: | :----: | :---: |
+| Landing          |    P    |    P    |    -     |    P     |    -    |   -   |  P   |    -     |   P    |  5/5  |
+| Sign In          |    P    |    P    |    -     |    /     |    -    |   -   |  P   |    P     |   P    |  5/6  |
+| Sign Up          |    P    |    P    |    /     |    /     |    -    |   -   |  /   |    P     |   P    |  4/7  |
+| Reset Password   |    P    |    P    |    -     |    P     |    -    |   -   |  P   |    P     |   P    |  6/6  |
+| Onboarding       |    P    |    P    |    M     |    /     |    -    |   -   |  P   |    P     |   P    |  5/7  |
+| Works List       |    P    |    P    |    P     |    M     |    /    |   P   |  /   |    P     |   /    |  5/9  |
+| Work Intake      |    /    |    P    |    M     |    M     |    -    |   -   |  /   |    P     |   /    |  2/7  |
+| Work Detail      |    P    |    /    |    P     |    M     |    /    |   /   |  M   |    P     |   /    |  3/9  |
+| Consignor List   |    P    |    P    |    /     |    M     |    /    |   P   |  /   |    P     |   /    |  4/9  |
+| Consignor New    |    /    |    P    |    -     |    M     |    -    |   -   |  /   |    P     |   /    |  2/6  |
+| Consignor Detail |    P    |    /    |    /     |    M     |    P    |   /   |  M   |    P     |   /    |  3/9  |
+| Settings         |    P    |    P    |    -     |    -     |    -    |   -   |  -   |    P     |   P    |  4/4  |
 
 **Legend:** P = Present, / = Partial, M = Missing, - = N/A
 
@@ -137,6 +152,7 @@ Gaps: none
   Layer: Next Steps | Fix: Post-save toast or detail-page CTA suggesting "Add a work for this consignor"
 
 ## Summary
+
 - **Total findings:** 18
 - **By severity:** 0 critical, 6 high, 9 medium, 3 low
 - **Pages with worst scores:** Work Intake (2/7), Work Detail (3/9), Consignor Detail (3/9)
@@ -146,22 +162,24 @@ Gaps: none
 ## Results
 
 ### Before/After Scorecard
-| Page | Before | After | Change |
-|------|--------|-------|--------|
-| Landing | 5/5 | 5/5 | -- |
-| Sign In | 5/6 | 5/6 | -- |
-| Sign Up | 4/7 | 5/7 | +1 |
-| Reset Password | 6/6 | 6/6 | -- |
-| Onboarding | 5/7 | 6/7 | +1 |
-| Works List | 5/9 | 8/9 | +3 |
-| Work Intake | 2/7 | 5/7 | +3 |
-| Work Detail | 3/9 | 7/9 | +4 |
-| Consignor List | 4/9 | 7/9 | +3 |
-| Consignor New | 2/6 | 5/6 | +3 |
-| Consignor Detail | 3/9 | 6/9 | +3 |
-| Settings | 4/4 | 4/4 | -- |
+
+| Page             | Before | After | Change |
+| ---------------- | ------ | ----- | ------ |
+| Landing          | 5/5    | 5/5   | --     |
+| Sign In          | 5/6    | 5/6   | --     |
+| Sign Up          | 4/7    | 5/7   | +1     |
+| Reset Password   | 6/6    | 6/6   | --     |
+| Onboarding       | 5/7    | 6/7   | +1     |
+| Works List       | 5/9    | 8/9   | +3     |
+| Work Intake      | 2/7    | 5/7   | +3     |
+| Work Detail      | 3/9    | 7/9   | +4     |
+| Consignor List   | 4/9    | 7/9   | +3     |
+| Consignor New    | 2/6    | 5/6   | +3     |
+| Consignor Detail | 3/9    | 6/9   | +3     |
+| Settings         | 4/4    | 4/4   | --     |
 
 ### Summary
+
 - **Findings resolved:** 16/18 (2 remaining: UX-012 payout prerequisite note, UX-018 post-save next step — deferred as low-impact)
 - **Average page score:** 57% -> 82% (+25 points)
 - **Workflows fixed:** First-time setup (Bumpy -> Smooth), Intake work (Bumpy -> Smooth), Manage lifecycle (Bumpy -> Smooth), Export provenance (Bumpy -> Smooth)

@@ -62,7 +62,9 @@ export default function SignUp() {
           <p className="mt-4 text-sm tracking-wide text-muted-foreground">
             Create your gallery account
           </p>
-          <p className="mt-1 text-xs text-muted-foreground/50">You'll set up your gallery name next</p>
+          <p className="mt-1 text-xs text-muted-foreground/50">
+            You'll set up your gallery name next
+          </p>
         </div>
 
         {/* Form */}
@@ -84,7 +86,10 @@ export default function SignUp() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-xs uppercase tracking-widest text-muted-foreground">
+            <Label
+              htmlFor="email"
+              className="text-xs uppercase tracking-widest text-muted-foreground"
+            >
               Email
             </Label>
             <Input
@@ -99,7 +104,10 @@ export default function SignUp() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-xs uppercase tracking-widest text-muted-foreground">
+            <Label
+              htmlFor="password"
+              className="text-xs uppercase tracking-widest text-muted-foreground"
+            >
               Password
             </Label>
             <Input
@@ -116,7 +124,10 @@ export default function SignUp() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-xs uppercase tracking-widest text-muted-foreground">
+            <Label
+              htmlFor="confirmPassword"
+              className="text-xs uppercase tracking-widest text-muted-foreground"
+            >
               Confirm Password
             </Label>
             <Input

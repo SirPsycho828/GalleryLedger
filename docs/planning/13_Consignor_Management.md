@@ -61,18 +61,19 @@ When no consignors exist:
 ## New Consignor Form
 
 Accessible from:
+
 1. The "+" icon on the consignor list top bar (navigates to `/consignors/new`)
 2. The "Add new" option in the consignor dropdown during work intake (opens as bottom sheet, see `06_Work_Intake.md`)
 
 ### Form Fields
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Name | Text input | Yes | Max 200 chars |
-| Email | Email input | No | Standard email validation if provided |
-| Phone | Tel input | No | No format validation -- international numbers vary |
-| Address | Multiline text | No | Free-text mailing address. Max 500 chars. |
-| Notes | Multiline text | No | Private notes about this consignor. Max 2000 chars. |
+| Field   | Type           | Required | Notes                                               |
+| ------- | -------------- | -------- | --------------------------------------------------- |
+| Name    | Text input     | Yes      | Max 200 chars                                       |
+| Email   | Email input    | No       | Standard email validation if provided               |
+| Phone   | Tel input      | No       | No format validation -- international numbers vary  |
+| Address | Multiline text | No       | Free-text mailing address. Max 500 chars.           |
+| Notes   | Multiline text | No       | Private notes about this consignor. Max 2000 chars. |
 
 ### Save Behavior
 
@@ -202,13 +203,13 @@ The financial summary computes after queries 2 and 3 resolve.
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Multi-currency aggregation | Not handled | Financial summary assumes all works use the same currency. If works have mixed currencies, the summary will incorrectly sum different denominations. Acceptable at MVP -- most galleries operate in one currency. |
-| Consignor merge/dedup | Not supported | No way to merge two consignor records that represent the same person. Manual only. |
-| Consignor import | Not supported | No CSV import of existing consignor lists. Manual entry only at MVP. |
-| Consignor photo/avatar | Not included | No profile image. Name initials could serve as avatar post-MVP. |
-| Communication log | Not tracked | No record of emails or calls with the consignor. Notes field serves as a manual log. |
-| Consignor-initiated access | Not supported | Consignors cannot log in to see their works or statements. Gallery operator shares info manually or via PDF. See `17_Future_Features.md`. |
-| `workCount` accuracy | Eventually consistent | Count may drift if writes fail partially. Display-only, no business logic depends on it. |
-| Linked work updates | No cascade | Changing a work's consignor does not update the old consignor's `workCount`. Client must decrement the old and increment the new. |  
+| Item                       | Default               | Notes                                                                                                                                                                                                             |
+| -------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Multi-currency aggregation | Not handled           | Financial summary assumes all works use the same currency. If works have mixed currencies, the summary will incorrectly sum different denominations. Acceptable at MVP -- most galleries operate in one currency. |
+| Consignor merge/dedup      | Not supported         | No way to merge two consignor records that represent the same person. Manual only.                                                                                                                                |
+| Consignor import           | Not supported         | No CSV import of existing consignor lists. Manual entry only at MVP.                                                                                                                                              |
+| Consignor photo/avatar     | Not included          | No profile image. Name initials could serve as avatar post-MVP.                                                                                                                                                   |
+| Communication log          | Not tracked           | No record of emails or calls with the consignor. Notes field serves as a manual log.                                                                                                                              |
+| Consignor-initiated access | Not supported         | Consignors cannot log in to see their works or statements. Gallery operator shares info manually or via PDF. See `17_Future_Features.md`.                                                                         |
+| `workCount` accuracy       | Eventually consistent | Count may drift if writes fail partially. Display-only, no business logic depends on it.                                                                                                                          |
+| Linked work updates        | No cascade            | Changing a work's consignor does not update the old consignor's `workCount`. Client must decrement the old and increment the new.                                                                                 |

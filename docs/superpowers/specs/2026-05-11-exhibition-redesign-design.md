@@ -28,6 +28,7 @@ Each block fades + slides up as it enters the viewport using Intersection Observ
 3. **"Manage Consignors"** — financial tracking and payout management
 
 Each block has:
+
 - Short heading (serif)
 - 1-2 sentences of body copy (sans, muted)
 - Abstract icon or line illustration on the opposite side
@@ -163,57 +164,71 @@ Each section is a card with gold uppercase heading label and subtle top border. 
 These details separate "nice" from "world-class."
 
 ### Buttons
+
 - All buttons: `whileTap={{ scale: 0.97 }}` for tactile press feedback
 
 ### Cards (desktop)
+
 - Artwork cards: image scales 1.03x, overlay darkens, thin gold border fades in (0.2s ease)
 
 ### Sheets & Dialogs
+
 - Content slides up with spring animation (stiffness: 300, damping: 25) instead of linear slide
 
 ### Toast Notifications
+
 - Slide up from bottom with slight bounce
 
 ### Loading Skeletons
+
 - Shimmer animation (gradient sweep left-to-right) instead of static gray
 
 ### Gold FAB
+
 - Appear: scale spring 0.8 → 1.0
 - Persistent subtle gold glow shadow
 
 ### Form Inputs
+
 - On focus: border transitions to gold with subtle glow ring (`ring-gold/20`)
 
 ### TopBar Scroll Enhancement
+
 - Border-bottom opacity increases as user scrolls past 50px (scroll-linked)
 
 ## 6. Technical Approach
 
 ### Key Dependencies (already installed)
+
 - `framer-motion` — all animations, shared-element transitions, `AnimatePresence`, `LayoutGroup`
 - `embla-carousel-react` — photo carousel on WorkDetail
 - Tailwind CSS 4 — responsive breakpoints, utility classes
 
 ### No New Dependencies Required
+
 Everything can be achieved with the current stack.
 
 ### Files to Modify
 
 **New files:**
+
 - `src/pages/LandingPage.tsx` — public landing page
 
 **Major rewrites:**
+
 - `src/pages/WorkList.tsx` — art grid layout, card redesign, stagger animations
 - `src/pages/WorkDetail.tsx` — full-bleed hero, visual timeline, desktop two-column, shared-element
 - `src/components/AppShell.tsx` — responsive nav (bottom on mobile, sidebar on desktop), auto-hide
 - `src/App.tsx` — add landing page route, wrap in LayoutGroup
 
 **Moderate changes:**
+
 - `src/components/TopBar.tsx` — scroll-linked border opacity, responsive adjustments
 - `src/pages/ConsignorList.tsx` — responsive grid if applicable
 - `src/pages/ConsignorDetail.tsx` — desktop layout improvements
 
 **Minor changes (micro-interactions):**
+
 - `src/components/ui/sheet.tsx` — spring animation
 - `src/components/ui/dialog.tsx` — spring animation
 - `src/components/ui/skeleton.tsx` — shimmer animation
@@ -221,12 +236,14 @@ Everything can be achieved with the current stack.
 - `src/index.css` — shimmer keyframe, any new utility classes
 
 ### Responsive Breakpoints
+
 - `< 640px` — mobile (2-col grid, bottom nav)
 - `640px–767px` — large mobile (3-col grid, bottom nav)
 - `768px–1023px` — tablet (3-col grid, sidebar nav)
 - `>= 1024px` — desktop (4-col grid, sidebar nav, two-column detail)
 
 ### Routing Changes
+
 - `/` — LandingPage (public, redirects authenticated users to works)
 - Works list moves to `/works` as default authenticated route
 - All other routes unchanged

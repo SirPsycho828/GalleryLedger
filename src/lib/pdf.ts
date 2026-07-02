@@ -3,7 +3,15 @@ import 'jspdf-autotable'
 import { formatCurrency, formatDate } from '@/lib/services'
 import type { Work, TimelineEvent, Consignor, Photo } from '@/types'
 import { EVENT_TYPE_LABELS, STATUS_LABELS } from '@/types'
-import type { IntakeDetails, SaleDetails, PayoutDetails, LocationChangeDetails, ConditionUpdateDetails, StatusChangeDetails, DocumentAttachDetails } from '@/types'
+import type {
+  IntakeDetails,
+  SaleDetails,
+  PayoutDetails,
+  LocationChangeDetails,
+  ConditionUpdateDetails,
+  StatusChangeDetails,
+  DocumentAttachDetails,
+} from '@/types'
 
 // Colors matching PRD
 const TEXT_COLOR = '#111827'
@@ -99,7 +107,14 @@ function ensureSpace(doc: jsPDF, y: number, needed: number): number {
 }
 
 // Add image to PDF, returning the height used. Fits within maxW x maxH mm.
-function addImage(doc: jsPDF, dataUrl: string, x: number, y: number, maxW: number, maxH: number): number {
+function addImage(
+  doc: jsPDF,
+  dataUrl: string,
+  x: number,
+  y: number,
+  maxW: number,
+  maxH: number
+): number {
   const props = doc.getImageProperties(dataUrl)
   let w = maxW
   let h = (props.height / props.width) * w
@@ -123,7 +138,7 @@ function addPhotoPlaceholder(doc: jsPDF, x: number, y: number, w: number, h: num
 export async function generateProvenancePdf(
   data: PdfData,
   selectedEventIds: string[] | null, // null = all events
-  onProgress?: ProgressCallback,
+  onProgress?: ProgressCallback
 ): Promise<Blob> {
   const { work, events, photos, consignor, galleryName } = data
   const selectedEvents = selectedEventIds
@@ -217,7 +232,11 @@ export async function generateProvenancePdf(
   // Gallery name and generation date at bottom
   doc.setFontSize(10)
   doc.setTextColor(...hexToRgb(SECONDARY_COLOR))
-  const genDate = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date())
+  const genDate = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date())
   doc.text(galleryName, MARGIN, PAGE_H - MARGIN - 8)
   doc.text(`Generated: ${genDate} via GalleryLedger`, MARGIN, PAGE_H - MARGIN - 3)
 
@@ -274,7 +293,11 @@ export async function generateProvenancePdf(
     doc.setTextColor(...hexToRgb(TEXT_COLOR))
     doc.text(`Date: ${formatDate(intakeEvent.createdAt)}`, MARGIN, y)
     y += 5
-    doc.text(`Overall: ${intakeDetails.conditionSummary.charAt(0).toUpperCase() + intakeDetails.conditionSummary.slice(1)}`, MARGIN, y)
+    doc.text(
+      `Overall: ${intakeDetails.conditionSummary.charAt(0).toUpperCase() + intakeDetails.conditionSummary.slice(1)}`,
+      MARGIN,
+      y
+    )
     y += 5
 
     if (intakeDetails.conditionNotes) {
@@ -287,7 +310,7 @@ export async function generateProvenancePdf(
     // Checklist issues
     const issues = Object.entries(intakeDetails.checklist)
     if (issues.length > 0) {
-      const issueNames = issues.map(([item, note]) => note ? `${item} (${note})` : item)
+      const issueNames = issues.map(([item, note]) => (note ? `${item} (${note})` : item))
       const issueText = `Issues: ${issueNames.join(', ')}`
       const issueLines = doc.splitTextToSize(issueText, CONTENT_W)
       y = ensureSpace(doc, y, issueLines.length * 5)
@@ -493,7 +516,7 @@ export async function generateProvenancePdf(
     const currency = saleDetails.currency
     const salePrice = saleDetails.salePrice
     const commRate = saleDetails.commissionRate
-    const commission = Math.round(salePrice * commRate / 100)
+    const commission = Math.round((salePrice * commRate) / 100)
     const consignorShare = salePrice - commission
 
     const financialLines: [string, string][] = [
@@ -564,7 +587,11 @@ export async function generateProvenancePdf(
     doc.setFontSize(9)
     doc.setFont('helvetica', 'italic')
     doc.setTextColor(...hexToRgb(SECONDARY_COLOR))
-    doc.text('Some content may be missing. Regenerate while online for a complete document.', MARGIN, y)
+    doc.text(
+      'Some content may be missing. Regenerate while online for a complete document.',
+      MARGIN,
+      y
+    )
   }
 
   // Add page numbers

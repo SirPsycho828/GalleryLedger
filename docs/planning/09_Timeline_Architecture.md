@@ -22,11 +22,13 @@ Events cannot be deleted. Ever. Not by the user, not by the app. Firestore secur
 After creating an event, the operator has 15 minutes to edit its content. This handles the common case of typos, selecting the wrong condition rating, or forgetting to add a note.
 
 **What can be edited during the grace period:**
+
 - `description` field
 - `details` map contents
 - `photoUrls` array (add or remove photos)
 
 **What can never be edited, even during the grace period:**
+
 - `type` -- the event type is permanent
 - `createdAt` -- the original timestamp is permanent
 - `editableUntil` -- the grace period deadline is permanent
@@ -62,30 +64,30 @@ Event appears in timeline ◄── Grace period begins
 
 Every event follows the same base schema regardless of type. See `02_Database_Schema.md` for field-level detail.
 
-| Field | Purpose |
-|-------|---------|
-| `type` | Categorizes the event. Determines which `details` fields are relevant. |
-| `description` | Human-readable summary shown in the timeline. Auto-generated or user-entered. |
-| `details` | Type-specific structured data (map). Schema varies by type. |
-| `photoUrls` | Download URLs of photos attached to this specific event. |
-| `createdAt` | Server timestamp. The canonical "when did this happen" field. |
-| `updatedAt` | Set only if edited within grace period. Null otherwise. |
-| `editableUntil` | `createdAt` + 15 minutes. After this, the document is immutable. |
+| Field           | Purpose                                                                       |
+| --------------- | ----------------------------------------------------------------------------- |
+| `type`          | Categorizes the event. Determines which `details` fields are relevant.        |
+| `description`   | Human-readable summary shown in the timeline. Auto-generated or user-entered. |
+| `details`       | Type-specific structured data (map). Schema varies by type.                   |
+| `photoUrls`     | Download URLs of photos attached to this specific event.                      |
+| `createdAt`     | Server timestamp. The canonical "when did this happen" field.                 |
+| `updatedAt`     | Set only if edited within grace period. Null otherwise.                       |
+| `editableUntil` | `createdAt` + 15 minutes. After this, the document is immutable.              |
 
 ## Auto-Generated Descriptions
 
 When an event is created, the app generates a default `description` based on the event type and details. The user can override this during the grace period.
 
-| Type | Auto-Description Pattern |
-|------|--------------------------|
-| `intake` | "Work received -- condition: {conditionSummary}" |
-| `condition_update` | "Condition updated to {conditionSummary}" |
-| `location_change` | "Moved from {from} to {to}" |
-| `status_change` | "Status changed from {from} to {to}" |
-| `sale` | "Sold for {formatted salePrice}" |
-| `payout` | "Payout of {formatted amount} -- {method}" |
-| `note` | (No auto-generation -- user writes the full note) |
-| `document_attach` | "Document attached: {fileName}" |
+| Type               | Auto-Description Pattern                          |
+| ------------------ | ------------------------------------------------- |
+| `intake`           | "Work received -- condition: {conditionSummary}"  |
+| `condition_update` | "Condition updated to {conditionSummary}"         |
+| `location_change`  | "Moved from {from} to {to}"                       |
+| `status_change`    | "Status changed from {from} to {to}"              |
+| `sale`             | "Sold for {formatted salePrice}"                  |
+| `payout`           | "Payout of {formatted amount} -- {method}"        |
+| `note`             | (No auto-generation -- user writes the full note) |
+| `document_attach`  | "Document attached: {fileName}"                   |
 
 Format currency values client-side using `Intl.NumberFormat` with the work's `currency` field.
 
@@ -105,13 +107,13 @@ Two events can share the same `createdAt` timestamp if created in rapid successi
 
 Some events update fields on the parent work document in addition to creating the event record:
 
-| Event Type | Work Field Updated |
-|------------|-------------------|
-| `status_change` | `work.status` set to `details.to` |
-| `sale` | `work.salePrice`, `work.commissionRate`, `work.status` set to `sold` |
-| `location_change` | None (location is tracked only in events, not as a work field) |
-| `condition_update` | None (current condition is the latest condition event) |
-| `payout` | None (payout status derived from event queries) |
+| Event Type         | Work Field Updated                                                   |
+| ------------------ | -------------------------------------------------------------------- |
+| `status_change`    | `work.status` set to `details.to`                                    |
+| `sale`             | `work.salePrice`, `work.commissionRate`, `work.status` set to `sold` |
+| `location_change`  | None (location is tracked only in events, not as a work field)       |
+| `condition_update` | None (current condition is the latest condition event)               |
+| `payout`           | None (payout status derived from event queries)                      |
 
 These dual writes (event creation + work field update) should use a Firestore batched write for atomicity.
 
@@ -119,12 +121,12 @@ These dual writes (event creation + work field update) should use a Firestore ba
 
 The timeline is the source of truth. Some "current state" questions are answered by reading the latest event of a given type rather than a field on the work document:
 
-| Question | How to Answer |
-|----------|--------------|
-| Current location | Latest `location_change` event's `details.to`, or "Not set" if no location events |
-| Current condition | Latest `condition_update` event's `details.conditionSummary`, or intake event's condition |
-| Total payouts | Sum `details.amount` across all `payout` events for the work |
-| Outstanding balance | `work.salePrice * (1 - work.commissionRate)` minus total payouts |
+| Question            | How to Answer                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------- |
+| Current location    | Latest `location_change` event's `details.to`, or "Not set" if no location events         |
+| Current condition   | Latest `condition_update` event's `details.conditionSummary`, or intake event's condition |
+| Total payouts       | Sum `details.amount` across all `payout` events for the work                              |
+| Outstanding balance | `work.salePrice * (1 - work.commissionRate)` minus total payouts                          |
 
 The work detail view computes these derived values client-side from the loaded events. No denormalized fields for these at MVP.
 
@@ -150,11 +152,11 @@ If a work is deleted (hard delete at MVP), all subcollection documents including
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Event backdating | Not supported | All events stamped at creation time. Real-world date can go in description. Post-MVP enhancement to add optional `occurredAt` field. |
-| Audit log of edits | Not tracked | Edits during the grace period overwrite the previous values silently. No edit history within an event. Acceptable for MVP since the window is only 15 minutes. |
-| Event count per work | Unlimited | No cap. Typical lifecycle produces 5-30 events. No pagination needed at MVP scale. |
-| Multi-device event conflict | Last write wins | If the same user creates events on two devices for the same work while offline, both events sync independently. No deduplication. Both appear in the timeline, which is acceptable -- append-only means no data loss. |
-| Grace period UX | Countdown or "editable" badge | Show an "Edit" button on the event card that disappears after 15 minutes. No visible countdown timer -- just the presence or absence of the edit affordance. Client checks `editableUntil` against local time. |
-| Bulk event creation | Not supported | No way to log multiple events at once (e.g., "moved and condition updated"). User creates them individually. They will have near-identical timestamps. |  
+| Item                        | Default                       | Notes                                                                                                                                                                                                                 |
+| --------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Event backdating            | Not supported                 | All events stamped at creation time. Real-world date can go in description. Post-MVP enhancement to add optional `occurredAt` field.                                                                                  |
+| Audit log of edits          | Not tracked                   | Edits during the grace period overwrite the previous values silently. No edit history within an event. Acceptable for MVP since the window is only 15 minutes.                                                        |
+| Event count per work        | Unlimited                     | No cap. Typical lifecycle produces 5-30 events. No pagination needed at MVP scale.                                                                                                                                    |
+| Multi-device event conflict | Last write wins               | If the same user creates events on two devices for the same work while offline, both events sync independently. No deduplication. Both appear in the timeline, which is acceptable -- append-only means no data loss. |
+| Grace period UX             | Countdown or "editable" badge | Show an "Edit" button on the event card that disappears after 15 minutes. No visible countdown timer -- just the presence or absence of the edit affordance. Client checks `editableUntil` against local time.        |
+| Bulk event creation         | Not supported                 | No way to log multiple events at once (e.g., "moved and condition updated"). User creates them individually. They will have near-identical timestamps.                                                                |

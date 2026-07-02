@@ -11,10 +11,10 @@ Offline capability is essential, not optional. Gallery operators receive works i
 
 ## Two-Layer Strategy
 
-| Layer | Technology | Handles | Automatic |
-|-------|-----------|---------|-----------|
-| Data | Firestore offline persistence | All Firestore reads and writes | Yes |
-| Files | Custom IndexedDB queue | Photo, signature, and document uploads to Firebase Storage | No (custom implementation) |
+| Layer | Technology                    | Handles                                                    | Automatic                  |
+| ----- | ----------------------------- | ---------------------------------------------------------- | -------------------------- |
+| Data  | Firestore offline persistence | All Firestore reads and writes                             | Yes                        |
+| Files | Custom IndexedDB queue        | Photo, signature, and document uploads to Firebase Storage | No (custom implementation) |
 
 These two layers operate independently. Firestore handles its own sync. The file upload queue handles its own sync. They converge when a photo document in Firestore references a Storage URL -- the URL is populated after the file upload completes.
 
@@ -29,6 +29,7 @@ enableMultiTabIndexedDbPersistence (default in Firebase v9+ modular SDK)
 ```
 
 This is a single configuration call. Once enabled, Firestore automatically:
+
 - Caches all documents read from the server in IndexedDB
 - Serves reads from cache when offline
 - Queues all writes locally when offline
@@ -77,6 +78,7 @@ When a file upload completes, the corresponding Firestore document must be updat
 3. **Document attachment**: update the event's `details.fileUrl` field. Same grace period consideration.
 
 **Handling stale references**: if a file uploads after the event's grace period has expired, the Firestore document cannot be updated. The file exists in Storage but is not linked. Mitigation approaches:
+
 - Set `editableUntil` generously for the `signatureUrl` and `fileUrl` fields specifically (not practical -- the grace period applies to the entire event)
 - Accept that this edge case (file queued for more than 15 minutes while offline) results in an orphaned Storage file. The URL can be reconstructed from the known Storage path pattern.
 - Recommended approach: write the photo/file document (in the `photos` subcollection) separately from the event. Photo documents are not subject to the event grace period. Events reference photos via `photoUrls` array, which is set at event creation with the expected download URL. If the URL is not yet valid (file still uploading), the timeline displays a placeholder. Once the upload completes and the Firestore photo document is updated, the URL resolves.
@@ -94,10 +96,12 @@ Firestore snapshot metadata includes `fromCache: boolean`. When snapshots consis
 ### Offline Indicator Logic
 
 Show the offline banner (see `05_App_Shell_And_Navigation.md`) when:
+
 - `navigator.onLine` is `false`, OR
 - Firestore snapshots have been `fromCache: true` for more than 10 seconds while `navigator.onLine` is `true`
 
 Hide the banner when:
+
 - A Firestore snapshot arrives with `fromCache: false`
 
 No polling, no manual health checks. Let the existing signals drive the indicator.
@@ -108,13 +112,13 @@ Handled by `vite-plugin-pwa` with Workbox. See `05_App_Shell_And_Navigation.md` 
 
 ### Cache Strategies by Asset Type
 
-| Asset Type | Strategy | Notes |
-|-----------|----------|-------|
-| App shell (HTML, JS, CSS) | Precache | Updated on new deployment. Entire app works offline. |
-| DM Sans font files | Precache | Bundled with the app build. |
-| Firebase SDK | Precache | Bundled via npm, included in JS build. |
-| Photos from Storage | Cache-first, network fallback | Photos are immutable once uploaded. Safe to cache aggressively. |
-| Firestore data | Managed by Firestore SDK | Not handled by service worker. |
+| Asset Type                | Strategy                      | Notes                                                           |
+| ------------------------- | ----------------------------- | --------------------------------------------------------------- |
+| App shell (HTML, JS, CSS) | Precache                      | Updated on new deployment. Entire app works offline.            |
+| DM Sans font files        | Precache                      | Bundled with the app build.                                     |
+| Firebase SDK              | Precache                      | Bundled via npm, included in JS build.                          |
+| Photos from Storage       | Cache-first, network fallback | Photos are immutable once uploaded. Safe to cache aggressively. |
+| Firestore data            | Managed by Firestore SDK      | Not handled by service worker.                                  |
 
 ### Photo Caching
 
@@ -146,23 +150,23 @@ At MVP, do not show "last synced" timestamps or per-document staleness indicator
 
 Key scenarios to verify during development:
 
-| Scenario | Expected Behavior |
-|----------|-------------------|
-| Create a work while offline | Work appears in list immediately. Syncs when online. |
-| Add photos while offline | Thumbnails display from local blobs. Uploads queue. Sync when online. |
-| Add timeline events while offline | Events appear in timeline immediately with "Just now" timestamp. Real timestamps after sync. |
-| Navigate between screens offline | All previously viewed data loads from cache. |
-| App killed while offline with queued writes | Firestore writes persist in IndexedDB, sync on next app open. Photo queue entries persist. |
-| Generate PDF while offline | Works with cached data and cached photos. Uncached photos show placeholder. |
-| Lose connectivity mid-upload | Resumable upload resumes on reconnect if the session is still valid. Otherwise, re-queues. |
+| Scenario                                    | Expected Behavior                                                                            |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Create a work while offline                 | Work appears in list immediately. Syncs when online.                                         |
+| Add photos while offline                    | Thumbnails display from local blobs. Uploads queue. Sync when online.                        |
+| Add timeline events while offline           | Events appear in timeline immediately with "Just now" timestamp. Real timestamps after sync. |
+| Navigate between screens offline            | All previously viewed data loads from cache.                                                 |
+| App killed while offline with queued writes | Firestore writes persist in IndexedDB, sync on next app open. Photo queue entries persist.   |
+| Generate PDF while offline                  | Works with cached data and cached photos. Uncached photos show placeholder.                  |
+| Lose connectivity mid-upload                | Resumable upload resumes on reconnect if the session is still valid. Otherwise, re-queues.   |
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| IndexedDB storage quota | Browser-managed | Most browsers grant PWAs at least 50 MB, often much more. 20 queued photos at 10 MB each = 200 MB, which may approach limits on some devices. Monitor queue size and warn if approaching 100 MB. |
-| Multi-tab support | Firestore handles it | Firestore's multi-tab IndexedDB persistence allows the app to work in multiple tabs. Not a common use case but supported. |
-| Background sync API | Not used | The Background Sync API could retry uploads when the browser regains connectivity, even if the app is closed. Browser support is inconsistent. Rely on in-app queue processing instead. |
-| Offline duration | No limit | The app can function offline indefinitely. Firestore cache and IndexedDB queue persist across app restarts. Extended offline periods (days) are fine for data, but photo queue memory usage grows. |
-| Forced online operations | None | No feature requires online connectivity to function. Even PDF generation works offline with cached data. |
-| Cache invalidation | Handled by Firestore | Firestore's cache is invalidated by the SDK on reconnection. No manual cache busting needed. |  
+| Item                     | Default              | Notes                                                                                                                                                                                              |
+| ------------------------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IndexedDB storage quota  | Browser-managed      | Most browsers grant PWAs at least 50 MB, often much more. 20 queued photos at 10 MB each = 200 MB, which may approach limits on some devices. Monitor queue size and warn if approaching 100 MB.   |
+| Multi-tab support        | Firestore handles it | Firestore's multi-tab IndexedDB persistence allows the app to work in multiple tabs. Not a common use case but supported.                                                                          |
+| Background sync API      | Not used             | The Background Sync API could retry uploads when the browser regains connectivity, even if the app is closed. Browser support is inconsistent. Rely on in-app queue processing instead.            |
+| Offline duration         | No limit             | The app can function offline indefinitely. Firestore cache and IndexedDB queue persist across app restarts. Extended offline periods (days) are fine for data, but photo queue memory usage grows. |
+| Forced online operations | None                 | No feature requires online connectivity to function. Even PDF generation works offline with cached data.                                                                                           |
+| Cache invalidation       | Handled by Firestore | Firestore's cache is invalidated by the SDK on reconnection. No manual cache busting needed.                                                                                                       |

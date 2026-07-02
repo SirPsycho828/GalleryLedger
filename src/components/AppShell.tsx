@@ -17,7 +17,8 @@ export function AppShell() {
   const navHidden = useScrollDirection()
 
   function isActive(path: string) {
-    if (path === '/works') return location.pathname === '/works' || location.pathname.startsWith('/works/')
+    if (path === '/works')
+      return location.pathname === '/works' || location.pathname.startsWith('/works/')
     return location.pathname.startsWith(path)
   }
 
@@ -98,7 +99,9 @@ export function AppShell() {
                   />
                 )}
                 <tab.icon className="h-5 w-5" strokeWidth={1.5} />
-                <span className="text-[10px] font-medium uppercase tracking-wider">{tab.label}</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider">
+                  {tab.label}
+                </span>
               </button>
             )
           })}

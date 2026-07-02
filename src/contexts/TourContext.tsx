@@ -1,4 +1,13 @@
-import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { TourOverlay, type TourStop } from '@/components/tour/TourOverlay'
 
@@ -28,17 +37,20 @@ const BASE_STOPS: TourStop[] = [
   {
     target: 'nav-works',
     title: 'Your Collection',
-    content: 'All artwork in your gallery lives here. Filter by status and tap any piece to see its full provenance.',
+    content:
+      'All artwork in your gallery lives here. Filter by status and tap any piece to see its full provenance.',
   },
   {
     target: 'add-work',
     title: 'Intake a Work',
-    content: 'Tap here to document a new artwork \u2014 photos, details, condition assessment, and consignor signature.',
+    content:
+      'Tap here to document a new artwork \u2014 photos, details, condition assessment, and consignor signature.',
   },
   {
     target: 'nav-consignors',
     title: 'Consignors',
-    content: 'Track the artists and owners who entrust works to your gallery. See their linked works and financial summary.',
+    content:
+      'Track the artists and owners who entrust works to your gallery. See their linked works and financial summary.',
   },
   {
     target: 'nav-settings',
@@ -51,12 +63,14 @@ const DETAIL_STOPS: TourStop[] = [
   {
     target: 'fab-add-event',
     title: 'Build Provenance',
-    content: 'Every condition change, location move, sale, and payout is logged here. This timeline is your dispute-proof record.',
+    content:
+      'Every condition change, location move, sale, and payout is logged here. This timeline is your dispute-proof record.',
   },
   {
     target: 'export-provenance',
     title: 'Export a Provenance Pack',
-    content: 'Generate a PDF report with the full timeline, photos, and financials \u2014 ready for buyers, insurers, or legal.',
+    content:
+      'Generate a PDF report with the full timeline, photos, and financials \u2014 ready for buyers, insurers, or legal.',
   },
 ]
 
@@ -81,7 +95,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
 
   const stops = useMemo(
     () => (firstWorkId ? [...BASE_STOPS, ...DETAIL_STOPS] : BASE_STOPS),
-    [firstWorkId],
+    [firstWorkId]
   )
 
   const endTour = useCallback(() => {
@@ -128,7 +142,8 @@ export function TourProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!active) return
     const isOnWorksPage = location.pathname === '/works'
-    const isOnWorkDetail = location.pathname.startsWith('/works/') && location.pathname !== '/works/new'
+    const isOnWorkDetail =
+      location.pathname.startsWith('/works/') && location.pathname !== '/works/new'
     const isDetailStep = currentStep >= BASE_STOPS.length
 
     if (isDetailStep && !isOnWorkDetail) {
@@ -156,12 +171,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
     >
       {children}
       {active && (
-        <TourOverlay
-          stops={stops}
-          currentStep={currentStep}
-          onNext={handleNext}
-          onSkip={endTour}
-        />
+        <TourOverlay stops={stops} currentStep={currentStep} onNext={handleNext} onSkip={endTour} />
       )}
     </TourContext.Provider>
   )

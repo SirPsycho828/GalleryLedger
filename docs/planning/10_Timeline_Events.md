@@ -11,16 +11,16 @@ Defines the eight timeline event types, their input forms, business logic, and s
 
 ## Event Type Summary
 
-| Type | Created By | Photos | Side Effects |
-|------|-----------|--------|-------------|
-| `intake` | Automatic (intake flow) | Yes | Creates work record |
-| `condition_update` | Manual | Yes | None |
-| `location_change` | Manual | No | None |
-| `status_change` | Manual | No | Updates `work.status` |
-| `sale` | Manual | No | Updates `work.salePrice`, `work.commissionRate`, `work.status` |
-| `payout` | Manual | No | None |
-| `note` | Manual | Optional | None |
-| `document_attach` | Manual | No | None (file attached) |
+| Type               | Created By              | Photos   | Side Effects                                                   |
+| ------------------ | ----------------------- | -------- | -------------------------------------------------------------- |
+| `intake`           | Automatic (intake flow) | Yes      | Creates work record                                            |
+| `condition_update` | Manual                  | Yes      | None                                                           |
+| `location_change`  | Manual                  | No       | None                                                           |
+| `status_change`    | Manual                  | No       | Updates `work.status`                                          |
+| `sale`             | Manual                  | No       | Updates `work.salePrice`, `work.commissionRate`, `work.status` |
+| `payout`           | Manual                  | No       | None                                                           |
+| `note`             | Manual                  | Optional | None                                                           |
+| `document_attach`  | Manual                  | No       | None (file attached)                                           |
 
 ## Event Type Details
 
@@ -44,11 +44,11 @@ Defines the eight timeline event types, their input forms, business logic, and s
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Overall condition | Chip select | Yes | `excellent`, `good`, `fair`, `poor` -- same as intake |
-| Condition notes | Multiline text | Yes | Describe what changed and why. Max 2000 chars. |
-| Photos | Photo capture/picker | No | Strongly encouraged. Same capture flow as intake. |
+| Field             | Type                 | Required | Notes                                                 |
+| ----------------- | -------------------- | -------- | ----------------------------------------------------- |
+| Overall condition | Chip select          | Yes      | `excellent`, `good`, `fair`, `poor` -- same as intake |
+| Condition notes   | Multiline text       | Yes      | Describe what changed and why. Max 2000 chars.        |
+| Photos            | Photo capture/picker | No       | Strongly encouraged. Same capture flow as intake.     |
 
 **Details map**: `conditionSummary`, `conditionNotes`.
 
@@ -64,10 +64,10 @@ Defines the eight timeline event types, their input forms, business logic, and s
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| From | Text input | Yes | Previous location. Pre-filled with the current location (from the latest `location_change` event, or empty if none). |
-| To | Text input | Yes | New location. Free text. |
+| Field | Type       | Required | Notes                                                                                                                |
+| ----- | ---------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| From  | Text input | Yes      | Previous location. Pre-filled with the current location (from the latest `location_change` event, or empty if none). |
+| To    | Text input | Yes      | New location. Free text.                                                                                             |
 
 **Location values are free text**, not a predefined list. Galleries use their own naming conventions: "Main gallery," "Back storage room," "Smith residence (loan)," "Art Basel booth 412." Autocomplete from previous location values in this gallery's events is a helpful optimization.
 
@@ -85,10 +85,10 @@ Defines the eight timeline event types, their input forms, business logic, and s
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| New status | Chip select | Yes | Shows all statuses except the current one |
-| Note | Multiline text | No | Optional context. Max 500 chars. |
+| Field      | Type           | Required | Notes                                     |
+| ---------- | -------------- | -------- | ----------------------------------------- |
+| New status | Chip select    | Yes      | Shows all statuses except the current one |
+| Note       | Multiline text | No       | Optional context. Max 500 chars.          |
 
 **Available statuses**: `intake`, `in_storage`, `on_display`, `on_loan`, `shipped`, `sold`, `returned`.
 
@@ -108,17 +108,18 @@ Defines the eight timeline event types, their input forms, business logic, and s
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Sale price | Number input | Yes | Displayed with currency symbol. Stored in cents. |
-| Currency | Select | No | Defaults to `USD`. Dropdown of common currencies. |
-| Commission rate | Number input | Yes | Percentage (0-100). Displayed as "Gallery commission: X%". Stored as decimal. |
-| Buyer name | Text input | No | Optional. Free text. |
-| Note | Multiline text | No | Optional context. Max 500 chars. |
+| Field           | Type           | Required | Notes                                                                         |
+| --------------- | -------------- | -------- | ----------------------------------------------------------------------------- |
+| Sale price      | Number input   | Yes      | Displayed with currency symbol. Stored in cents.                              |
+| Currency        | Select         | No       | Defaults to `USD`. Dropdown of common currencies.                             |
+| Commission rate | Number input   | Yes      | Percentage (0-100). Displayed as "Gallery commission: X%". Stored as decimal. |
+| Buyer name      | Text input     | No       | Optional. Free text.                                                          |
+| Note            | Multiline text | No       | Optional context. Max 500 chars.                                              |
 
 **Details map**: `salePrice`, `currency`, `buyerName`, `commissionRate`.
 
 **Side effects** (batched write):
+
 - `work.salePrice` set to the entered value (in cents)
 - `work.currency` set to the entered currency
 - `work.commissionRate` set to the entered decimal value
@@ -139,16 +140,17 @@ See `14_Sales_And_Payouts.md` for financial reconciliation logic.
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Amount | Number input | Yes | In the work's currency. Stored in cents. |
-| Method | Text input | Yes | Free text: "Check #1234", "Wire transfer", "Cash", etc. |
-| Reference | Text input | No | Transaction ID, check number, or other identifier. |
-| Note | Multiline text | No | Optional. Max 500 chars. |
+| Field     | Type           | Required | Notes                                                   |
+| --------- | -------------- | -------- | ------------------------------------------------------- |
+| Amount    | Number input   | Yes      | In the work's currency. Stored in cents.                |
+| Method    | Text input     | Yes      | Free text: "Check #1234", "Wire transfer", "Cash", etc. |
+| Reference | Text input     | No       | Transaction ID, check number, or other identifier.      |
+| Note      | Multiline text | No       | Optional. Max 500 chars.                                |
 
 **Details map**: `amount`, `currency`, `method`, `reference`.
 
 **Contextual info displayed on the form** (read-only, not editable):
+
 - Sale price (from `work.salePrice`)
 - Gallery commission (from `work.commissionRate`)
 - Consignor share (calculated: `salePrice * (1 - commissionRate)`)
@@ -169,10 +171,10 @@ See `14_Sales_And_Payouts.md` for financial reconciliation logic.
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Note | Multiline text | Yes | Max 2000 chars. |
-| Photos | Photo capture/picker | No | Optional supporting images. |
+| Field  | Type                 | Required | Notes                       |
+| ------ | -------------------- | -------- | --------------------------- |
+| Note   | Multiline text       | Yes      | Max 2000 chars.             |
+| Photos | Photo capture/picker | No       | Optional supporting images. |
 
 **Details map**: None. The `description` field holds the note text.
 
@@ -186,10 +188,10 @@ See `14_Sales_And_Payouts.md` for financial reconciliation logic.
 
 **Form fields**:
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| File | File picker | Yes | Accepts PDF, JPEG, PNG. Max 10 MB. |
-| Note | Multiline text | No | Describe the document. Max 500 chars. |
+| Field | Type           | Required | Notes                                 |
+| ----- | -------------- | -------- | ------------------------------------- |
+| File  | File picker    | Yes      | Accepts PDF, JPEG, PNG. Max 10 MB.    |
+| Note  | Multiline text | No       | Describe the document. Max 500 chars. |
 
 **Details map**: `fileName`, `fileUrl`, `fileType`.
 
@@ -217,11 +219,11 @@ The FAB on the work detail view (see `12_Work_Detail_View.md`) opens a menu list
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Loan event type | Not separate | Loans are tracked as a `status_change` to `on_loan` plus a `location_change`. No dedicated loan event with borrower details. See `17_Future_Features.md`. |
-| Return event type | Not separate | Returns are a `status_change` to `returned` plus optional `location_change` and `condition_update`. |
-| Event templates | Not supported | No saved templates for frequently repeated events (e.g., "moved to storage"). Post-MVP. |
-| Bulk events | Not supported | Cannot apply the same event to multiple works at once (e.g., "moved all 10 works to fair booth"). Post-MVP. |
-| Currency on payouts | Inherited from work | Payout currency matches the work's sale currency. No cross-currency payouts at MVP. |
-| Document preview | External only | PDFs open in a browser tab. No in-app PDF viewer. |  
+| Item                | Default             | Notes                                                                                                                                                     |
+| ------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Loan event type     | Not separate        | Loans are tracked as a `status_change` to `on_loan` plus a `location_change`. No dedicated loan event with borrower details. See `17_Future_Features.md`. |
+| Return event type   | Not separate        | Returns are a `status_change` to `returned` plus optional `location_change` and `condition_update`.                                                       |
+| Event templates     | Not supported       | No saved templates for frequently repeated events (e.g., "moved to storage"). Post-MVP.                                                                   |
+| Bulk events         | Not supported       | Cannot apply the same event to multiple works at once (e.g., "moved all 10 works to fair booth"). Post-MVP.                                               |
+| Currency on payouts | Inherited from work | Payout currency matches the work's sale currency. No cross-currency payouts at MVP.                                                                       |
+| Document preview    | External only       | PDFs open in a browser tab. No in-app PDF viewer.                                                                                                         |

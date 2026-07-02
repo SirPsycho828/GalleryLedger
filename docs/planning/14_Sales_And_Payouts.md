@@ -23,12 +23,12 @@ There is no separate financial collection. The timeline IS the ledger.
 
 All monetary values stored in cents (integers) to avoid floating-point precision issues.
 
-| Calculation | Formula |
-|-------------|---------|
-| Gallery commission amount | `salePrice * commissionRate` |
-| Consignor share | `salePrice * (1 - commissionRate)` |
-| Total paid out | Sum of `details.amount` from all `payout` events for this work |
-| Outstanding balance | Consignor share - total paid out |
+| Calculation               | Formula                                                        |
+| ------------------------- | -------------------------------------------------------------- |
+| Gallery commission amount | `salePrice * commissionRate`                                   |
+| Consignor share           | `salePrice * (1 - commissionRate)`                             |
+| Total paid out            | Sum of `details.amount` from all `payout` events for this work |
+| Outstanding balance       | Consignor share - total paid out                               |
 
 **Rounding**: Apply `Math.round()` after multiplication. For a $10,000 sale at 50% commission, the consignor share is exactly $5,000 (500000 cents). For odd splits like 40% on $10,001, round to the nearest cent. Rounding happens at display time only -- stored values are the raw cents.
 
@@ -39,6 +39,7 @@ All monetary values stored in cents (integers) to avoid floating-point precision
 The operator creates a `sale` event from the work detail FAB menu. See `10_Timeline_Events.md` for form fields.
 
 **Batched write** (atomic):
+
 1. Create the `sale` event in `works/{workId}/events`
 2. Update the work document: set `salePrice`, `currency`, `commissionRate`, `status` to `sold`
 3. Update `work.updatedAt`
@@ -96,15 +97,16 @@ A work can have unlimited payout events. Common pattern: a gallery sells a work 
 
 The financial summary card on the work detail screen (see `12_Work_Detail_View.md`) shows:
 
-| Line | Value | Visibility |
-|------|-------|-----------|
-| Sale price | Formatted `work.salePrice` | Only if sale exists |
-| Gallery commission | Rate as percentage, amount in currency | Only if sale exists |
-| Consignor share | Calculated amount | Only if sale exists |
-| Paid out | Sum of payout amounts | Only if any payouts exist |
-| Remaining | Consignor share minus paid out | Only if sale exists |
+| Line               | Value                                  | Visibility                |
+| ------------------ | -------------------------------------- | ------------------------- |
+| Sale price         | Formatted `work.salePrice`             | Only if sale exists       |
+| Gallery commission | Rate as percentage, amount in currency | Only if sale exists       |
+| Consignor share    | Calculated amount                      | Only if sale exists       |
+| Paid out           | Sum of payout amounts                  | Only if any payouts exist |
+| Remaining          | Consignor share minus paid out         | Only if sale exists       |
 
 **Remaining balance styling**:
+
 - Positive (money owed): `text-primary`, normal weight
 - Zero (fully paid): `success` color, with a Lucide `check-circle` icon
 - Negative (overpaid): `destructive` color, with the amount shown as negative
@@ -121,13 +123,13 @@ No financial info shown on the work list cards. Financial details are only visib
 
 There is no `payoutStatus` field stored on the work document. Status is derived client-side:
 
-| Condition | Derived Status | Display |
-|-----------|---------------|---------|
-| No sale event | No financial data | Financial section hidden |
-| Sale exists, no payouts | Unpaid | "No payouts recorded" in `text-secondary` |
-| Sale exists, payouts < consignor share | Partially paid | Remaining balance shown |
-| Sale exists, payouts = consignor share | Fully paid | "Fully paid" badge in `success` color |
-| Sale exists, payouts > consignor share | Overpaid | Negative remaining in `destructive` color |
+| Condition                              | Derived Status    | Display                                   |
+| -------------------------------------- | ----------------- | ----------------------------------------- |
+| No sale event                          | No financial data | Financial section hidden                  |
+| Sale exists, no payouts                | Unpaid            | "No payouts recorded" in `text-secondary` |
+| Sale exists, payouts < consignor share | Partially paid    | Remaining balance shown                   |
+| Sale exists, payouts = consignor share | Fully paid        | "Fully paid" badge in `success` color     |
+| Sale exists, payouts > consignor share | Overpaid          | Negative remaining in `destructive` color |
 
 ## Currency Handling
 
@@ -156,6 +158,7 @@ This handles symbol placement, decimal separators, and grouping for each currenc
 ### Sale Reversal
 
 If a sale falls through, the operator:
+
 1. Creates a `status_change` event moving the work back to a non-sold status (e.g., `on_display`)
 2. The `salePrice` and `commissionRate` fields on the work document remain set (historical data)
 3. The financial summary still displays because `salePrice` is non-null
@@ -173,14 +176,14 @@ If the operator edits a `sale` event during the 15-minute grace period (see `09_
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Tax handling | Not included | No sales tax, VAT, or tax reporting. Galleries handle tax outside the app. |
-| Invoice generation | Not included | No invoice or receipt PDFs for sales. The PDF provenance pack covers documentation, not billing. See `17_Future_Features.md`. |
-| Commission rate per gallery | Not stored | No default commission rate. Entered per sale. Post-MVP: store default on gallery document. |
-| Payment method tracking | Free text only | No integration with payment processors. The `method` field on payouts is descriptive text. |
-| Multi-currency consignor summary | Not handled | If a consignor has works in different currencies, the consignor financial summary sums them incorrectly. Acceptable at MVP. |
-| Partial sale (edition prints) | Not supported | No concept of selling one print from an edition. One work, one sale. |
-| Refunds | Not modeled | No refund event type. Use a `note` event and a negative payout if needed. |
-| Financial reports/export | Not in MVP | No CSV export of sales or payout data. See `17_Future_Features.md`. |
-| Audit trail for financial edits | Grace period only | Edits to sale events during the 15-minute window are silent. No edit history beyond the timeline itself. |  
+| Item                             | Default           | Notes                                                                                                                         |
+| -------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Tax handling                     | Not included      | No sales tax, VAT, or tax reporting. Galleries handle tax outside the app.                                                    |
+| Invoice generation               | Not included      | No invoice or receipt PDFs for sales. The PDF provenance pack covers documentation, not billing. See `17_Future_Features.md`. |
+| Commission rate per gallery      | Not stored        | No default commission rate. Entered per sale. Post-MVP: store default on gallery document.                                    |
+| Payment method tracking          | Free text only    | No integration with payment processors. The `method` field on payouts is descriptive text.                                    |
+| Multi-currency consignor summary | Not handled       | If a consignor has works in different currencies, the consignor financial summary sums them incorrectly. Acceptable at MVP.   |
+| Partial sale (edition prints)    | Not supported     | No concept of selling one print from an edition. One work, one sale.                                                          |
+| Refunds                          | Not modeled       | No refund event type. Use a `note` event and a negative payout if needed.                                                     |
+| Financial reports/export         | Not in MVP        | No CSV export of sales or payout data. See `17_Future_Features.md`.                                                           |
+| Audit trail for financial edits  | Grace period only | Edits to sale events during the 15-minute window are silent. No edit history beyond the timeline itself.                      |

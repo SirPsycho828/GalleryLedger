@@ -11,15 +11,15 @@ The app shell is a mobile-first PWA layout with bottom tab navigation as the pri
 
 **Manifest fields that matter**:
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| `display` | `standalone` | Removes browser chrome, feels native |
-| `orientation` | `portrait` | Primary use is one-handed vertical; do not lock -- allow landscape for photo review |
-| `theme_color` | `#FFFFFF` | Matches light theme background |
-| `background_color` | `#FFFFFF` | Splash screen background |
-| `start_url` | `/` | App root |
-| `name` | `GalleryLedger` | Install prompt and app launcher |
-| `short_name` | `GalleryLedger` | Home screen label |
+| Field              | Value           | Notes                                                                               |
+| ------------------ | --------------- | ----------------------------------------------------------------------------------- |
+| `display`          | `standalone`    | Removes browser chrome, feels native                                                |
+| `orientation`      | `portrait`      | Primary use is one-handed vertical; do not lock -- allow landscape for photo review |
+| `theme_color`      | `#FFFFFF`       | Matches light theme background                                                      |
+| `background_color` | `#FFFFFF`       | Splash screen background                                                            |
+| `start_url`        | `/`             | App root                                                                            |
+| `name`             | `GalleryLedger` | Install prompt and app launcher                                                     |
+| `short_name`       | `GalleryLedger` | Home screen label                                                                   |
 
 **Service worker**: Use Vite PWA plugin (`vite-plugin-pwa`) with workbox for precaching the app shell. Cache strategy:
 
@@ -76,11 +76,11 @@ No custom offline fallback page. The app works offline via Firestore persistence
 
 Three tabs at MVP. Each tab is an independent navigation stack.
 
-| Tab | Icon | Label | Root Screen | Notes |
-|-----|------|-------|-------------|-------|
-| Works | Lucide `image` | Works | Work list dashboard | Primary tab. See `11_Work_List_Dashboard.md` |
-| Consignors | Lucide `users` | Consignors | Consignor list | See `13_Consignor_Management.md` |
-| Settings | Lucide `settings` | Settings | Settings screen | Profile, gallery name, sign out |
+| Tab        | Icon              | Label      | Root Screen         | Notes                                        |
+| ---------- | ----------------- | ---------- | ------------------- | -------------------------------------------- |
+| Works      | Lucide `image`    | Works      | Work list dashboard | Primary tab. See `11_Work_List_Dashboard.md` |
+| Consignors | Lucide `users`    | Consignors | Consignor list      | See `13_Consignor_Management.md`             |
+| Settings   | Lucide `settings` | Settings   | Settings screen     | Profile, gallery name, sign out              |
 
 **Active tab indicator**: `accent` color on icon and label. Inactive tabs use `text-tertiary`.
 
@@ -141,12 +141,12 @@ These hide the bottom tabs and top bar entirely.
 
 Minimal at MVP. Single scrollable list of options:
 
-| Item | Action |
-|------|--------|
+| Item         | Action                                      |
+| ------------ | ------------------------------------------- |
 | Gallery Name | Tap to edit (inline or push to edit screen) |
-| Email | Display only (from Firebase Auth) |
-| Sign Out | Tap to sign out with confirmation dialog |
-| App Version | Display only, shown at bottom |
+| Email        | Display only (from Firebase Auth)           |
+| Sign Out     | Tap to sign out with confirmation dialog    |
+| App Version  | Display only, shown at bottom               |
 
 No account deletion, no notification settings, no data export at MVP. See `17_Future_Features.md`.
 
@@ -163,30 +163,30 @@ Do not block any functionality while offline. All reads come from Firestore cach
 
 ## Route Definitions
 
-| Path | Screen | Auth | Tab |
-|------|--------|------|-----|
-| `/signin` | Sign In | Public | None |
-| `/signup` | Sign Up | Public | None |
-| `/reset-password` | Password Reset | Public | None |
-| `/onboarding` | Gallery Name + First Work | Auth | None |
-| `/` | Work List | Auth | Works |
-| `/works/new` | New Work Intake | Auth | Works |
-| `/works/:workId` | Work Detail | Auth | Works |
-| `/consignors` | Consignor List | Auth | Consignors |
-| `/consignors/new` | New Consignor | Auth | Consignors |
-| `/consignors/:consignorId` | Consignor Detail | Auth | Consignors |
-| `/settings` | Settings | Auth | Settings |
+| Path                       | Screen                    | Auth   | Tab        |
+| -------------------------- | ------------------------- | ------ | ---------- |
+| `/signin`                  | Sign In                   | Public | None       |
+| `/signup`                  | Sign Up                   | Public | None       |
+| `/reset-password`          | Password Reset            | Public | None       |
+| `/onboarding`              | Gallery Name + First Work | Auth   | None       |
+| `/`                        | Work List                 | Auth   | Works      |
+| `/works/new`               | New Work Intake           | Auth   | Works      |
+| `/works/:workId`           | Work Detail               | Auth   | Works      |
+| `/consignors`              | Consignor List            | Auth   | Consignors |
+| `/consignors/new`          | New Consignor             | Auth   | Consignors |
+| `/consignors/:consignorId` | Consignor Detail          | Auth   | Consignors |
+| `/settings`                | Settings                  | Auth   | Settings   |
 
 Use React Router. Auth guard wraps all authenticated routes (see `01_Auth_And_Onboarding.md`). Public routes redirect to `/` if already authenticated.
 
 ## Gaps and Assumptions
 
-| Item | Default | Notes |
-|------|---------|-------|
-| Router library | React Router v7 | Not specified in PRD. Most mature option for React SPAs with nested routes. |
-| Tab state persistence | In-memory | Tab stacks reset on full page reload. Acceptable for PWA where reloads are rare. |
-| Deep linking | Supported via route paths | PWA deep links work naturally with the route table above. No special handling needed. |
-| Splash screen | PWA default from manifest | No custom animated splash. The manifest `background_color` and icon display during app load. |
-| App update prompt | Deferred | When a new service worker is available, no prompt is shown at MVP. Updates apply on next full app load. |
-| Landscape support | Not optimized | App renders in landscape but layouts are not tuned for it. Portrait is the expected usage. |
-| Tablet layout | Basic `md` breakpoint | Work list gets 2-column grid at 768px+. No sidebar navigation at MVP. |  
+| Item                  | Default                   | Notes                                                                                                   |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Router library        | React Router v7           | Not specified in PRD. Most mature option for React SPAs with nested routes.                             |
+| Tab state persistence | In-memory                 | Tab stacks reset on full page reload. Acceptable for PWA where reloads are rare.                        |
+| Deep linking          | Supported via route paths | PWA deep links work naturally with the route table above. No special handling needed.                   |
+| Splash screen         | PWA default from manifest | No custom animated splash. The manifest `background_color` and icon display during app load.            |
+| App update prompt     | Deferred                  | When a new service worker is available, no prompt is shown at MVP. Updates apply on next full app load. |
+| Landscape support     | Not optimized             | App renders in landscape but layouts are not tuned for it. Portrait is the expected usage.              |
+| Tablet layout         | Basic `md` breakpoint     | Work list gets 2-column grid at 768px+. No sidebar navigation at MVP.                                   |
